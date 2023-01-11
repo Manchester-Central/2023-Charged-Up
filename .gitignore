@@ -162,5 +162,5 @@ bin/
 *-window.json
 simgui*.json
 
-# Allow lib jars #
+# Allow libs folder
 !libs/*.jar

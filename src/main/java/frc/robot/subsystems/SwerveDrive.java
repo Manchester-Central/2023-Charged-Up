@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -27,15 +28,17 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight = new SwerveModule();
   }
 
-  public void move(ChassisSpeeds chassisSpeeds){
-  SwerveModuleState[] states=m_kinematics.toSwerveModuleStates(chassisSpeeds);
-  m_frontLeft.setTarget(states[0]);
-  //Todo 
+  public void move(ChassisSpeeds chassisSpeeds) {
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    m_frontLeft.setTarget(states[0]);
+    // TODO
   }
-  public void moveDriverRelative(double x,double y,double omega){
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(y, -x, omega, getRotation());
+
+  public void moveDriverRelative(double x, double y, double omega) {
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(y, -x, omega, new Rotation2d()); // TODO replace Rotation2d
     move(speeds);
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

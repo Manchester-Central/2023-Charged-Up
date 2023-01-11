@@ -26,8 +26,9 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final Gamepad m_driverController =
-      new Gamepad(OperatorConstants.kDriverControllerPort);
+  private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
+
+  private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -51,7 +52,7 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_driver.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**

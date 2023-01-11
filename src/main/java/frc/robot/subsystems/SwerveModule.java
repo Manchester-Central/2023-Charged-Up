@@ -4,8 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+
 public class SwerveModule {
   /** Creates a new SwerveModule. */
   public SwerveModule() {}
+public void setTarget(SwerveModuleState state){
+  
+}
 
 }

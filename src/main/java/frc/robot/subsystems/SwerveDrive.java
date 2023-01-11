@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
@@ -13,6 +15,8 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
+
+  private SwerveDriveKinematics m_kinematics;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -24,7 +28,13 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds){
-
+  SwerveModuleState[] states=m_kinematics.toSwerveModuleStates(chassisSpeeds);
+  m_frontLeft.setTarget(states[0]);
+  //Todo 
+  }
+  public void moveDriverRelative(double x,double y,double omega){
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(y, -x, omega, getRotation());
+    move(speeds);
   }
   @Override
   public void periodic() {

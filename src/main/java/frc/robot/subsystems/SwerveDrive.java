@@ -34,8 +34,17 @@ public class SwerveDrive extends SubsystemBase {
     // TODO
   }
 
-  public void moveDriverRelative(double x, double y, double omega) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(y, -x, omega, new Rotation2d()); // TODO replace Rotation2d
+  public void moveDriverRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
+      double omegaRadianPerSecond) {
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySidewaySpeedMetersPerSecond,
+        -xForwardSpeedMetersPerSecond, omegaRadianPerSecond, new Rotation2d()); // TODO replace Rotation2d
+    move(speeds);
+  }
+
+  public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
+      double omegaRadianPerSecond) {
+    ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,
+        omegaRadianPerSecond);
     move(speeds);
   }
 

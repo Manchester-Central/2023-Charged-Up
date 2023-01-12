@@ -47,6 +47,9 @@ public class SwerveDrive extends SubsystemBase {
         omegaRadianPerSecond);
     move(speeds);
   }
+  public void stop(){
+    // TODO add stop code
+  }
 
   @Override
   public void periodic() {

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.subsystems.SwerveDrive;
 
 import com.chaos131.gamepads.Gamepad;
@@ -29,9 +30,7 @@ public class RobotContainer {
   private SwerveDrive m_swerveDrive = new SwerveDrive();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
 
@@ -51,11 +50,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_swerveDrive.setDefaultCommand(new RobotRelativeDrive(m_swerveDrive, m_driver));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(new RunCommand(() -> m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0.5)));
-    m_driverController.b().whileFalse(new RunCommand(() -> m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0)));
-    Shuffleboard.getTab("Test").addBoolean("b pressed", () -> m_driverController.b().getAsBoolean());
+    m_driver.b().whileTrue(new RunCommand(() -> m_driver.getHID().setRumble(RumbleType.kBothRumble, 0.5)));
+    m_driver.b().whileFalse(new RunCommand(() -> m_driver.getHID().setRumble(RumbleType.kBothRumble, 0.0)));
+    Shuffleboard.getTab("Test").addBoolean("b pressed", () -> m_driver.b().getAsBoolean());
   }
 
   /**

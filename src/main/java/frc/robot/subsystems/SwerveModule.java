@@ -4,11 +4,16 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule {
+  private Translation2d m_position;
+  
   /** Creates a new SwerveModule. */
-  public SwerveModule() {}
+  public SwerveModule(Translation2d position) {
+    m_position = position;
+  }
 public void setTarget(SwerveModuleState state){
   
 }

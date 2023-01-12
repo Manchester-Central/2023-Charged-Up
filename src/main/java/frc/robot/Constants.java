@@ -17,4 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
+  public static class SwerveConstants {
+    public static final double RobotWidth_in = 21.25;
+    public static final double RobotLength_in = 22.25;
+    public static final double RobotWidth_m = RobotWidth_in / 39.3701;
+    public static final double RobotLength_m = RobotLength_in / 39.3701;
+  }
 }

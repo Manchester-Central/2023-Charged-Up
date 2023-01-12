@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -21,11 +23,14 @@ public class SwerveDrive extends SubsystemBase {
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
-
-    m_frontLeft = new SwerveModule();
-    m_frontRight = new SwerveModule();
-    m_backLeft = new SwerveModule();
-    m_backRight = new SwerveModule();
+    Translation2d frontLeftPosition = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
+    Translation2d frontRightPosition = new Translation2d(SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
+    Translation2d backLeftPosition = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
+    Translation2d backRightPosition = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
+    m_frontLeft = new SwerveModule(frontLeftPosition);
+    m_frontRight = new SwerveModule(frontRightPosition);
+    m_backLeft = new SwerveModule(backLeftPosition);
+    m_backRight = new SwerveModule(backRightPosition);
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {

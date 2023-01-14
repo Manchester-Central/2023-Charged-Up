@@ -23,14 +23,16 @@ public class SwerveDrive extends SubsystemBase {
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
-    Translation2d frontLeftPosition = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
-    Translation2d frontRightPosition = new Translation2d(SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
-    Translation2d backLeftPosition = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
-    Translation2d backRightPosition = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
-    m_frontLeft = new SwerveModule(frontLeftPosition);
-    m_frontRight = new SwerveModule(frontRightPosition);
-    m_backLeft = new SwerveModule(backLeftPosition);
-    m_backRight = new SwerveModule(backRightPosition);
+    Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
+    Translation2d frontRightTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
+    Translation2d backLeftTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
+    Translation2d backRightTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
+    m_frontLeft = new SwerveModule(frontLeftTranslation);
+    m_frontRight = new SwerveModule(frontRightTranslation);
+    m_backLeft = new SwerveModule(backLeftTranslation);
+    m_backRight = new SwerveModule(backRightTranslation);
+    m_kinematics = new SwerveDriveKinematics(
+      frontLeftTranslation, frontRightTranslation, backLeftTranslation, backRightTranslation);
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {

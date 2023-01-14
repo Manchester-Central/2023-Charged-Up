@@ -8,14 +8,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule {
-  private Translation2d m_position;
+  private Translation2d m_translation;
   
   /** Creates a new SwerveModule. */
-  public SwerveModule(Translation2d position) {
-    m_position = position;
+  public SwerveModule(Translation2d translation) {
+    m_translation = translation;
   }
 public void setTarget(SwerveModuleState state){
   
+}
+
+public Translation2d getTranslation() {
+  return m_translation;
 }
 
 }

@@ -24,6 +24,17 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
+    public static final int CanIdFrontLeftAngle = 0; //TODO: fake value
+    public static final int CanIdFrontLeftVelocity = 1; //TODO: fake value
+    public static final int CanIdFrontRightAngle = 3; //TODO: fake value
+    public static final int CanIdFrontRightVelocity = 4; //TODO: fake value
+    public static final int CanIdBackLeftAngle = 5; //TODO: fake value
+    public static final int CanIdBackLeftVelocity = 6; //TODO: fake value
+    public static final int CanIdBackRightAngle = 7; //TODO: fake value
+    public static final int CanIdBackRightVelocity = 8; //TODO: fake value
+    public static final double AngleEncoderRatio = 1024.0; //TODO: fake value
+    public static final double VelocityEncoderRatio = 1000.0; //TODO: fake value
+
   }
    public static final double UpdateFrequency_Hz = 50;
 

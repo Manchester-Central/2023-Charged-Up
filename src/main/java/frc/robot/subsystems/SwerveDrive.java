@@ -52,10 +52,10 @@ public class SwerveDrive extends SubsystemBase {
     Translation2d frontRightTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2,-SwerveConstants.RobotWidth_m / 2);
     Translation2d backLeftTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
     Translation2d backRightTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
-    m_frontLeft = new SwerveModule(frontLeftTranslation);
-    m_frontRight = new SwerveModule(frontRightTranslation);
-    m_backLeft = new SwerveModule(backLeftTranslation);
-    m_backRight = new SwerveModule(backRightTranslation);
+    m_frontLeft = new SwerveModule(frontLeftTranslation, SwerveConstants.CanIdFrontLeftAngle, SwerveConstants.CanIdFrontLeftVelocity);
+    m_frontRight = new SwerveModule(frontRightTranslation, SwerveConstants.CanIdFrontRightAngle, SwerveConstants.CanIdFrontRightVelocity);
+    m_backLeft = new SwerveModule(backLeftTranslation, SwerveConstants.CanIdBackLeftAngle, SwerveConstants.CanIdBackLeftVelocity);
+    m_backRight = new SwerveModule(backRightTranslation, SwerveConstants.CanIdBackRightAngle, SwerveConstants.CanIdBackRightVelocity);
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(

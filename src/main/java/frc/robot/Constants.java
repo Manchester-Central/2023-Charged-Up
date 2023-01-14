@@ -23,4 +23,6 @@ public final class Constants {
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
   }
+   public static final double UpdateFrequency_Hz = 50;
+
 }

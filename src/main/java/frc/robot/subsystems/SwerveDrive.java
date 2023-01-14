@@ -69,7 +69,7 @@ public class SwerveDrive extends SubsystemBase {
     m_frontRight.setTarget(states[1]);
     m_backLeft.setTarget(states[2]);
     m_backRight.setTarget(states[3]);
-   
+    m_frontLeft.dumpTarget();
   }
 
   public void moveDriverRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
@@ -102,8 +102,9 @@ public class SwerveDrive extends SubsystemBase {
   public void periodic() {
     if (Robot.isSimulation()) {
       ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_frontLeft.getModuleState(),m_frontRight.getModuleState(),m_backLeft.getModuleState(),m_backRight.getModuleState());
-        double radians = speeds.omegaRadiansPerSecond / Constants.UpdateFrequency_Hz;
+        double radians = speeds.omegaRadiansPerSecond /Constants.UpdateFrequency_Hz;
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
+      //out.printf("Omega %f radiance%f\n", speeds.omegaRadiansPerSecond, radians);
     }
     Pose2d pose = m_odometry.update(getRotation(), getModulePositions());
     m_field.setRobotPose(pose);

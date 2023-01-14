@@ -46,5 +46,7 @@ public class SwerveModule {
      }
       return null; // TODO
   }
-
+  public void dumpTarget(){
+    //System.out.printf("speed %f, angle %f\n",m_targetState.speedMetersPerSecond,m_targetState.angle.getRadians());
+  }
 }

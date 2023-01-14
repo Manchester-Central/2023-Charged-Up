@@ -28,7 +28,7 @@ public class RobotRelativeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveRobotRelative(m_driverController.getLeftY(), -m_driverController.getLeftX(), m_driverController.getRightY());
+    m_swerveDrive.moveRobotRelative(m_driverController.getLeftY(), -m_driverController.getLeftX(), -m_driverController.getRightX());
   }
 
   // Called once the command ends or is interrupted.

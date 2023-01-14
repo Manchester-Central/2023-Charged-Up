@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule {
@@ -14,6 +17,7 @@ public class SwerveModule {
   public SwerveModule(Translation2d translation) {
     m_translation = translation;
   }
+
 public void setTarget(SwerveModuleState state){
   
 }
@@ -21,5 +25,12 @@ public void setTarget(SwerveModuleState state){
 public Translation2d getTranslation() {
   return m_translation;
 }
+
+public SwerveModulePosition getPosition() {
+  return null;
+}
+ //TODO
+
+
 
 }

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 
@@ -23,10 +26,11 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
-  AHRS m_gyro = new AHRS(SPI.Port.kMXP); 
+  // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
   private SwerveDriveOdometry m_odometry;
+  private Field2d m_field;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -41,8 +45,10 @@ public class SwerveDrive extends SubsystemBase {
     m_kinematics = new SwerveDriveKinematics(
       frontLeftTranslation, frontRightTranslation, backLeftTranslation, backRightTranslation);
     m_odometry = new SwerveDriveOdometry(
-      m_kinematics, m_gyro.getRotation2d(),
+      m_kinematics, getRotation(),
       getModulePositions());
+    m_field = new Field2d();
+    SmartDashboard.putData("SwerveDrive", m_field);
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -75,7 +81,8 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Rotation2d getRotation() {
-    return m_gyro.getRotation2d();
+    return new Rotation2d();
+    // return m_gyro.getRotation2d();
   }
 
   public void stop(){
@@ -84,6 +91,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Pose2d pose = m_odometry.getPoseMeters();
     // This method will be called once per scheduler run
   }
 }

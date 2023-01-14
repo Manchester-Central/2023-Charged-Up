@@ -9,6 +9,7 @@ import javax.swing.text.Position;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Robot;
 
 public class SwerveModule {
   private Translation2d m_translation;
@@ -27,6 +28,9 @@ public Translation2d getTranslation() {
 }
 
 public SwerveModulePosition getPosition() {
+  if (Robot.isSimulation()){
+    return new SwerveModulePosition(); 
+  }
   return null;
 }
  //TODO

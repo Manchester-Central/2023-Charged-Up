@@ -127,14 +127,15 @@ public class SwerveDrive extends SubsystemBase {
     }
     Pose2d robotPose = m_odometry.update(getRotation(), getModulePositions());
     m_field.setRobotPose(robotPose);
-    Transform2d FLtransform = new Transform2d(m_frontLeft.getTranslation(), m_frontLeft.getModuleState().angle);
-    Pose2d FLpose = robotPose.transformBy(FLtransform);
-    m_field.getObject("FL").setPose(FLpose);
+    updateModuleOnField(m_frontLeft, robotPose, "FL");
+    updateModuleOnField(m_frontRight, robotPose, "FR");
+    updateModuleOnField(m_backLeft, robotPose, "BL");
+    updateModuleOnField(m_backRight, robotPose, "BR");
 
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
-    Transform2d transform = new Transform2d(swerveModule.getTranslation(), swerveModule.getModuleState().angle);
+    Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);
     m_field.getObject(name).setPose(swerveModulePose);
   }

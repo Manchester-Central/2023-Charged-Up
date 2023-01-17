@@ -90,13 +90,11 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(states[3]);
   }
 
-  public void moveDriverRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
-      double omegaRadianPerSecond) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySidewaySpeedMetersPerSecond,
-        -xForwardSpeedMetersPerSecond, omegaRadianPerSecond, new Rotation2d()); // TODO replace Rotation2d
+
+  public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
+    ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getRotation());
     move(speeds);
   }
-
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {
     ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,

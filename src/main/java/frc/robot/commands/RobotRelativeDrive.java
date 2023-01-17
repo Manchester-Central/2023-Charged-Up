@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 
 public class RobotRelativeDrive extends CommandBase {
@@ -28,7 +29,10 @@ public class RobotRelativeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveRobotRelative(m_driverController.getLeftY(), -m_driverController.getLeftX(), -m_driverController.getRightX());
+    double xMetersPerSecond = m_driverController.getLeftY() * Constants.SwerveConstants.MaxRobotSpeed_mps;
+    double yMetersPerSecond = -m_driverController.getLeftX() * Constants.SwerveConstants.MaxRobotSpeed_mps;
+    double omegaRadiansPerSecond = -m_driverController.getRightX() * Constants.SwerveConstants.MaxRobotRotation_radps;
+    m_swerveDrive.moveRobotRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
   }
 
   // Called once the command ends or is interrupted.

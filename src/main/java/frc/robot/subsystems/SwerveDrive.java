@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -46,7 +47,7 @@ public class SwerveDrive extends SubsystemBase {
     m_backLeft = new SwerveModule(backLeftTranslation);
     m_backRight = new SwerveModule(backRightTranslation);
     m_kinematics = new SwerveDriveKinematics(
-        frontLeftTranslation, frontRightTranslation, backLeftTranslation, backRightTranslation);
+        getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(
         m_kinematics, getRotation(),
         getModulePositions());
@@ -63,6 +64,24 @@ public class SwerveDrive extends SubsystemBase {
     };
   }
 
+  private Translation2d[] getModuleTranslations() {
+    return new Translation2d[] {
+      m_frontLeft.getTranslation(),
+      m_frontRight.getTranslation(),
+      m_backLeft.getTranslation(),
+      m_backRight.getTranslation()
+    };
+  }
+
+  private SwerveModuleState[] getModuleStates() {
+    return new SwerveModuleState[] {
+      m_frontLeft.getModuleState(),
+      m_frontRight.getModuleState(),
+      m_backLeft.getModuleState(),
+      m_backRight.getModuleState()
+    };
+  }
+
   public void move(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     m_frontLeft.setTarget(states[0]);
@@ -71,13 +90,11 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(states[3]);
   }
 
-  public void moveDriverRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
-      double omegaRadianPerSecond) {
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySidewaySpeedMetersPerSecond,
-        -xForwardSpeedMetersPerSecond, omegaRadianPerSecond, new Rotation2d()); // TODO replace Rotation2d
+
+  public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
+    ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getRotation());
     move(speeds);
   }
-
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {
     ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,
@@ -106,7 +123,18 @@ public class SwerveDrive extends SubsystemBase {
       double radians = speeds.omegaRadiansPerSecond / Constants.UpdateFrequency_Hz;
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
     }
-    Pose2d pose = m_odometry.update(getRotation(), getModulePositions());
-    m_field.setRobotPose(pose);
+    Pose2d robotPose = m_odometry.update(getRotation(), getModulePositions());
+    m_field.setRobotPose(robotPose);
+    updateModuleOnField(m_frontLeft, robotPose, "FL");
+    updateModuleOnField(m_frontRight, robotPose, "FR");
+    updateModuleOnField(m_backLeft, robotPose, "BL");
+    updateModuleOnField(m_backRight, robotPose, "BR");
+
+  }
+
+  public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
+    Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
+    Pose2d swerveModulePose = robotPose.transformBy(transform);
+    m_field.getObject(name).setPose(swerveModulePose);
   }
 }

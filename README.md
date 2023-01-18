@@ -1,7 +1,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/Manchester-Central/2023-Charged-Up)
 [![WPILib License](https://img.shields.io/badge/license-WPI_Lib-blue)](https://github.com/Manchester-Central/2023-Charged-Up/blob/main/WPILib-License.md)
 ![GitHub contributors](https://img.shields.io/github/contributors/Manchester-Central/2023-Charged-Up)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Manchester-Central/2023-Charged-Up)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Manchester-Central/2023-Charged-Up)
 ![GitHub issues](https://img.shields.io/github/issues/Manchester-Central/2023-Charged-Up)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Manchester-Central/2023-Charged-Up)
 ![GitHub followers](https://img.shields.io/github/followers/Manchester-Central?style=social)

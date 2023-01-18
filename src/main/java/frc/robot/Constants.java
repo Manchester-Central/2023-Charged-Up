@@ -24,18 +24,19 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
-    public static final int CanIdFrontLeftAngle = 0; //TODO: fake value
-    public static final int CanIdFrontLeftVelocity = 1; //TODO: fake value
-    public static final int CanIdFrontRightAngle = 3; //TODO: fake value
-    public static final int CanIdFrontRightVelocity = 4; //TODO: fake value
-    public static final int CanIdBackLeftAngle = 5; //TODO: fake value
-    public static final int CanIdBackLeftVelocity = 6; //TODO: fake value
-    public static final int CanIdBackRightAngle = 7; //TODO: fake value
-    public static final int CanIdBackRightVelocity = 8; //TODO: fake value
-    public static final double AngleEncoderRatio = 1024.0; //TODO: fake value
-    public static final double VelocityEncoderRatio = 1000.0; //TODO: fake value
+    public static final int CanIdFrontLeftAngle = 5; //TODO: 2022 value
+    public static final int CanIdFrontLeftVelocity = 6; //TODO: 2022 value
+    public static final int CanIdFrontRightAngle = 4; //TODO: 2022 value
+    public static final int CanIdFrontRightVelocity = 8; //TODO: 2022 value
+    public static final int CanIdBackLeftAngle = 7; //TODO: 2022 value
+    public static final int CanIdBackLeftVelocity = 3; //TODO: 2022 value
+    public static final int CanIdBackRightAngle = 1; //TODO: 2022 value
+    public static final int CanIdBackRightVelocity = 2; //TODO: 2022 value
+    public static final double AngleEncoderRatio = 144.0/14.0; //TODO: 2022 value
+    public static final double VelocityEncoderRatio = 7.8; //TODO: 2022 value
 
   }
    public static final double UpdateFrequency_Hz = 50;
+   public static final boolean Is2022Robot = true;
 
 }

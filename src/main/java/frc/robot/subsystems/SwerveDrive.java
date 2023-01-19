@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -29,7 +30,7 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
-  // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
   private SwerveDriveOdometry m_odometry;
@@ -106,8 +107,9 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-    return new Rotation2d();
-    // return m_gyro.getRotation2d();
+
+    return m_gyro.getRotation2d();
+    
   }
 
   public void stop() {
@@ -129,6 +131,7 @@ public class SwerveDrive extends SubsystemBase {
     updateModuleOnField(m_frontRight, robotPose, "FR");
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
+    SmartDashboard.putNumber("angle", getRotation().getDegrees());
 
   }
 

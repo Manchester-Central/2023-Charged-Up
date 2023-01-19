@@ -37,6 +37,10 @@ public class SwerveDrive extends SubsystemBase {
   private Field2d m_field;
   private Rotation2d m_simrotation = new Rotation2d();
 
+  private PIDController m_XPid;
+  private PIDController m_YPid;
+  private PIDController m_AnglePid;
+
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
     Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
@@ -54,6 +58,9 @@ public class SwerveDrive extends SubsystemBase {
         getModulePositions());
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
+    m_XPid = new PIDController(0.01, 0, 0);
+    m_YPid = new PIDController(0.01, 0, 0);
+    m_AnglePid = new PIDController(0.01, 0, 0);
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -101,6 +108,18 @@ public class SwerveDrive extends SubsystemBase {
     ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,
         omegaRadianPerSecond);
     move(speeds);
+  }
+  public void setCoordinates(double x, double y, Rotation2d angle){
+    m_XPid.setSetpoint(x);
+    m_YPid.setSetpoint(y);
+    m_AnglePid.setSetpoint(angle.getRadians());
+  }
+  public void moveToTarget(){
+    Pose2d pose = m_odometry.getPoseMeters();
+    double x = m_XPid.calculate(pose.getX());
+    double y = m_YPid.calculate(pose.getY());
+    double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
+    moveFieldRelative(x, y, angle);
   }
 
   public Rotation2d getRotation() {

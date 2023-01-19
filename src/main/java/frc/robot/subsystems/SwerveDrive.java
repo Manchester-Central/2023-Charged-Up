@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.chaos131.pid.PIDTuner;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -40,6 +41,9 @@ public class SwerveDrive extends SubsystemBase {
   private PIDController m_XPid;
   private PIDController m_YPid;
   private PIDController m_AnglePid;
+  private PIDTuner m_XPidTuner;
+  private PIDTuner m_YPidTuner;
+  private PIDTuner m_AnglePidTuner;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -58,9 +62,12 @@ public class SwerveDrive extends SubsystemBase {
         getModulePositions());
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
-    m_XPid = new PIDController(0.01, 0, 0);
-    m_YPid = new PIDController(0.01, 0, 0);
-    m_AnglePid = new PIDController(0.01, 0, 0);
+    m_XPid = new PIDController(1, 0, 0);
+    m_YPid = new PIDController(1, 0, 0);
+    m_AnglePid = new PIDController(1, 0, 0);
+    m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
+    m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
+    m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -151,7 +158,9 @@ public class SwerveDrive extends SubsystemBase {
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
     SmartDashboard.putNumber("angle", getRotation().getDegrees());
-
+    m_XPidTuner.tune();
+    m_YPidTuner.tune();
+    m_AnglePidTuner.tune();
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

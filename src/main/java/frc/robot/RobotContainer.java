@@ -32,7 +32,7 @@ public class RobotContainer {
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
 
-  // Replace with CommandPS4Co mntroller or CommandJoystick if needed
+  // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);

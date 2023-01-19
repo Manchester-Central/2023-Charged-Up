@@ -110,18 +110,21 @@ public class SwerveDrive extends SubsystemBase {
     ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getRotation());
     move(speeds);
   }
+
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {
     ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,
         omegaRadianPerSecond);
     move(speeds);
   }
-  public void setCoordinates(double x, double y, Rotation2d angle){
+
+  public void setCoordinates(double x, double y, Rotation2d angle) {
     m_XPid.setSetpoint(x);
     m_YPid.setSetpoint(y);
     m_AnglePid.setSetpoint(angle.getRadians());
   }
-  public void moveToTarget(){
+
+  public void moveToTarget() {
     Pose2d pose = m_odometry.getPoseMeters();
     double x = m_XPid.calculate(pose.getX());
     double y = m_YPid.calculate(pose.getY());
@@ -133,9 +136,7 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-
     return m_gyro.getRotation2d();
-    
   }
 
   public void stop() {
@@ -144,7 +145,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run    
+    // This method will be called once per scheduler run
     if (Robot.isSimulation()) {
       ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_frontLeft.getModuleState(), m_frontRight.getModuleState(),
           m_backLeft.getModuleState(), m_backRight.getModuleState());

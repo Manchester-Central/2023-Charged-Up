@@ -13,14 +13,15 @@ public class DriveToTarget extends CommandBase {
   private double m_x;
   private double m_y;
   private Rotation2d m_angle;
+
   /** Creates a new DriveToTarget. */
   public DriveToTarget(SwerveDrive swerveDrive, double x, double y, Rotation2d angle) {
     // Use addRequirements() here to declare subsystem dependencies.
-      m_swerveDrive = swerveDrive;
-      m_x = x;
-      m_y = y;
-      m_angle = angle;
-      addRequirements(m_swerveDrive);
+    m_swerveDrive = swerveDrive;
+    m_x = x;
+    m_y = y;
+    m_angle = angle;
+    addRequirements(m_swerveDrive);
   }
 
   // Called when the command is initially scheduled.
@@ -37,7 +38,8 @@ public class DriveToTarget extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

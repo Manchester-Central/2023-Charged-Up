@@ -8,6 +8,7 @@ import javax.swing.text.Position;
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -35,6 +36,7 @@ public class SwerveModule {
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     m_angle = new TalonFX(canIdAngle);
+    m_angle.setInverted(TalonFXInvertType.Clockwise);
     m_absoluteAngleOffset2022 = absoluteAngleOffset2022;
     m_velocity = new TalonFX(canIdVelocity);
     if (Constants.Is2022Robot) {
@@ -44,7 +46,7 @@ public class SwerveModule {
 
   public void setTarget(SwerveModuleState state) {
     double convertedAngle = degreesToEncoder(state.angle.getDegrees());
-    double convertedVelocity = distanceMetersToEncoders(state.speedMetersPerSecond);
+    double convertedVelocity = meterPerSecondToVelocityUnit(state.speedMetersPerSecond);
     m_angle.set(TalonFXControlMode.Position, convertedAngle);
     m_velocity.set(TalonFXControlMode.Velocity, convertedVelocity);
     m_targetState = state;
@@ -84,6 +86,7 @@ public class SwerveModule {
     SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
     SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
     SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
   }
 
   public double encoderToDegrees(double counts) {
@@ -117,5 +120,8 @@ public class SwerveModule {
   }
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
+  }
+  public double getAbsoluteAngle(){
+    return m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022;
   }
 }

@@ -157,6 +157,9 @@ public class SwerveDrive extends SubsystemBase {
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
     }
     Pose2d robotPose = m_odometry.update(getRotation(), getModulePositions());
+    SmartDashboard.putNumber("SwerveDrive/X", robotPose.getX());
+    SmartDashboard.putNumber("SwerveDrive/y", robotPose.getY());
+    SmartDashboard.putNumber("SwerveDrive/Rotation", robotPose.getRotation().getDegrees());
     m_field.setRobotPose(robotPose);
     updateModuleOnField(m_frontLeft, robotPose, "FL");
     updateModuleOnField(m_frontRight, robotPose, "FR");
@@ -166,6 +169,10 @@ public class SwerveDrive extends SubsystemBase {
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
+    m_frontLeft.getModuleInfo("FL");
+    m_frontRight.getModuleInfo("FR");
+    m_backLeft.getModuleInfo("BL");
+    m_backRight.getModuleInfo("BR");
   }
   public void resetPose(Pose2d robotPose){
     m_odometry.resetPosition(getRotation(), getModulePositions(), robotPose);

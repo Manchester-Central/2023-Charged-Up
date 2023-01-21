@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
@@ -63,32 +64,39 @@ public class SwerveModule {
     return m_translation;
   }
 
-  public double getIntegratedSensorPosition() {
-    if (Constants.Is2022Robot) {
-      return m_velocity.getSelectedSensorPosition();
-    } else {
-      return m_velocity.getSensorCollection().getIntegratedSensorPosition();
-    }
-  }
+  //  public double getIntegratedSensorPosition() {
+  //   if (Constants.Is2022Robot) {
+  //     return m_velocity.getSelectedSensorPosition();
+  //   } else {
+  //     return m_velocity.getSensorCollection().getIntegratedSensorPosition();
+  //   }
+  // }
 
-  public double getIntegratedSensorAbsolutePosition() {
-    if (Constants.Is2022Robot) {
-      return 360 - m_2022AbsoluteCanCoder.getAbsolutePosition() + m_absoluteAngleOffset2022;
-    } else {
-      return m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
-    }
-  }
+  // public double getIntegratedSensorAbsolutePosition() {
+  //   if (Constants.Is2022Robot) {
+  //     return 360 - m_2022AbsoluteCanCoder.getAbsolutePosition() + m_absoluteAngleOffset2022;
+  //   } else {
+  //     return m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
+  //   }
+  // } 
 
   public SwerveModulePosition getPosition() {
     if (Robot.isSimulation()) {
       m_simdistance = m_simdistance + m_targetState.speedMetersPerSecond / Constants.UpdateFrequency_Hz;
       return new SwerveModulePosition(m_simdistance, m_targetState.angle);
     }
-    double distance = getIntegratedSensorPosition();
+    double distance = m_velocity.getSensorCollection().getIntegratedSensorPosition();
     double angle = m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
     distance = encoderToDistanceMeters(distance);
     angle = encoderToDegrees(angle);
     return new SwerveModulePosition(distance, Rotation2d.fromDegrees(angle));
+  }
+
+  public void getModuleInfo(String name) {
+    SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
+    SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
+    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoder", m_velocity.getSensorCollection().getIntegratedSensorPosition());
+    SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition());
   }
 
   public double encoderToDegrees(double angle) {

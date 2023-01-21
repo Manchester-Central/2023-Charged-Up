@@ -56,7 +56,7 @@ public class SwerveModule {
     }
     double velocity = m_velocity.getSelectedSensorVelocity();
     double angle = m_angle.getSelectedSensorPosition();
-    velocity = encoderToDistanceMeters(velocity);
+    velocity = velocityUnitToMeterPerSecond(velocity);
     angle = encoderToDegrees(angle);
     return new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle));
   }
@@ -80,11 +80,10 @@ public class SwerveModule {
   public void getModuleInfo(String name) {
     SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
     SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoder", m_velocity.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderPosition", m_velocity.getSelectedSensorPosition());
     SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
     SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
-    
-
+    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
   }
 
   public double encoderToDegrees(double counts) {
@@ -112,5 +111,11 @@ public class SwerveModule {
     distance = distance * SwerveConstants.VelocityEncoderRatio;
     return distance / SwerveConstants.WheelCircumference;
 
+  }
+  public double velocityUnitToMeterPerSecond(double velocityUnit){
+    return encoderToDistanceMeters(velocityUnit) * 10;
+  }
+  public double meterPerSecondToVelocityUnit(double metersPerSecond){
+    return distanceMetersToEncoders(metersPerSecond) / 10;
   }
 }

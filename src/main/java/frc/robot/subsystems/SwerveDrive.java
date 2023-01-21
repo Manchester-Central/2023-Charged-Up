@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.chaos131.pid.PIDTuner;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -37,6 +38,13 @@ public class SwerveDrive extends SubsystemBase {
   private Field2d m_field;
   private Rotation2d m_simrotation = new Rotation2d();
 
+  private PIDController m_XPid;
+  private PIDController m_YPid;
+  private PIDController m_AnglePid;
+  private PIDTuner m_XPidTuner;
+  private PIDTuner m_YPidTuner;
+  private PIDTuner m_AnglePidTuner;
+
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
     Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
@@ -54,6 +62,12 @@ public class SwerveDrive extends SubsystemBase {
         getModulePositions());
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
+    m_XPid = new PIDController(1, 0, 0);
+    m_YPid = new PIDController(1, 0, 0);
+    m_AnglePid = new PIDController(1, 0, 0);
+    m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
+    m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
+    m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -96,6 +110,7 @@ public class SwerveDrive extends SubsystemBase {
     ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getRotation());
     move(speeds);
   }
+
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {
     ChassisSpeeds speeds = new ChassisSpeeds(xForwardSpeedMetersPerSecond, ySidewaySpeedMetersPerSecond,
@@ -103,13 +118,25 @@ public class SwerveDrive extends SubsystemBase {
     move(speeds);
   }
 
+  public void setCoordinates(double x, double y, Rotation2d angle) {
+    m_XPid.setSetpoint(x);
+    m_YPid.setSetpoint(y);
+    m_AnglePid.setSetpoint(angle.getRadians());
+  }
+
+  public void moveToTarget() {
+    Pose2d pose = m_odometry.getPoseMeters();
+    double x = m_XPid.calculate(pose.getX());
+    double y = m_YPid.calculate(pose.getY());
+    double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
+    moveFieldRelative(x, y, angle);
+  }
+
   public Rotation2d getRotation() {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-
     return m_gyro.getRotation2d();
-    
   }
 
   public void stop() {
@@ -118,7 +145,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run    
+    // This method will be called once per scheduler run
     if (Robot.isSimulation()) {
       ChassisSpeeds speeds = m_kinematics.toChassisSpeeds(m_frontLeft.getModuleState(), m_frontRight.getModuleState(),
           m_backLeft.getModuleState(), m_backRight.getModuleState());
@@ -132,7 +159,9 @@ public class SwerveDrive extends SubsystemBase {
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
     SmartDashboard.putNumber("angle", getRotation().getDegrees());
-
+    m_XPidTuner.tune();
+    m_YPidTuner.tune();
+    m_AnglePidTuner.tune();
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

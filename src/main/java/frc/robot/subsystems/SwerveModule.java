@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import javax.swing.text.Position;
+import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -64,22 +65,6 @@ public class SwerveModule {
     return m_translation;
   }
 
-  //  public double getIntegratedSensorPosition() {
-  //   if (Constants.Is2022Robot) {
-  //     return m_velocity.getSelectedSensorPosition();
-  //   } else {
-  //     return m_velocity.getSensorCollection().getIntegratedSensorPosition();
-  //   }
-  // }
-
-  // public double getIntegratedSensorAbsolutePosition() {
-  //   if (Constants.Is2022Robot) {
-  //     return 360 - m_2022AbsoluteCanCoder.getAbsolutePosition() + m_absoluteAngleOffset2022;
-  //   } else {
-  //     return m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
-  //   }
-  // } 
-
   public SwerveModulePosition getPosition() {
     if (Robot.isSimulation()) {
       m_simdistance = m_simdistance + m_targetState.speedMetersPerSecond / Constants.UpdateFrequency_Hz;
@@ -97,23 +82,35 @@ public class SwerveModule {
     SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
     SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoder", m_velocity.getSelectedSensorPosition());
     SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
+    
+
   }
 
-  public double encoderToDegrees(double angle) {
-    angle = angle / 2048;
-    angle = angle / SwerveConstants.AngleEncoderRatio;
-    return angle * 360;
+  public double encoderToDegrees(double counts) {
+    counts = counts / 2048;
+    counts = counts / SwerveConstants.AngleEncoderRatio;
+    return counts * 360;
   }
 
-  public double degreesToEncoder(double encoderTicks) {
-    return encoderTicks * (SwerveConstants.AngleEncoderRatio / 360.0);
+  public double degreesToEncoder(double angle) {
+    angle = angle * 2048;
+    angle = angle * SwerveConstants.AngleEncoderRatio;
+    return angle / 360;
+
   }
 
   public double encoderToDistanceMeters(double counts) {
-    return (counts / SwerveConstants.VelocityEncoderRatio);
+    counts = counts / 2048;
+    counts = counts / SwerveConstants.VelocityEncoderRatio;
+    return counts * SwerveConstants.WheelCircumference;
+
   }
 
   public double distanceMetersToEncoders(double distance) {
-    return distance * SwerveConstants.VelocityEncoderRatio;
+    distance = distance * 2048;
+    distance = distance * SwerveConstants.VelocityEncoderRatio;
+    return distance / SwerveConstants.WheelCircumference;
+
   }
 }

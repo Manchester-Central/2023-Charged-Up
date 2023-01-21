@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -34,7 +36,8 @@ public final class Constants {
     public static final int CanIdBackRightVelocity = 2; //TODO: 2022 value
     public static final double AngleEncoderRatio = 144.0/14.0; //TODO: 2022 value
     public static final double VelocityEncoderRatio = 7.8; //TODO: 2022 value
-
+    public static final double WheelDiameter = 0.092;
+    public static final double WheelCircumference = WheelDiameter * Math.PI;
   }
    public static final double UpdateFrequency_Hz = 50;
    public static final boolean Is2022Robot = true;

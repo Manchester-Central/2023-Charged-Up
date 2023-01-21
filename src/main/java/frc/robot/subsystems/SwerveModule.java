@@ -53,8 +53,8 @@ public class SwerveModule {
     if (Robot.isSimulation()) {
       return m_targetState;
     }
-    double velocity = m_velocity.getSensorCollection().getIntegratedSensorVelocity();
-    double angle = m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
+    double velocity = m_velocity.getSelectedSensorVelocity();
+    double angle = m_angle.getSelectedSensorPosition();
     velocity = encoderToDistanceMeters(velocity);
     angle = encoderToDegrees(angle);
     return new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle));
@@ -85,8 +85,8 @@ public class SwerveModule {
       m_simdistance = m_simdistance + m_targetState.speedMetersPerSecond / Constants.UpdateFrequency_Hz;
       return new SwerveModulePosition(m_simdistance, m_targetState.angle);
     }
-    double distance = m_velocity.getSensorCollection().getIntegratedSensorPosition();
-    double angle = m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition();
+    double distance = m_velocity.getSelectedSensorPosition();
+    double angle = m_angle.getSelectedSensorPosition();
     distance = encoderToDistanceMeters(distance);
     angle = encoderToDegrees(angle);
     return new SwerveModulePosition(distance, Rotation2d.fromDegrees(angle));
@@ -95,12 +95,14 @@ public class SwerveModule {
   public void getModuleInfo(String name) {
     SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
     SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoder", m_velocity.getSensorCollection().getIntegratedSensorPosition());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSensorCollection().getIntegratedSensorAbsolutePosition());
+    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoder", m_velocity.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
   }
 
   public double encoderToDegrees(double angle) {
-    return angle * (360.0 / SwerveConstants.AngleEncoderRatio);
+    angle = angle / 2048;
+    angle = angle / SwerveConstants.AngleEncoderRatio;
+    return angle * 360;
   }
 
   public double degreesToEncoder(double encoderTicks) {

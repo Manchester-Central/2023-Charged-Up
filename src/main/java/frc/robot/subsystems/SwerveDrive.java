@@ -32,7 +32,7 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
-  AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+ // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
   private SwerveDriveOdometry m_odometry;
@@ -140,7 +140,8 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-    return m_gyro.getRotation2d();
+    // return m_gyro.getRotation2d();
+    return new Rotation2d();
   }
 
   public void stop() {
@@ -174,9 +175,11 @@ public class SwerveDrive extends SubsystemBase {
     m_backLeft.getModuleInfo("BL");
     m_backRight.getModuleInfo("BR");
   }
+
   public void resetPose(Pose2d robotPose){
     m_odometry.resetPosition(getRotation(), getModulePositions(), robotPose);
   }
+
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
     Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);

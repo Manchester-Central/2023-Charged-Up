@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,8 +32,27 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    logManager.addNumber("GameState", () -> robotMode());
     logManager.writeHeaders();
   }
+
+  public static double robotMode()
+  {
+    if (DriverStation.isDisabled()) {
+      return 1.0;
+    }
+    if (DriverStation.isAutonomous()) {
+      return 2.0;
+    }
+    if (DriverStation.isTeleop()) {
+      return 3.0;
+    }
+    if (DriverStation.isTest()) {
+      return 4.0;
+    }
+    return 0.0;
+  }
+
 
   public static long getCurrentTimeMs(){
     return RobotController.getFPGATime() / 1000;

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.logging.LogManager;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -68,6 +69,9 @@ public class SwerveDrive extends SubsystemBase {
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
     m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
     m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
+    Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
+    Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
+    Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> m_odometry.getPoseMeters().getRotation().getDegrees());
   }
 
   private SwerveModulePosition[] getModulePositions() {

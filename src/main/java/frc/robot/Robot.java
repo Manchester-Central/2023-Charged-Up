@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.logging.LogManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  public static final LogManager logManager = new LogManager(true);
 
   private RobotContainer m_robotContainer;
 
@@ -28,6 +32,30 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    logManager.addNumber("GameState", () -> robotMode());
+    logManager.writeHeaders();
+  }
+
+  public static double robotMode()
+  {
+    if (DriverStation.isDisabled()) {
+      return 1.0;
+    }
+    if (DriverStation.isAutonomous()) {
+      return 2.0;
+    }
+    if (DriverStation.isTeleop()) {
+      return 3.0;
+    }
+    if (DriverStation.isTest()) {
+      return 4.0;
+    }
+    return 0.0;
+  }
+
+
+  public static long getCurrentTimeMs(){
+    return RobotController.getFPGATime() / 1000;
   }
 
   /**
@@ -43,6 +71,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    logManager.update();
     CommandScheduler.getInstance().run();
   }
 

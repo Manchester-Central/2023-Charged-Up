@@ -30,7 +30,7 @@ public class LogManager {
         m_loggingThread = new LoggingThread();
         m_shuffleboardTab = Shuffleboard.getTab("Logging");
         m_willLogShuffleBoard = willLogShuffleBoard;
-        // addNumber("timeMs", () -> Robot.getCurrentTimeMs());
+        addNumber("timeMs", () -> Robot.getCurrentTimeMs());
     }
 
     public void addBoolean(String title, BooleanSupplier valueSupplier) {

@@ -164,3 +164,6 @@ simgui*.json
 
 # Allow libs folder
 !libs/*.jar
+
+# Ignore Logs
+logs

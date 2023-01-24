@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 
-/** Add your docs here. */
+/** Manages the logs recorded into the .csv file, stored on a flash drive on the robot*/
 public class LogManager {
     private boolean m_willLogShuffleBoard;
     private ShuffleboardTab m_shuffleboardTab;

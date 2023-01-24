@@ -1,10 +1,13 @@
-![GitHub top language](https://img.shields.io/github/languages/top/Manchester-Central/2023-Charged-Up)
-[![WPILib License](https://img.shields.io/badge/license-WPI_Lib-blue)](https://github.com/Manchester-Central/2023-Charged-Up/blob/main/WPILib-License.md)
-![GitHub contributors](https://img.shields.io/github/contributors/Manchester-Central/2023-Charged-Up)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Manchester-Central/2023-Charged-Up)
-![GitHub issues](https://img.shields.io/github/issues/Manchester-Central/2023-Charged-Up)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Manchester-Central/2023-Charged-Up)
+![GitHub top language](https://img.shields.io/github/languages/top/Manchester-Central/2023-Charged-Up?style=flat-square)
+[![WPILib License](https://img.shields.io/badge/license-WPI_Lib-blue?style=flat-square)](https://github.com/Manchester-Central/2023-Charged-Up/blob/main/WPILib-License.md)
+![GitHub contributors](https://img.shields.io/github/contributors/Manchester-Central/2023-Charged-Up?style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Manchester-Central/2023-Charged-Up?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/Manchester-Central/2023-Charged-Up?style=flat-square)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Manchester-Central/2023-Charged-Up?style=flat-square)
 ![GitHub followers](https://img.shields.io/github/followers/Manchester-Central?style=social)
+
+
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Manchester-Central/2023-Charged-Up/gradle.yml?style=flat-square)
 # 2023: Charged Up
 This is FRC Team 131 'CHAOS's code for the 2023 season.
 

@@ -42,6 +42,7 @@ public class SwerveModule {
     if (Constants.Is2022Robot) {
       m_2022AbsoluteCanCoder = new CANCoder(canAbsoluteID2022);
     }
+    m_angle.setSelectedSensorPosition(degreesToEncoder(getAbsoluteAngle()));
   }
 
   public void setTarget(SwerveModuleState state) {

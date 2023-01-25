@@ -63,19 +63,19 @@ public class SwerveDrive extends SubsystemBase {
       SwerveConstants.CanIdFrontRightAngle, 
       SwerveConstants.CanIdFrontRightVelocity, 
       21, 
-      177);
+      -3);
     m_backLeft = new SwerveModule(
       backLeftTranslation, 
       SwerveConstants.CanIdBackLeftAngle, 
       SwerveConstants.CanIdBackLeftVelocity,
        23, 
-       237);
+       57);
     m_backRight = new SwerveModule(
       backRightTranslation, 
       SwerveConstants.CanIdBackRightAngle, 
       SwerveConstants.CanIdBackRightVelocity, 
       20, 
-      341);
+      -161);
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(

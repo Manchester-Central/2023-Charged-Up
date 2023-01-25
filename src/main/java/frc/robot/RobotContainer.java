@@ -8,10 +8,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.ResetPose;
+import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.subsystems.SwerveDrive;
 
-import com.chaos131.gamepads.Gamepad;
+import com.chaos131.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,6 +39,9 @@ public class RobotContainer {
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
+
+
+  private final AutoBuilder autoBuilder = new AutoBuilder();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,7 +76,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    return autoBuilder.createAutoCommand();
   }
 }

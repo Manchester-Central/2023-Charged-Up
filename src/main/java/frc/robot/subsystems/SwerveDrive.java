@@ -167,7 +167,9 @@ public class SwerveDrive extends SubsystemBase {
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
   }
-
+  public void resetPose(Pose2d robotPose){
+    m_odometry.resetPosition(getRotation(), getModulePositions(), robotPose);
+  }
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
     Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);

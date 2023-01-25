@@ -7,12 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeDrive;
-import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.subsystems.SwerveDrive;
 
 import com.chaos131.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import com.chaos131.gamepads.Gamepad;
@@ -64,6 +65,8 @@ public class RobotContainer {
     m_driver.b().whileFalse(new RunCommand(() -> m_driver.getHID().setRumble(RumbleType.kBothRumble, 0.0)));
     Shuffleboard.getTab("Test").addBoolean("b pressed", () -> m_driver.b().getAsBoolean());
     m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
+    m_driver.povUp().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+    m_driver.povDown().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(180))));
   }
 
   /**

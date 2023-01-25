@@ -32,7 +32,7 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
-  AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+ // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
   private SwerveDriveOdometry m_odometry;
@@ -52,10 +52,30 @@ public class SwerveDrive extends SubsystemBase {
     Translation2d frontRightTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2,-SwerveConstants.RobotWidth_m / 2);
     Translation2d backLeftTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
     Translation2d backRightTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
-    m_frontLeft = new SwerveModule(frontLeftTranslation);
-    m_frontRight = new SwerveModule(frontRightTranslation);
-    m_backLeft = new SwerveModule(backLeftTranslation);
-    m_backRight = new SwerveModule(backRightTranslation);
+    m_frontLeft = new SwerveModule(
+      frontLeftTranslation, 
+      SwerveConstants.CanIdFrontLeftAngle, 
+      SwerveConstants.CanIdFrontLeftVelocity, 
+      22, 
+      250);
+    m_frontRight = new SwerveModule(
+      frontRightTranslation, 
+      SwerveConstants.CanIdFrontRightAngle, 
+      SwerveConstants.CanIdFrontRightVelocity, 
+      21, 
+      -3);
+    m_backLeft = new SwerveModule(
+      backLeftTranslation, 
+      SwerveConstants.CanIdBackLeftAngle, 
+      SwerveConstants.CanIdBackLeftVelocity,
+       23, 
+       57);
+    m_backRight = new SwerveModule(
+      backRightTranslation, 
+      SwerveConstants.CanIdBackRightAngle, 
+      SwerveConstants.CanIdBackRightVelocity, 
+      20, 
+      -161);
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(
@@ -140,7 +160,8 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-    return m_gyro.getRotation2d();
+    // return m_gyro.getRotation2d();
+    return new Rotation2d();
   }
 
   public void stop() {
@@ -157,6 +178,9 @@ public class SwerveDrive extends SubsystemBase {
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
     }
     Pose2d robotPose = m_odometry.update(getRotation(), getModulePositions());
+    SmartDashboard.putNumber("SwerveDrive/X", robotPose.getX());
+    SmartDashboard.putNumber("SwerveDrive/y", robotPose.getY());
+    SmartDashboard.putNumber("SwerveDrive/Rotation", robotPose.getRotation().getDegrees());
     m_field.setRobotPose(robotPose);
     updateModuleOnField(m_frontLeft, robotPose, "FL");
     updateModuleOnField(m_frontRight, robotPose, "FR");
@@ -166,6 +190,14 @@ public class SwerveDrive extends SubsystemBase {
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
+    m_frontLeft.getModuleInfo("FL");
+    m_frontRight.getModuleInfo("FR");
+    m_backLeft.getModuleInfo("BL");
+    m_backRight.getModuleInfo("BR");
+  }
+
+  public void resetPose(Pose2d robotPose){
+    m_odometry.resetPosition(getRotation(), getModulePositions(), robotPose);
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

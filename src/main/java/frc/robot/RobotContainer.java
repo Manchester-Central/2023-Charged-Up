@@ -12,6 +12,7 @@ import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.subsystems.SwerveDrive;
 
 import com.chaos131.auto.AutoBuilder;
+import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,6 +45,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Register auto commands
+    autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
     // Configure the trigger bindings
     configureBindings();
   }

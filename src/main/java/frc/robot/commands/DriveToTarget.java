@@ -51,6 +51,7 @@ public class DriveToTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_swerveDrive.resetPids();
+    m_swerveDrive.stop();
   }
 
   // Returns true when the command should end.

@@ -175,7 +175,10 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void stop() {
-    // TODO add stop code
+    m_frontLeft.stop();
+    m_frontRight.stop();
+    m_backLeft.stop();
+    m_backRight.stop();
   }
 
   @Override

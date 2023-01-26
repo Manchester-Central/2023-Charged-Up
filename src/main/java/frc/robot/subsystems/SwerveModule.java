@@ -53,6 +53,11 @@ public class SwerveModule {
     m_targetState = state;
   }
 
+  public void stop() {
+    m_angle.set(TalonFXControlMode.PercentOutput, 0);
+    m_velocity.set(TalonFXControlMode.PercentOutput, 0);
+  }
+
   public SwerveModuleState getModuleState() {
     if (Robot.isSimulation()) {
       return m_targetState;

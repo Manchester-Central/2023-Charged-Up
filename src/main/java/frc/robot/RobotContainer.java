@@ -47,6 +47,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
+    autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
     // Configure the trigger bindings
     configureBindings();
   }

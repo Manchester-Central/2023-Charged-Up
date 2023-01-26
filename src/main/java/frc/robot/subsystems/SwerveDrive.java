@@ -142,6 +142,12 @@ public class SwerveDrive extends SubsystemBase {
     move(speeds);
   }
 
+  public void resetPids() {
+    m_XPid.reset();
+    m_YPid.reset();
+    m_AnglePid.reset();
+  }
+
   public void setCoordinates(double x, double y, Rotation2d angle) {
     m_XPid.setSetpoint(x);
     m_YPid.setSetpoint(y);

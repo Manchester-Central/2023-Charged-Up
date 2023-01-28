@@ -86,6 +86,7 @@ public class SwerveDrive extends SubsystemBase {
     m_XPid = new PIDController(1, 0, 0);
     m_YPid = new PIDController(1, 0, 0);
     m_AnglePid = new PIDController(1, 0, 0);
+    m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
     m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
     m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);

@@ -25,6 +25,10 @@ public final class Constants {
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
   }
+  public static class FieldConstants {
+    public static final double FieldWidth_m = 8.02;
+    public static final double FieldLength_m = 16.54;
+  }
    public static final double UpdateFrequency_Hz = 50;
 
 }

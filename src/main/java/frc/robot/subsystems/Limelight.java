@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.lang.reflect.Field;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -30,11 +28,22 @@ public Pose2d getPose() {
   double[] results = m_limelightTable.getEntry("botpose").getDoubleArray(defaults);
   double limeLightOriginX = FieldConstants.FieldLength_m/2;
   double limeLightOriginY= FieldConstants.FieldWidth_m/2;
-  double x = results[0] + limeLightOriginX;
-  double y = results[1] + limeLightOriginY;
-  Pose2d pose = new Pose2d(x, y, Rotation2d.fromDegrees(results[5]));
   
-  return pose;
+  if (results.length >= 5) {
+    double x = results[0] + limeLightOriginX;
+    double y = results[1] + limeLightOriginY;
+    Pose2d pose = new Pose2d(x, y, Rotation2d.fromDegrees(results[5]));
+    return pose;
+  } else {
+    return new Pose2d();
+  }
+}
+public int getPipeline() {
+  return (int)m_limelightTable.getEntry("getpipe").getDouble(-1);
+}
+
+public void setPipeline(int pipeline) {
+  m_limelightTable.getEntry("pipeline").setDouble(pipeline);
 }
 
 public boolean hasTarget() {
@@ -46,5 +55,6 @@ public boolean hasTarget() {
     // This method will be called once per scheduler run
     //System.out.printf("TargetCheck %b \n", hasTarget());
     m_field.setRobotPose(getPose());
+    SmartDashboard.putNumber("limelight pipeline", getPipeline());
   }
 }

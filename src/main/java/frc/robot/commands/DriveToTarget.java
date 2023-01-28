@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
+import com.chaos131.auto.ParsedCommand;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.SwerveDrive;
 
 public class DriveToTarget extends CommandBase {
@@ -24,10 +27,18 @@ public class DriveToTarget extends CommandBase {
     addRequirements(m_swerveDrive);
   }
 
+  public static DriveToTarget createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+    double x_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("x"), 0.0);
+    double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
+    double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);
+    return new DriveToTarget(swerveDrive, x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees));
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_swerveDrive.setCoordinates(m_x, m_y, m_angle);
+    m_swerveDrive.resetPids();
+    m_swerveDrive.setTarget(m_x, m_y, m_angle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,11 +50,13 @@ public class DriveToTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_swerveDrive.resetPids();
+    m_swerveDrive.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_swerveDrive.atTarget();
   }
 }

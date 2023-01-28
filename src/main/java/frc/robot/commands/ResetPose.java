@@ -4,8 +4,12 @@
 
 package frc.robot.commands;
 
+import com.chaos131.auto.ParsedCommand;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.SwerveDrive;
 
 public class ResetPose extends CommandBase {
@@ -17,6 +21,13 @@ public class ResetPose extends CommandBase {
     addRequirements(m_SwerveDrive);
     m_pose = pose;
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+  
+  public static ResetPose createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerve){
+    double x_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("x"), 0.0);
+    double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
+    double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);
+    return new ResetPose(swerve, new Pose2d(x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees)));
   }
 
   // Called when the command is initially scheduled.

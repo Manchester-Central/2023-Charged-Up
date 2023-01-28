@@ -63,24 +63,25 @@ public class SwerveDrive extends SubsystemBase {
       SwerveConstants.CanIdFrontRightAngle, 
       SwerveConstants.CanIdFrontRightVelocity, 
       21, 
-      -3);
+      177);
     m_backLeft = new SwerveModule(
       backLeftTranslation, 
       SwerveConstants.CanIdBackLeftAngle, 
       SwerveConstants.CanIdBackLeftVelocity,
        23, 
-       57);
+       237);
     m_backRight = new SwerveModule(
       backRightTranslation, 
       SwerveConstants.CanIdBackRightAngle, 
       SwerveConstants.CanIdBackRightVelocity, 
       20, 
-      -161);
+      341);
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(
         m_kinematics, getGyroRotation(),
         getModulePositions());
+    resetPose(new Pose2d(8, 4, Rotation2d.fromDegrees(0)));
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(1, 0, 0);

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -24,11 +25,24 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
+    public static final int CanIdFrontLeftAngle = 5; //TODO: 2022 value
+    public static final int CanIdFrontLeftVelocity = 6; //TODO: 2022 value
+    public static final int CanIdFrontRightAngle = 4; //TODO: 2022 value
+    public static final int CanIdFrontRightVelocity = 8; //TODO: 2022 value
+    public static final int CanIdBackLeftAngle = 7; //TODO: 2022 value
+    public static final int CanIdBackLeftVelocity = 3; //TODO: 2022 value
+    public static final int CanIdBackRightAngle = 1; //TODO: 2022 value
+    public static final int CanIdBackRightVelocity = 2; //TODO: 2022 value
+    public static final double AngleEncoderRatio = 144.0/14.0; //TODO: 2022 value
+    public static final double VelocityEncoderRatio = 7.8; //TODO: 2022 value
+    public static final double WheelDiameter = 0.092;
+    public static final double WheelCircumference = WheelDiameter * Math.PI;
   }
   public static class FieldConstants {
     public static final double FieldWidth_m = 8.02;
     public static final double FieldLength_m = 16.54;
   }
    public static final double UpdateFrequency_Hz = 50;
+   public static final boolean Is2022Robot = true;
 
 }

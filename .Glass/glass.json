@@ -1,0 +1,48 @@
+{
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "SmartDashboard": {
+        "Swerve Module BL": {
+          "open": true
+        },
+        "Swerve Module BR": {
+          "open": true
+        },
+        "Swerve Module FL": {
+          "open": true
+        },
+        "Swerve Module FR": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/SwerveDrive": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/SwerveDrive": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "131"
+  }
+}

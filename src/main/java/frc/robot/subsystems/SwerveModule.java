@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import pabeles.concurrency.ConcurrencyOps.NewInstance;
 
 public class SwerveModule {
   private Translation2d m_translation;
@@ -56,6 +57,7 @@ public class SwerveModule {
   public void stop() {
     m_angle.set(TalonFXControlMode.PercentOutput, 0);
     m_velocity.set(TalonFXControlMode.PercentOutput, 0);
+    m_targetState = new SwerveModuleState(0, getModuleState().angle); 
   }
 
   public SwerveModuleState getModuleState() {

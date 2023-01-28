@@ -209,8 +209,12 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.getModuleInfo("BR");
   }
 
-  public void resetPose(Pose2d robotPose){
-    m_odometry.resetPosition(getRotation(), getModulePositions(), robotPose);
+  public void resetPose(Pose2d targetPose){
+    if (Robot.isSimulation()) {
+    m_simrotation = targetPose.getRotation();
+    }
+
+    m_odometry.resetPosition(getRotation(), getModulePositions(), targetPose);
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

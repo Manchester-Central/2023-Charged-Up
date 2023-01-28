@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -80,5 +81,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoBuilder.createAutoCommand();
+  }
+
+  public void addSmartDashboard() {
+    SmartDashboard.putNumber("Driver Left X", m_driver.getLeftX());
+    SmartDashboard.putNumber("Driver Right X", m_driver.getRightX());
+    SmartDashboard.putNumber("Driver Left Y", m_driver.getLeftY());
+    SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
   }
 }

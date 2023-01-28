@@ -79,7 +79,7 @@ public class SwerveDrive extends SubsystemBase {
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(
-        m_kinematics, getRotation(),
+        m_kinematics, getGyroRotation(),
         getModulePositions());
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
@@ -91,7 +91,7 @@ public class SwerveDrive extends SubsystemBase {
     m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
-    Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> m_odometry.getPoseMeters().getRotation().getDegrees());
+    Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -131,7 +131,7 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
-    ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getRotation());
+    ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
     move(speeds);
   }
 
@@ -152,7 +152,7 @@ public class SwerveDrive extends SubsystemBase {
     return m_XPid.atSetpoint() && m_YPid.atSetpoint() && m_AnglePid.atSetpoint();
   }
 
-  public void setCoordinates(double x, double y, Rotation2d angle) {
+  public void setTarget(double x, double y, Rotation2d angle) {
     m_XPid.setSetpoint(x);
     m_YPid.setSetpoint(y);
     m_AnglePid.setSetpoint(angle.getRadians());
@@ -166,12 +166,16 @@ public class SwerveDrive extends SubsystemBase {
     moveFieldRelative(x, y, angle);
   }
 
-  public Rotation2d getRotation() {
+  public Rotation2d getGyroRotation() {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
     // return m_gyro.getRotation2d();
     return new Rotation2d();
+  }
+
+  public Rotation2d getOdometryRotation() {
+    return m_odometry.getPoseMeters().getRotation();
   }
 
   public void stop() {
@@ -190,7 +194,7 @@ public class SwerveDrive extends SubsystemBase {
       double radians = speeds.omegaRadiansPerSecond / Constants.UpdateFrequency_Hz;
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
     }
-    Pose2d robotPose = m_odometry.update(getRotation(), getModulePositions());
+    Pose2d robotPose = m_odometry.update(getGyroRotation(), getModulePositions());
     SmartDashboard.putNumber("SwerveDrive/X", robotPose.getX());
     SmartDashboard.putNumber("SwerveDrive/y", robotPose.getY());
     SmartDashboard.putNumber("SwerveDrive/Rotation", robotPose.getRotation().getDegrees());
@@ -199,7 +203,7 @@ public class SwerveDrive extends SubsystemBase {
     updateModuleOnField(m_frontRight, robotPose, "FR");
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
-    SmartDashboard.putNumber("angle", getRotation().getDegrees());
+    SmartDashboard.putNumber("gyro_angle", getGyroRotation().getDegrees());
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
@@ -214,7 +218,7 @@ public class SwerveDrive extends SubsystemBase {
     m_simrotation = targetPose.getRotation();
     }
 
-    m_odometry.resetPosition(getRotation(), getModulePositions(), targetPose);
+    m_odometry.resetPosition(getGyroRotation(), getModulePositions(), targetPose);
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

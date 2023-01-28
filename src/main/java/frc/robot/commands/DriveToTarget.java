@@ -38,7 +38,7 @@ public class DriveToTarget extends CommandBase {
   @Override
   public void initialize() {
     m_swerveDrive.resetPids();
-    m_swerveDrive.setCoordinates(m_x, m_y, m_angle);
+    m_swerveDrive.setTarget(m_x, m_y, m_angle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

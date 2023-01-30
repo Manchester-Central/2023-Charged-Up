@@ -47,9 +47,11 @@ public class SwerveModule {
   }
 
   public void setTarget(SwerveModuleState state) {
-    double convertedAngle = degreesToEncoder(state.angle.getDegrees());
+    state = SwerveModuleState.optimize(state, getModuleState().angle);
+    double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
     double convertedVelocity = meterPerSecondToVelocityUnit(state.speedMetersPerSecond);
-    m_angle.set(TalonFXControlMode.Position, convertedAngle);
+
+    m_angle.set(TalonFXControlMode.Position, targetAngle);
     m_velocity.set(TalonFXControlMode.Velocity, convertedVelocity);
     m_targetState = state;
   }
@@ -132,4 +134,41 @@ public class SwerveModule {
   public double getAbsoluteAngle(){
     return m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022;
   }
+
+  // UNITS: [currentAngle : degrees | targetAngle : degrees]
+  private double closestTarget1(double currentAngle, double targetAngle) {
+    double cycleOffset = Math.floor(currentAngle / 360) * 360;
+    double scaledTargetAngle = targetAngle + cycleOffset;
+    double alternateAngle = currentAngle;
+
+    if(scaledTargetAngle > currentAngle) {
+      alternateAngle = scaledTargetAngle - 360;
+    } else {
+      alternateAngle = scaledTargetAngle + 360;
+    }
+
+
+    
+    return targetAngle;
+  }
+
+  // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]
+  // RETURN UNITS: encoder ticks
+  private double closestTarget(double currentEncoderAngle, double targetAngle) {
+    double angleOffset = Math.floor(currentEncoderAngle / 360) * 360;
+    targetAngle += angleOffset; // Produces an equivalent angle that is closer to current encoder value
+    double d = (targetAngle >= currentEncoderAngle) ? -1 : 1;
+    double alternateTargetAngle = targetAngle + (d * 360);
+
+    double currentToTarget = targetAngle - currentEncoderAngle;
+    double currentToAlternateTarget = alternateTargetAngle - currentEncoderAngle;
+
+    if(Math.abs(currentToTarget) <= Math.abs(currentToAlternateTarget)) {
+      return degreesToEncoder(currentEncoderAngle + currentToTarget);
+    } else {
+      return degreesToEncoder(currentEncoderAngle + currentToAlternateTarget);
+    }
+  }
+
+
 }

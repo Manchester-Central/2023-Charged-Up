@@ -57,9 +57,11 @@ public class SwerveModule {
   }
 
   public void setTarget(SwerveModuleState state) {
-    double convertedAngle = degreesToEncoder(state.angle.getDegrees());
+    state = SwerveModuleState.optimize(state, getModuleState().angle);
+    double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
     double convertedVelocity = meterPerSecondToVelocityUnit(state.speedMetersPerSecond);
-    m_angle.set(TalonFXControlMode.Position, convertedAngle);
+
+    m_angle.set(TalonFXControlMode.Position, targetAngle);
     m_velocity.set(TalonFXControlMode.Velocity, convertedVelocity);
     m_targetState = state;
   }
@@ -146,17 +148,47 @@ public class SwerveModule {
     return distance / SwerveConstants.WheelCircumference;
 
   }
+
   public double velocityUnitToMeterPerSecond(double velocityUnit){
     return encoderToDistanceMeters(velocityUnit) * 10;
   }
+
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
+  
   public double getAbsoluteAngle(){
     return Rotation2d.fromDegrees(m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022).getDegrees();
   }
+
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());
     m_angle.setSelectedSensorPosition(initialEncoder);
   }
+
+  // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]
+  // RETURN UNITS: encoder ticks
+  /*
+   * This function takes in the current angle read by the encoder and a target angle for the robot to move to.
+   * The target angle will be between -PI and PI, but this function will scale it up so it is an equivalent
+   * angle that is closer to the current encoder angle. It will return this "optimized" angle to avoid
+   * the wheels overspinning.
+   */
+  private double closestTarget(double currentEncoderAngle, double targetAngle) {
+    double angleOffset = Math.floor(currentEncoderAngle / 360) * 360;
+    targetAngle += angleOffset; // Produces an equivalent angle that is closer to current encoder value
+    double d = (targetAngle >= currentEncoderAngle) ? -1 : 1;
+    double alternateTargetAngle = targetAngle + (d * 360);
+
+    double currentToTarget = targetAngle - currentEncoderAngle;
+    double currentToAlternateTarget = alternateTargetAngle - currentEncoderAngle;
+
+    if(Math.abs(currentToTarget) <= Math.abs(currentToAlternateTarget)) {
+      return degreesToEncoder(currentEncoderAngle + currentToTarget);
+    } else {
+      return degreesToEncoder(currentEncoderAngle + currentToAlternateTarget);
+    }
+  }
+
+
 }

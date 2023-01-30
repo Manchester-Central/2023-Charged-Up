@@ -125,31 +125,17 @@ public class SwerveModule {
     return distance / SwerveConstants.WheelCircumference;
 
   }
+
   public double velocityUnitToMeterPerSecond(double velocityUnit){
     return encoderToDistanceMeters(velocityUnit) * 10;
   }
+
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
+  
   public double getAbsoluteAngle(){
     return m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022;
-  }
-
-  // UNITS: [currentAngle : degrees | targetAngle : degrees]
-  private double closestTarget1(double currentAngle, double targetAngle) {
-    double cycleOffset = Math.floor(currentAngle / 360) * 360;
-    double scaledTargetAngle = targetAngle + cycleOffset;
-    double alternateAngle = currentAngle;
-
-    if(scaledTargetAngle > currentAngle) {
-      alternateAngle = scaledTargetAngle - 360;
-    } else {
-      alternateAngle = scaledTargetAngle + 360;
-    }
-
-
-    
-    return targetAngle;
   }
 
   // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]

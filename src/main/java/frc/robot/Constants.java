@@ -38,6 +38,10 @@ public final class Constants {
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
   }
+  public static class FieldConstants {
+    public static final double FieldWidth_m = 8.02;
+    public static final double FieldLength_m = 16.54;
+  }
    public static final double UpdateFrequency_Hz = 50;
    public static final boolean Is2022Robot = true;
 

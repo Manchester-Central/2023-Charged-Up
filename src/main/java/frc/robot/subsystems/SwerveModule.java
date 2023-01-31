@@ -7,10 +7,13 @@ package frc.robot.subsystems;
 import javax.swing.text.Position;
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
+import com.chaos131.pid.PIDUpdate;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.RecalibrateModules;
 import pabeles.concurrency.ConcurrencyOps.NewInstance;
 
 public class SwerveModule {
@@ -30,6 +34,7 @@ public class SwerveModule {
   private TalonFX m_velocity;
   private CANCoder m_2022AbsoluteCanCoder;
   private double m_absoluteAngleOffset2022;
+  private double initialEncoder;
 
   /** Creates a new SwerveModule. */
   public SwerveModule(Translation2d translation, int canIdAngle, int canIdVelocity, int canAbsoluteID2022, double absoluteAngleOffset2022) {
@@ -37,13 +42,18 @@ public class SwerveModule {
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     m_angle = new TalonFX(canIdAngle);
+    m_velocity = new TalonFX(canIdVelocity);
+    m_angle.configAllowableClosedloopError(0, degreesToEncoder(0.5));
+    m_velocity.setNeutralMode(NeutralMode.Coast);
+    m_angle.setNeutralMode(NeutralMode.Brake);
+    m_velocity.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.Period_20Ms);
+    m_velocity.configVelocityMeasurementWindow(32);
     m_angle.setInverted(TalonFXInvertType.Clockwise);
     m_absoluteAngleOffset2022 = absoluteAngleOffset2022;
-    m_velocity = new TalonFX(canIdVelocity);
     if (Constants.Is2022Robot) {
       m_2022AbsoluteCanCoder = new CANCoder(canAbsoluteID2022);
     }
-    m_angle.setSelectedSensorPosition(degreesToEncoder(getAbsoluteAngle()));
+    recalibrate();
   }
 
   public void setTarget(SwerveModuleState state) {
@@ -87,6 +97,18 @@ public class SwerveModule {
     return new SwerveModulePosition(distance, Rotation2d.fromDegrees(angle));
   }
 
+  public void UpdateVelocityPIDConstants(PIDUpdate update) {
+    m_velocity.config_kP(0, update.P);
+    m_velocity.config_kI(0, update.I);
+    m_velocity.config_kD(0, update.D);
+  }
+
+  public void UpdateAnglePIDConstants(PIDUpdate update) {
+    m_angle.config_kP(0, update.P);
+    m_angle.config_kI(0, update.I);
+    m_angle.config_kD(0, update.D);
+  }
+
   public void getModuleInfo(String name) {
     SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
     SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
@@ -95,6 +117,7 @@ public class SwerveModule {
     SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
     SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
+    SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
   }
 
   public double encoderToDegrees(double counts) {
@@ -130,6 +153,10 @@ public class SwerveModule {
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
   public double getAbsoluteAngle(){
-    return m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022;
+    return Rotation2d.fromDegrees(m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022).getDegrees();
+  }
+  public void recalibrate() {
+    initialEncoder = degreesToEncoder(getAbsoluteAngle());
+    m_angle.setSelectedSensorPosition(initialEncoder);
   }
 }

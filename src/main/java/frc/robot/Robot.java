@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     logManager.update();
     CommandScheduler.getInstance().run();
+    m_robotContainer.addSmartDashboard();
     
   }
 

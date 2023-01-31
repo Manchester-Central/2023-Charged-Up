@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.subsystems.Limelight;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -72,6 +74,7 @@ public class RobotContainer {
     m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
     m_driver.povUp().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
     m_driver.povDown().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(180))));
+    m_driver.povRight().onTrue(new RecalibrateModules(m_swerveDrive));
   }
 
   /**
@@ -81,5 +84,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoBuilder.createAutoCommand();
+  }
+
+  public void addSmartDashboard() {
+    SmartDashboard.putNumber("Driver Left X", m_driver.getLeftX());
+    SmartDashboard.putNumber("Driver Right X", m_driver.getRightX());
+    SmartDashboard.putNumber("Driver Left Y", m_driver.getLeftY());
+    SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
   }
 }

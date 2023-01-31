@@ -32,7 +32,11 @@ public class RobotRelativeDrive extends CommandBase {
     double xMetersPerSecond = m_driverController.getLeftY() * Constants.SwerveConstants.MaxRobotSpeed_mps;
     double yMetersPerSecond = -m_driverController.getLeftX() * Constants.SwerveConstants.MaxRobotSpeed_mps;
     double omegaRadiansPerSecond = -m_driverController.getRightX() * Constants.SwerveConstants.MaxRobotRotation_radps;
-    m_swerveDrive.moveRobotRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
+    if (xMetersPerSecond == 0 && yMetersPerSecond == 0 && omegaRadiansPerSecond == 0) {
+      m_swerveDrive.stop();
+    } else {
+      m_swerveDrive.moveRobotRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
+    }
   }
 
   // Called once the command ends or is interrupted.

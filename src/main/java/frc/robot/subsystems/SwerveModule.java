@@ -167,6 +167,12 @@ public class SwerveModule {
 
   // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]
   // RETURN UNITS: encoder ticks
+  /*
+   * This function takes in the current angle read by the encoder and a target angle for the robot to move to.
+   * The target angle will be between -PI and PI, but this function will scale it up so it is an equivalent
+   * angle that is closer to the current encoder angle. It will return this "optimized" angle to avoid
+   * the wheels overspinning.
+   */
   private double closestTarget(double currentEncoderAngle, double targetAngle) {
     double angleOffset = Math.floor(currentEncoderAngle / 360) * 360;
     targetAngle += angleOffset; // Produces an equivalent angle that is closer to current encoder value

@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.RecalibrateModules;
 import frc.robot.logging.LogManager;
 
 public class SwerveDrive extends SubsystemBase {
@@ -191,6 +192,13 @@ public class SwerveDrive extends SubsystemBase {
 
   public Rotation2d getOdometryRotation() {
     return m_odometry.getPoseMeters().getRotation();
+  }
+
+  public void recalibrateModules(){
+    m_frontLeft.recalibrate();
+    m_frontRight.recalibrate();
+    m_backLeft.recalibrate();
+    m_backRight.recalibrate();
   }
 
   public void stop() {

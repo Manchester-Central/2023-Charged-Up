@@ -25,6 +25,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.RecalibrateModules;
 import pabeles.concurrency.ConcurrencyOps.NewInstance;
+import java.lang.Thread;
 
 public class SwerveModule {
   private Translation2d m_translation;
@@ -61,7 +62,7 @@ public class SwerveModule {
     double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
     double convertedVelocity = meterPerSecondToVelocityUnit(state.speedMetersPerSecond);
 
-    m_angle.set(TalonFXControlMode.Position, targetAngle);
+    m_angle.set(TalonFXControlMode.Position, degreesToEncoder(targetAngle));
     m_velocity.set(TalonFXControlMode.Velocity, convertedVelocity);
     m_targetState = state;
   }
@@ -167,26 +168,31 @@ public class SwerveModule {
   }
 
   // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]
-  // RETURN UNITS: encoder ticks
+  // RETURN UNITS: degrees
   /*
    * This function takes in the current angle read by the encoder and a target angle for the robot to move to.
    * The target angle will be between -PI and PI, but this function will scale it up so it is an equivalent
    * angle that is closer to the current encoder angle. It will return this "optimized" angle to avoid
    * the wheels overspinning.
    */
-  private double closestTarget(double currentEncoderAngle, double targetAngle) {
-    double angleOffset = Math.floor(currentEncoderAngle / 360) * 360;
+  public static double closestTarget(double currentModuleAngle, double targetAngle) {
+    if((currentModuleAngle - targetAngle) % 360.0 == 0) return currentModuleAngle;
+    double angleOffset = Math.floor(currentModuleAngle / 360) * 360;
     targetAngle += angleOffset; // Produces an equivalent angle that is closer to current encoder value
-    double d = (targetAngle >= currentEncoderAngle) ? -1 : 1;
-    double alternateTargetAngle = targetAngle + (d * 360);
+    double alternateAngleDirection = (targetAngle >= currentModuleAngle) ? -1 : 1;
+    double alternateTargetAngle = targetAngle + (alternateAngleDirection * 360);
 
-    double currentToTarget = targetAngle - currentEncoderAngle;
-    double currentToAlternateTarget = alternateTargetAngle - currentEncoderAngle;
+    
 
-    if(Math.abs(currentToTarget) <= Math.abs(currentToAlternateTarget)) {
-      return degreesToEncoder(currentEncoderAngle + currentToTarget);
+    double currentToTarget = targetAngle - currentModuleAngle;
+    double currentToAlternateTarget = alternateTargetAngle - currentModuleAngle;
+
+    if(Math.abs(currentToTarget) < Math.abs(currentToAlternateTarget)) {
+      return currentModuleAngle + currentToTarget;
+    } else if(Math.abs(currentToTarget) > Math.abs(currentToAlternateTarget)){
+      return currentModuleAngle + currentToAlternateTarget;
     } else {
-      return degreesToEncoder(currentEncoderAngle + currentToAlternateTarget);
+      return currentModuleAngle; // ERROR VALUE
     }
   }
 

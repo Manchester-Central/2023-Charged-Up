@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -34,6 +37,12 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     logManager.addNumber("GameState", () -> robotMode());
     logManager.writeHeaders();
+    new Timer().schedule(new TimerTask() {
+      @Override
+      public void run() {
+        m_robotContainer.delayedRobotInit();
+      }
+    }, 1000 );
   }
 
   public static double robotMode()

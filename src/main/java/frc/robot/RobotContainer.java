@@ -54,7 +54,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
   }
-
+  public void delayedRobotInit(){
+    m_swerveDrive.recalibrateModules();
+  }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary

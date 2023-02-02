@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.swing.text.Position;
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.chaos131.pid.PIDUpdate;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -23,9 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.RecalibrateModules;
-import pabeles.concurrency.ConcurrencyOps.NewInstance;
-import java.lang.Thread;
 
 public class SwerveModule {
   private Translation2d m_translation;

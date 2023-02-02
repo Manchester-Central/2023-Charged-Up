@@ -167,34 +167,22 @@ public class SwerveModule {
     m_angle.setSelectedSensorPosition(initialEncoder);
   }
 
-  // PARAMETER UNTS: [currentAngle : degrees | targetAngle : degrees]
-  // RETURN UNITS: degrees
-  /*
+  /**
    * This function takes in the current angle read by the encoder and a target angle for the robot to move to.
    * The target angle will be between -PI and PI, but this function will scale it up so it is an equivalent
    * angle that is closer to the current encoder angle. It will return this "optimized" angle to avoid
-   * the wheels overspinning.
+   * the wheels overspinning. 
+   * @param currentModuleAngle_deg - The current swerve module's angle in degrees
+   * @param targetAngle_deg - The target angle in degrees
+   * @return The swerve module target angle 
    */
-  public static double closestTarget(double currentModuleAngle, double targetAngle) {
-    if((currentModuleAngle - targetAngle) % 360.0 == 0) return currentModuleAngle;
-    double angleOffset = Math.floor(currentModuleAngle / 360) * 360;
-    targetAngle += angleOffset; // Produces an equivalent angle that is closer to current encoder value
-    double alternateAngleDirection = (targetAngle >= currentModuleAngle) ? -1 : 1;
-    double alternateTargetAngle = targetAngle + (alternateAngleDirection * 360);
-
-    
-
-    double currentToTarget = targetAngle - currentModuleAngle;
-    double currentToAlternateTarget = alternateTargetAngle - currentModuleAngle;
-
-    if(Math.abs(currentToTarget) < Math.abs(currentToAlternateTarget)) {
-      return currentModuleAngle + currentToTarget;
-    } else if(Math.abs(currentToTarget) > Math.abs(currentToAlternateTarget)){
-      return currentModuleAngle + currentToAlternateTarget;
-    } else {
-      return currentModuleAngle; // ERROR VALUE
-    }
-  }
+  public static double closestTarget(double currentModuleAngle_deg, double targetAngle_deg) {
+    Rotation2d currentModuleAngle = Rotation2d.fromDegrees(currentModuleAngle_deg);
+    Rotation2d targetAngle = Rotation2d.fromDegrees(targetAngle_deg);
+    Rotation2d angleDifference = currentModuleAngle.minus(targetAngle);
+    return currentModuleAngle_deg - angleDifference.getDegrees();
+ 
+  } 
 
 
 }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToTarget;
+import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetPose;
@@ -77,6 +78,7 @@ public class RobotContainer {
     m_driver.povUp().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
     m_driver.povDown().onTrue(new ResetPose(m_swerveDrive, new Pose2d(8, 4, Rotation2d.fromDegrees(180))));
     m_driver.povRight().onTrue(new RecalibrateModules(m_swerveDrive));
+    m_driver.x().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
   }
 
   /**

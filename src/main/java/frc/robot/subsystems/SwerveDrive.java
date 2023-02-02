@@ -147,7 +147,16 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
-    ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    move(speeds);
+  }
+
+  public void moveFieldRelativeAngle(double xMetersPerSecond, double yMetersPerSecond, Rotation2d angle, double magnitude){
+    double omega = 0;
+    if (Math.abs(magnitude) >= 0.2) {
+      omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians());
+    }
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
     move(speeds);
   }
 

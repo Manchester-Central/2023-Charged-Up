@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.swing.text.Position;
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.chaos131.pid.PIDUpdate;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -23,8 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.RecalibrateModules;
-import pabeles.concurrency.ConcurrencyOps.NewInstance;
 
 public class SwerveModule {
   private Translation2d m_translation;
@@ -57,9 +52,11 @@ public class SwerveModule {
   }
 
   public void setTarget(SwerveModuleState state) {
-    double convertedAngle = degreesToEncoder(state.angle.getDegrees());
+    state = SwerveModuleState.optimize(state, getModuleState().angle);
+    double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
     double convertedVelocity = meterPerSecondToVelocityUnit(state.speedMetersPerSecond);
-    m_angle.set(TalonFXControlMode.Position, convertedAngle);
+
+    m_angle.set(TalonFXControlMode.Position, degreesToEncoder(targetAngle));
     m_velocity.set(TalonFXControlMode.Velocity, convertedVelocity);
     m_targetState = state;
   }
@@ -146,17 +143,40 @@ public class SwerveModule {
     return distance / SwerveConstants.WheelCircumference;
 
   }
+
   public double velocityUnitToMeterPerSecond(double velocityUnit){
     return encoderToDistanceMeters(velocityUnit) * 10;
   }
+
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
+  
   public double getAbsoluteAngle(){
     return Rotation2d.fromDegrees(m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022).getDegrees();
   }
+
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());
     m_angle.setSelectedSensorPosition(initialEncoder);
   }
+
+  /**
+   * This function takes in the current angle read by the encoder and a target angle for the robot to move to.
+   * The target angle will be between -PI and PI, but this function will scale it up so it is an equivalent
+   * angle that is closer to the current encoder angle. It will return this "optimized" angle to avoid
+   * the wheels overspinning. 
+   * @param currentModuleAngle_deg - The current swerve module's angle in degrees
+   * @param targetAngle_deg - The target angle in degrees
+   * @return The swerve module target angle 
+   */
+  public static double closestTarget(double currentModuleAngle_deg, double targetAngle_deg) {
+    Rotation2d currentModuleAngle = Rotation2d.fromDegrees(currentModuleAngle_deg);
+    Rotation2d targetAngle = Rotation2d.fromDegrees(targetAngle_deg);
+    Rotation2d angleDifference = currentModuleAngle.minus(targetAngle);
+    return currentModuleAngle_deg - angleDifference.getDegrees();
+ 
+  } 
+
+
 }

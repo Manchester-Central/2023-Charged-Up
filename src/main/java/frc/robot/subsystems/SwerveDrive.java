@@ -145,6 +145,13 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(states[3]);
   }
 
+  public void swerveXMode() {
+    m_frontLeft.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    m_frontRight.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(315)));
+    m_backLeft.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(135)));
+    m_backRight.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(225)));
+  }
+
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds=ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());

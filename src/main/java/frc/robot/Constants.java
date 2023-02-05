@@ -65,6 +65,6 @@ public final class Constants {
     public static final double FieldLength_m = 16.54;
   }
    public static final double UpdateFrequency_Hz = 50;
-   public static final boolean Is2022Robot = true;
+   public static final boolean Is2022Robot = false;
 
 }

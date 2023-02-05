@@ -19,20 +19,17 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.SwerveConstants;
 
-public class SwerveModule {
+public abstract class SwerveModule {
   private Translation2d m_translation;
   private double m_simdistance;
   private SwerveModuleState m_targetState;
   private TalonFX m_angle;
   private TalonFX m_velocity;
-  private CANCoder m_2022AbsoluteCanCoder;
-  private double m_absoluteAngleOffset2022;
   private double initialEncoder;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(Translation2d translation, int canIdAngle, int canIdVelocity, int canAbsoluteID2022, double absoluteAngleOffset2022) {
+  public SwerveModule(Translation2d translation, int canIdAngle, int canIdVelocity) {
     m_translation = translation;
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
@@ -44,11 +41,7 @@ public class SwerveModule {
     m_velocity.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.Period_20Ms);
     m_velocity.configVelocityMeasurementWindow(32);
     m_angle.setInverted(TalonFXInvertType.Clockwise);
-    m_absoluteAngleOffset2022 = absoluteAngleOffset2022;
-    if (Constants.Is2022Robot) {
-      m_2022AbsoluteCanCoder = new CANCoder(canAbsoluteID2022);
-    }
-    recalibrate();
+
   }
 
   public void setTarget(SwerveModuleState state) {
@@ -119,28 +112,28 @@ public class SwerveModule {
 
   public double encoderToDegrees(double counts) {
     counts = counts / 2048;
-    counts = counts / SwerveConstants.AngleEncoderRatio;
+    counts = counts / getAngleEncoderRatio();
     return counts * 360;
   }
 
   public double degreesToEncoder(double angle) {
     angle = angle * 2048;
-    angle = angle * SwerveConstants.AngleEncoderRatio;
+    angle = angle * getAngleEncoderRatio();
     return angle / 360;
 
   }
 
   public double encoderToDistanceMeters(double counts) {
     counts = counts / 2048;
-    counts = counts / SwerveConstants.VelocityEncoderRatio;
-    return counts * SwerveConstants.WheelCircumference;
+    counts = counts / getVelocityEncoderRatio();
+    return counts * getWheelCircumference();
 
   }
 
   public double distanceMetersToEncoders(double distance) {
     distance = distance * 2048;
-    distance = distance * SwerveConstants.VelocityEncoderRatio;
-    return distance / SwerveConstants.WheelCircumference;
+    distance = distance * getVelocityEncoderRatio();
+    return distance / getWheelCircumference();
 
   }
 
@@ -152,9 +145,11 @@ public class SwerveModule {
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
   
-  public double getAbsoluteAngle(){
-    return Rotation2d.fromDegrees(m_2022AbsoluteCanCoder.getAbsolutePosition() - m_absoluteAngleOffset2022).getDegrees();
-  }
+  public abstract double getAbsoluteAngle();
+  public abstract double getAngleEncoderRatio();
+  public abstract double getVelocityEncoderRatio();
+  public abstract double getWheelCircumference();
+
 
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());

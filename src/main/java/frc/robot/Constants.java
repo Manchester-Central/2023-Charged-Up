@@ -25,19 +25,41 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
-    public static final int CanIdFrontLeftAngle = 5; //TODO: 2022 value
-    public static final int CanIdFrontLeftVelocity = 6; //TODO: 2022 value
-    public static final int CanIdFrontRightAngle = 4; //TODO: 2022 value
-    public static final int CanIdFrontRightVelocity = 8; //TODO: 2022 value
-    public static final int CanIdBackLeftAngle = 7; //TODO: 2022 value
-    public static final int CanIdBackLeftVelocity = 3; //TODO: 2022 value
-    public static final int CanIdBackRightAngle = 1; //TODO: 2022 value
-    public static final int CanIdBackRightVelocity = 2; //TODO: 2022 value
-    public static final double AngleEncoderRatio = 144.0/14.0; //TODO: 2022 value
-    public static final double VelocityEncoderRatio = 7.8; //TODO: 2022 value
+    public static final int CanIdFrontLeftAngle = 2;
+    public static final int CanIdFrontLeftVelocity = 1; 
+    public static final int CanIdFrontRightAngle = 4; 
+    public static final int CanIdFrontRightVelocity = 3; 
+    public static final int CanIdBackLeftAngle = 6; 
+    public static final int CanIdBackLeftVelocity = 5; 
+    public static final int CanIdBackRightAngle = 8; 
+    public static final int CanIdBackRightVelocity = 7; 
+    public static final double AngleEncoderRatio = 144.0/14.0; //TODO confirm
+    public static final double VelocityEncoderRatio = 7.8; //TODO confirm
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
   }
+
+  public static class SwerveConstants2022 {
+    public static final double RobotWidth_in = 21.25;
+    public static final double RobotLength_in = 22.25;
+    public static final double RobotWidth_m = RobotWidth_in / 39.3701;
+    public static final double RobotLength_m = RobotLength_in / 39.3701;
+    public static final double MaxRobotSpeed_mps = 5;
+    public static final double MaxRobotRotation_radps = 2;
+    public static final int CanIdFrontLeftAngle = 5; 
+    public static final int CanIdFrontLeftVelocity = 6; 
+    public static final int CanIdFrontRightAngle = 4; 
+    public static final int CanIdFrontRightVelocity = 8; 
+    public static final int CanIdBackLeftAngle = 7; 
+    public static final int CanIdBackLeftVelocity = 3; 
+    public static final int CanIdBackRightAngle = 1; 
+    public static final int CanIdBackRightVelocity = 2; 
+    public static final double AngleEncoderRatio = 144.0/14.0; 
+    public static final double VelocityEncoderRatio = 7.8; 
+    public static final double WheelDiameter = 0.092;
+    public static final double WheelCircumference = WheelDiameter * Math.PI;
+  }
+
   public static class FieldConstants {
     public static final double FieldWidth_m = 8.02;
     public static final double FieldLength_m = 16.54;

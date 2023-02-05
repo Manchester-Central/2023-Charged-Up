@@ -44,6 +44,11 @@ public abstract class SwerveModule {
 
   }
 
+  public abstract double getAbsoluteAngle();
+  public abstract double getAngleEncoderRatio();
+  public abstract double getVelocityEncoderRatio();
+  public abstract double getWheelCircumference();
+
   public void setTarget(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
     double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
@@ -145,10 +150,7 @@ public abstract class SwerveModule {
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
   
-  public abstract double getAbsoluteAngle();
-  public abstract double getAngleEncoderRatio();
-  public abstract double getVelocityEncoderRatio();
-  public abstract double getWheelCircumference();
+
 
 
   public void recalibrate() {

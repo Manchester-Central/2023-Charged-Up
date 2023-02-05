@@ -4,13 +4,16 @@
 
 package frc.robot;
 
-
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -18,6 +21,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
+
   public static class SwerveConstants {
     public static final double RobotWidth_in = 21.25;
     public static final double RobotLength_in = 22.25;
@@ -26,17 +30,25 @@ public final class Constants {
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
     public static final int CanIdFrontLeftAngle = 2;
-    public static final int CanIdFrontLeftVelocity = 1; 
-    public static final int CanIdFrontRightAngle = 4; 
-    public static final int CanIdFrontRightVelocity = 3; 
-    public static final int CanIdBackLeftAngle = 6; 
-    public static final int CanIdBackLeftVelocity = 5; 
-    public static final int CanIdBackRightAngle = 8; 
-    public static final int CanIdBackRightVelocity = 7; 
-    public static final double AngleEncoderRatio = 144.0/14.0; //TODO confirm
-    public static final double VelocityEncoderRatio = 7.8; //TODO confirm
+    public static final int CanIdFrontLeftVelocity = 1;
+    public static final int CanIdFrontRightAngle = 4;
+    public static final int CanIdFrontRightVelocity = 3;
+    public static final int CanIdBackLeftAngle = 6;
+    public static final int CanIdBackLeftVelocity = 5;
+    public static final int CanIdBackRightAngle = 8;
+    public static final int CanIdBackRightVelocity = 7;
+    public static final double AngleEncoderRatio = 144.0 / 14.0; // TODO confirm
+    public static final double VelocityEncoderRatio = 7.8; // TODO confirm
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
+    public static final int AnalogInputFrontLeftAbsoluteEncoder = 1;
+    public static final int AnalogInputFrontRightAbsoluteEncoder = 2;
+    public static final int AnalogInputBackLeftAbsoluteEncoder = 3;
+    public static final int AnalogInputBackRightAbsoluteEncoder = 0;
+    public static final double AbsoluteAngleOffsetFrontLeft = 247;
+    public static final double AbsoluteAngleOffsetFrontRight =  167.3;
+    public static final double AbsoluteAngleOffsetBackLeft = 213.6;
+    public static final double AbsoluteAngleOffsetBackRight = 216.2;
   }
 
   public static class SwerveConstants2022 {
@@ -46,25 +58,34 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
-    public static final int CanIdFrontLeftAngle = 5; 
-    public static final int CanIdFrontLeftVelocity = 6; 
-    public static final int CanIdFrontRightAngle = 4; 
-    public static final int CanIdFrontRightVelocity = 8; 
-    public static final int CanIdBackLeftAngle = 7; 
-    public static final int CanIdBackLeftVelocity = 3; 
-    public static final int CanIdBackRightAngle = 1; 
-    public static final int CanIdBackRightVelocity = 2; 
-    public static final double AngleEncoderRatio = 144.0/14.0; 
-    public static final double VelocityEncoderRatio = 7.8; 
+    public static final int CanIdFrontLeftAngle = 5;
+    public static final int CanIdFrontLeftVelocity = 6;
+    public static final int CanIdFrontLeftAbsoluteEncoder = 22;
+    public static final int CanIdFrontRightAngle = 4;
+    public static final int CanIdFrontRightVelocity = 8;
+    public static final int CanIdFrontRightAbsoluteEncoder = 21;
+    public static final int CanIdBackLeftAngle = 7;
+    public static final int CanIdBackLeftVelocity = 3;
+    public static final int CanIdBackLeftAbsoluteEncoder = 23;
+    public static final int CanIdBackRightAngle = 1;
+    public static final int CanIdBackRightVelocity = 2;
+    public static final int CanIdBackRightAbsoluteEncoder = 20;
+    public static final double AngleEncoderRatio = 144.0 / 14.0;
+    public static final double VelocityEncoderRatio = 7.8;
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
+    public static final double AbsoluteAngleOffsetFrontLeft = 250;
+    public static final double AbsoluteAngleOffsetFrontRight = 177;
+    public static final double AbsoluteAngleOffsetBackLeft = 237;
+    public static final double AbsoluteAngleOffsetBackRight = 341;
   }
 
   public static class FieldConstants {
     public static final double FieldWidth_m = 8.02;
     public static final double FieldLength_m = 16.54;
   }
-   public static final double UpdateFrequency_Hz = 50;
-   public static final boolean Is2022Robot = false;
+
+  public static final double UpdateFrequency_Hz = 50;
+  public static final boolean Is2022Robot = false;
 
 }

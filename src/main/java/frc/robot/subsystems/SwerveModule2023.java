@@ -4,19 +4,26 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
 public class SwerveModule2023 extends SwerveModule {
-    public SwerveModule2023(Translation2d translation, int canIdAngle, int canIdVelocity){
+    private AnalogEncoder m_absoluteEncoder;
+    private double m_absoluteAngleOffset;
+    
+    public SwerveModule2023(Translation2d translation, int canIdAngle, int canIdVelocity, int absoluteAnalogPort, double absoluteAngleOffset){
         super(translation, canIdAngle, canIdVelocity);
+
+        m_absoluteEncoder = new AnalogEncoder(absoluteAnalogPort);
+        m_absoluteAngleOffset = absoluteAngleOffset;
     }
 
     @Override
     public double getAbsoluteAngle() {
-        // TODO Auto-generated method stub
-        return 0;
+        return Rotation2d.fromDegrees((m_absoluteEncoder.getAbsolutePosition() * 360) - m_absoluteAngleOffset).getDegrees();
     }
 
     @Override

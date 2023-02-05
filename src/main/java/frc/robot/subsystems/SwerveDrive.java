@@ -61,27 +61,27 @@ public class SwerveDrive extends SubsystemBase {
     m_frontLeft = new SwerveModule2022(
       frontLeftTranslation, 
       SwerveConstants2022.CanIdFrontLeftAngle, 
-      SwerveConstants2022.CanIdFrontLeftVelocity, 
-      22, 
-      250);
+      SwerveConstants2022.CanIdFrontLeftVelocity,
+      SwerveConstants2022.CanIdFrontLeftAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetFrontLeft);
     m_frontRight = new SwerveModule2022(
       frontRightTranslation, 
       SwerveConstants2022.CanIdFrontRightAngle, 
       SwerveConstants2022.CanIdFrontRightVelocity, 
-      21, 
-      177);
+      SwerveConstants2022.CanIdFrontRightAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetFrontRight);
     m_backLeft = new SwerveModule2022(
       backLeftTranslation, 
       SwerveConstants2022.CanIdBackLeftAngle, 
       SwerveConstants2022.CanIdBackLeftVelocity,
-       23, 
-       237);
+      SwerveConstants2022.CanIdBackLeftAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetBackLeft);
     m_backRight = new SwerveModule2022(
       backRightTranslation, 
       SwerveConstants2022.CanIdBackRightAngle, 
       SwerveConstants2022.CanIdBackRightVelocity, 
-      20, 
-      341);
+      SwerveConstants2022.CanIdBackRightAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetBackRight);
     }
     else {
       Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
@@ -91,22 +91,32 @@ public class SwerveDrive extends SubsystemBase {
     m_frontLeft = new SwerveModule2023(
       frontLeftTranslation, 
       SwerveConstants.CanIdFrontLeftAngle, 
-      SwerveConstants.CanIdFrontLeftVelocity 
+      SwerveConstants.CanIdFrontLeftVelocity, 
+      SwerveConstants.AnalogInputFrontLeftAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetFrontLeft
 );
     m_frontRight = new SwerveModule2023(
       frontRightTranslation, 
       SwerveConstants.CanIdFrontRightAngle, 
-      SwerveConstants.CanIdFrontRightVelocity 
+      SwerveConstants.CanIdFrontRightVelocity,
+      SwerveConstants.AnalogInputFrontRightAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetFrontRight
+      
+
 );
     m_backLeft = new SwerveModule2023(
       backLeftTranslation, 
       SwerveConstants.CanIdBackLeftAngle, 
-      SwerveConstants.CanIdBackLeftVelocity
+      SwerveConstants.CanIdBackLeftVelocity,
+      SwerveConstants.AnalogInputBackLeftAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetBackLeft
 );
     m_backRight = new SwerveModule2023(
       backRightTranslation, 
       SwerveConstants.CanIdBackRightAngle, 
-      SwerveConstants.CanIdBackRightVelocity 
+      SwerveConstants.CanIdBackRightVelocity,
+      SwerveConstants.AnalogInputBackRightAbsoluteEncoder, 
+      SwerveConstants.AbsoluteAngleOffsetBackRight
 );
     }
 

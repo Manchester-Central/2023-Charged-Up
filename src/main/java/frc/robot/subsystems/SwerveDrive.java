@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.SwerveConstants2022;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.logging.LogManager;
 
@@ -34,7 +35,7 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveModule m_frontRight;
   private SwerveModule m_backLeft;
   private SwerveModule m_backRight;
- // AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  private AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
   private SwerveDriveOdometry m_odometry;
@@ -52,34 +53,74 @@ public class SwerveDrive extends SubsystemBase {
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
-    Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
+    if (Constants.Is2022Robot) {
+      Translation2d frontLeftTranslation = new Translation2d(SwerveConstants2022.RobotLength_m / 2, SwerveConstants2022.RobotWidth_m / 2);
+    Translation2d frontRightTranslation = new Translation2d(SwerveConstants2022.RobotLength_m / 2,-SwerveConstants2022.RobotWidth_m / 2);
+    Translation2d backLeftTranslation = new Translation2d(-SwerveConstants2022.RobotLength_m / 2, SwerveConstants2022.RobotWidth_m / 2);
+    Translation2d backRightTranslation = new Translation2d(-SwerveConstants2022.RobotLength_m / 2, -SwerveConstants2022.RobotWidth_m / 2);
+    m_frontLeft = new SwerveModule2022(
+      frontLeftTranslation, 
+      SwerveConstants2022.CanIdFrontLeftAngle, 
+      SwerveConstants2022.CanIdFrontLeftVelocity,
+      SwerveConstants2022.CanIdFrontLeftAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetFrontLeft);
+    m_frontRight = new SwerveModule2022(
+      frontRightTranslation, 
+      SwerveConstants2022.CanIdFrontRightAngle, 
+      SwerveConstants2022.CanIdFrontRightVelocity, 
+      SwerveConstants2022.CanIdFrontRightAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetFrontRight);
+    m_backLeft = new SwerveModule2022(
+      backLeftTranslation, 
+      SwerveConstants2022.CanIdBackLeftAngle, 
+      SwerveConstants2022.CanIdBackLeftVelocity,
+      SwerveConstants2022.CanIdBackLeftAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetBackLeft);
+    m_backRight = new SwerveModule2022(
+      backRightTranslation, 
+      SwerveConstants2022.CanIdBackRightAngle, 
+      SwerveConstants2022.CanIdBackRightVelocity, 
+      SwerveConstants2022.CanIdBackRightAbsoluteEncoder,
+      SwerveConstants2022.AbsoluteAngleOffsetBackRight);
+    }
+    else {
+      Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
     Translation2d frontRightTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2,-SwerveConstants.RobotWidth_m / 2);
     Translation2d backLeftTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
     Translation2d backRightTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, -SwerveConstants.RobotWidth_m / 2);
-    m_frontLeft = new SwerveModule(
+    m_frontLeft = new SwerveModule2023(
       frontLeftTranslation, 
       SwerveConstants.CanIdFrontLeftAngle, 
       SwerveConstants.CanIdFrontLeftVelocity, 
-      22, 
-      250);
-    m_frontRight = new SwerveModule(
+      SwerveConstants.AnalogInputFrontLeftAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetFrontLeft
+);
+    m_frontRight = new SwerveModule2023(
       frontRightTranslation, 
       SwerveConstants.CanIdFrontRightAngle, 
-      SwerveConstants.CanIdFrontRightVelocity, 
-      21, 
-      177);
-    m_backLeft = new SwerveModule(
+      SwerveConstants.CanIdFrontRightVelocity,
+      SwerveConstants.AnalogInputFrontRightAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetFrontRight
+      
+
+);
+    m_backLeft = new SwerveModule2023(
       backLeftTranslation, 
       SwerveConstants.CanIdBackLeftAngle, 
       SwerveConstants.CanIdBackLeftVelocity,
-       23, 
-       237);
-    m_backRight = new SwerveModule(
+      SwerveConstants.AnalogInputBackLeftAbsoluteEncoder,
+      SwerveConstants.AbsoluteAngleOffsetBackLeft
+);
+    m_backRight = new SwerveModule2023(
       backRightTranslation, 
       SwerveConstants.CanIdBackRightAngle, 
-      SwerveConstants.CanIdBackRightVelocity, 
-      20, 
-      341);
+      SwerveConstants.CanIdBackRightVelocity,
+      SwerveConstants.AnalogInputBackRightAbsoluteEncoder, 
+      SwerveConstants.AbsoluteAngleOffsetBackRight
+);
+    }
+
+    
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
     m_odometry = new SwerveDriveOdometry(
@@ -145,6 +186,13 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(states[3]);
   }
 
+  public void swerveXMode() {
+    m_frontLeft.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    m_frontRight.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(315)));
+    m_backLeft.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(135)));
+    m_backRight.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(225)));
+  }
+
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
@@ -195,8 +243,7 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-    // return m_gyro.getRotation2d();
-    return new Rotation2d();
+    return m_gyro.getRotation2d().times(-1);
   }
 
   public Rotation2d getOdometryRotation() {

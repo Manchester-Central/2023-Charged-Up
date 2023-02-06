@@ -186,7 +186,7 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
       return m_simrotation;
     }
-    return m_gyro.getRotation2d();
+    return m_gyro.getRotation2d().times(-1);
   }
 
   public Rotation2d getOdometryRotation() {

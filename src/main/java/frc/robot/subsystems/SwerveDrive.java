@@ -8,6 +8,7 @@ import com.chaos131.pid.PIDTuner;
 import com.chaos131.pid.PIDUpdate;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -179,6 +180,10 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {
+    chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps;
+    chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps;
+    chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps;
+
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     m_frontLeft.setTarget(states[0]);
     m_frontRight.setTarget(states[1]);
@@ -195,6 +200,7 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
+    omegaRadianPerSecond *= Constants.SwerveConstants.MaxRobotRotation_radps;
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
     move(speeds);
   }

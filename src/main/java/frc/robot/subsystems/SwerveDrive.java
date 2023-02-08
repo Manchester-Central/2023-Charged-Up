@@ -188,11 +188,15 @@ public class SwerveDrive extends SubsystemBase {
       return;
     }
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    ChassisSpeeds currentSpeed = new ChassisSpeeds(); // TODO Figure out values
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, currentSpeed, SwerveConstants.MaxSwerveModuleSpeed_mps, SwerveConstants.MaxRobotSpeed_mps, SwerveConstants.MaxRobotRotation_radps);
     m_frontLeft.setTarget(states[0]);
     m_frontRight.setTarget(states[1]);
     m_backLeft.setTarget(states[2]);
     m_backRight.setTarget(states[3]);
+    
   }
+
 
   public void swerveXMode() {
     m_frontLeft.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));

@@ -29,6 +29,7 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 5;
     public static final double MaxRobotRotation_radps = 2;
+    public static final double MaxSwerveModuleSpeed_mps = MaxRobotSpeed_mps;
     public static final int CanIdFrontLeftAngle = 2;
     public static final int CanIdFrontLeftVelocity = 1;
     public static final int CanIdFrontRightAngle = 4;

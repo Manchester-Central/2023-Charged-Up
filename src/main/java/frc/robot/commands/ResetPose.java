@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class ResetPose extends CommandBase {
   private SwerveDrive m_SwerveDrive;

@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class SwerveXMode extends CommandBase {
   SwerveDrive m_swerveDrive;

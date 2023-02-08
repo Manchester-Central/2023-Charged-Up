@@ -1,9 +1,9 @@
-import frc.robot.subsystems.SwerveModule; // Set the closestTarget function to public when testing.
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import frc.robot.subsystems.swerve.SwerveModule;
 
 public class SwerveModuleTest {
     @Test

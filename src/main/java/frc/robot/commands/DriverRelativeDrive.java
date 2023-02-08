@@ -29,9 +29,9 @@ public class DriverRelativeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = m_driverController.getLeftY() * Constants.SwerveConstants.MaxRobotSpeed_mps;
-    double yMetersPerSecond = -m_driverController.getLeftX() * Constants.SwerveConstants.MaxRobotSpeed_mps;
-    double omegaRadiansPerSecond = -m_driverController.getRightX() * Constants.SwerveConstants.MaxRobotRotation_radps;
+    double xMetersPerSecond = m_driverController.getLeftY();
+    double yMetersPerSecond = -m_driverController.getLeftX();
+    double omegaRadiansPerSecond = -m_driverController.getRightX();
     m_swerveDrive.moveFieldRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
   }
 

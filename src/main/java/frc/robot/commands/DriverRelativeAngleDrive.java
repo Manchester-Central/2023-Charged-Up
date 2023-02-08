@@ -30,8 +30,8 @@ public class DriverRelativeAngleDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = m_driverController.getLeftY() * Constants.SwerveConstants.MaxRobotSpeed_mps;
-    double yMetersPerSecond = -m_driverController.getLeftX() * Constants.SwerveConstants.MaxRobotSpeed_mps;
+    double xMetersPerSecond = m_driverController.getLeftY();
+    double yMetersPerSecond = -m_driverController.getLeftX();
     Rotation2d rightAngle = Rotation2d.fromRadians(m_driverController.getRightAngle() - Math.PI/2);
     double rightMagnitude = m_driverController.getRightMagnitude();
     m_swerveDrive.moveFieldRelativeAngle(xMetersPerSecond, yMetersPerSecond, rightAngle, rightMagnitude);

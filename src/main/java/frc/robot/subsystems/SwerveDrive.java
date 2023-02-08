@@ -200,7 +200,6 @@ public class SwerveDrive extends SubsystemBase {
 
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
-    omegaRadianPerSecond *= Constants.SwerveConstants.MaxRobotRotation_radps;
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
     move(speeds);
   }

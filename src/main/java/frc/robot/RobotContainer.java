@@ -69,7 +69,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_swerveDrive.setDefaultCommand(new RobotRelativeDrive(m_swerveDrive, m_driver));
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driver.b().whileTrue(new RunCommand(() -> m_driver.getHID().setRumble(RumbleType.kBothRumble, 0.5)));
@@ -81,6 +81,8 @@ public class RobotContainer {
     m_driver.povRight().onTrue(new RecalibrateModules(m_swerveDrive));
     m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
+    m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
+    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
   }
 
   /**

@@ -183,7 +183,10 @@ public class SwerveDrive extends SubsystemBase {
     chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps;
     chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps;
     chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps;
-
+    if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
+      stop();
+      return;
+    }
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     m_frontLeft.setTarget(states[0]);
     m_frontRight.setTarget(states[1]);

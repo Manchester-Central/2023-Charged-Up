@@ -14,7 +14,9 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.logging.LogManager;
 
 /** Add your docs here. */
 public class Shoulder {
@@ -36,6 +38,7 @@ public class Shoulder {
         m_AbsoluteEncoder.setPositionConversionFactor(ArmConstants.ShoulderAngleConversionFactor);
         m_AbsoluteEncoder.setZeroOffset(ArmConstants.ShoulderAngleZeroOffset);
         m_PidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
+        Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
     }
 
     public Rotation2d getRotation(){
@@ -43,7 +46,7 @@ public class Shoulder {
     }
 
     public void setTargetAngle(){
-
+        //TODO
     }
 
     public void tunePID(PIDUpdate pidUpdate){

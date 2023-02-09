@@ -8,9 +8,10 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
+  Shoulder m_Shoulder;
   /** Creates a new Arm. */
   public Arm() {
-    
+    m_Shoulder = new Shoulder();
   }
 
   @Override

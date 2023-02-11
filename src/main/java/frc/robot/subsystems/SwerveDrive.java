@@ -308,6 +308,12 @@ public class SwerveDrive extends SubsystemBase {
     m_odometry.resetPosition(getGyroRotation(), getModulePositions(), targetPose);
   }
 
+  public void resetHeading(Rotation2d targetHeading) {
+    var currentPose = m_odometry.getPoseMeters();
+    var updatedPose = new Pose2d(currentPose.getX(), currentPose.getY(), targetHeading);
+    resetPose(updatedPose);
+  }
+
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
     Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);

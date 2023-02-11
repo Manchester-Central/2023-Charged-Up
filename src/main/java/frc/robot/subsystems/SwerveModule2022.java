@@ -14,13 +14,17 @@ import frc.robot.Constants.SwerveConstants2022;
 public class SwerveModule2022 extends SwerveModule {
     private CANCoder m_2022AbsoluteCanCoder;
     private double m_absoluteAngleOffset;
-
+        
     public SwerveModule2022(Translation2d translation, int canIdAngle, int canIdVelocity, int canAbsoluteID,
             double absoluteAngleOffset) {
         super(translation, canIdAngle, canIdVelocity);
         m_2022AbsoluteCanCoder = new CANCoder(canAbsoluteID);
         m_absoluteAngleOffset = absoluteAngleOffset;
         recalibrate();
+    }
+
+    public double getRawAbsoluteAngle(){
+        return m_2022AbsoluteCanCoder.getAbsolutePosition();
     }
 
     public double getAbsoluteAngle() {

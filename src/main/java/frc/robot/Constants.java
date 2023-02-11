@@ -27,8 +27,8 @@ public final class Constants {
     public static final double RobotLength_in = 22.25;
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
-    public static final double MaxRobotSpeed_mps = 5;
-    public static final double MaxRobotRotation_radps = 2;
+    public static final double MaxRobotSpeed_mps = 2.5; //TODO revert speed to 5 after testing
+    public static final double MaxRobotRotation_radps = 1; //TODO revert rotation speed to 2 after testing.
     public static final int CanIdFrontLeftAngle = 2;
     public static final int CanIdFrontLeftVelocity = 1;
     public static final int CanIdFrontRightAngle = 4;
@@ -45,10 +45,10 @@ public final class Constants {
     public static final int AnalogInputFrontRightAbsoluteEncoder = 2;
     public static final int AnalogInputBackLeftAbsoluteEncoder = 3;
     public static final int AnalogInputBackRightAbsoluteEncoder = 0;
-    public static final double AbsoluteAngleOffsetFrontLeft = 247;
-    public static final double AbsoluteAngleOffsetFrontRight =  167.3;
-    public static final double AbsoluteAngleOffsetBackLeft = 213.6;
-    public static final double AbsoluteAngleOffsetBackRight = 216.2;
+    public static final double AbsoluteAngleOffsetFrontLeft = 244;
+    public static final double AbsoluteAngleOffsetFrontRight =  164.2;
+    public static final double AbsoluteAngleOffsetBackLeft = 213.5;
+    public static final double AbsoluteAngleOffsetBackRight = 216.5;
   }
 
   public static class SwerveConstants2022 {

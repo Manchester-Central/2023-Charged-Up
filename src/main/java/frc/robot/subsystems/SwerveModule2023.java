@@ -21,6 +21,10 @@ public class SwerveModule2023 extends SwerveModule {
         m_absoluteAngleOffset = absoluteAngleOffset;
     }
 
+    public double getRawAbsoluteAngle(){
+        return (m_absoluteEncoder.getAbsolutePosition() * 360);
+    }
+
     @Override
     public double getAbsoluteAngle() {
         return Rotation2d.fromDegrees((m_absoluteEncoder.getAbsolutePosition() * 360) - m_absoluteAngleOffset).getDegrees();

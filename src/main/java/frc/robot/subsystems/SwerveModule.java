@@ -97,6 +97,7 @@ public abstract class SwerveModule {
     m_velocity.config_kP(0, update.P);
     m_velocity.config_kI(0, update.I);
     m_velocity.config_kD(0, update.D);
+    m_velocity.config_kF(0, update.F);
   }
 
   public void UpdateAnglePIDConstants(PIDUpdate update) {

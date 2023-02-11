@@ -113,6 +113,7 @@ public abstract class SwerveModule {
     SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
     SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
+    SmartDashboard.putNumber("Swerve Module " + name + "/TargetSpeed", m_targetState.speedMetersPerSecond);
   }
 
   public double encoderToDegrees(double counts) {

@@ -12,6 +12,7 @@ import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
+import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive;
@@ -71,7 +72,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driverControls();
-    m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
+    //m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
@@ -84,6 +85,7 @@ public class RobotContainer {
     m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
     m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
+    m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
     m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     

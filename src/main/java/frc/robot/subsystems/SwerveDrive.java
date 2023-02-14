@@ -132,11 +132,11 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(1, 0, 0);
     m_YPid = new PIDController(1, 0, 0);
-    m_AnglePid = new PIDController(1, 0, 0);
+    m_AnglePid = new PIDController(8.5, 0.001, 0);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
     m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
-    m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
+    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
@@ -221,7 +221,7 @@ public class SwerveDrive extends SubsystemBase {
     }
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
     move(speeds);
-  }
+  } 
 
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {

@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
@@ -91,6 +92,9 @@ public class RobotContainer {
     
     m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
+
+    m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
+    m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
   }
 
   /**

@@ -96,5 +96,6 @@ public final class Constants {
     public static final double ShoulderAngleConversionFactor = 360; //TODO confirm values
     public static final double ShoulderAngleZeroOffset = 0; //TODO confirm values
     public static final int CanIdExtender = 14;
+    public static final int CanIdWrist = 15;
   }
 }

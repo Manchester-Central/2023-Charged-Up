@@ -8,24 +8,27 @@ import com.chaos131.pid.PIDTuner;
 import com.chaos131.pid.PIDUpdate;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import java.lang.annotation.Target;
 
 import frc.robot.Constants.ArmConstants;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 /** Add your docs here. */
-public class Extender {
+public class Wrist {
     private CANSparkMax m_SparkMax;
     private PIDTuner m_pidTuner;
-    public Extender(){
-        m_SparkMax = new CANSparkMax(ArmConstants.CanIdExtender, MotorType.kBrushless);
-        m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
+    public Wrist(){
+        m_SparkMax = new CANSparkMax(ArmConstants.CanIdWrist, MotorType.kBrushless);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
     }
 
-    public void ExtendToTarget(double targetPosition){
+    public void setTarget(Rotation2d target){
         //TODO
     }
 
-    public double getPosition(){
-        return 0.0; //TODO not real value
+    public Rotation2d getLocation(){
+        return Rotation2d.fromDegrees(0); //TODO fake value
     }
 
     public void tunePID(PIDUpdate pidUpdate){

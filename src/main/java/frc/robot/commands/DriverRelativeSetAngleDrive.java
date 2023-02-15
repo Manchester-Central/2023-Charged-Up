@@ -8,7 +8,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
   /** Creates a new DriverRelativeSetAngleDrive. */

@@ -8,7 +8,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeDrive extends CommandBase {
   private SwerveDrive m_swerveDrive;

@@ -12,8 +12,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeAngleDrive extends CommandBase {
-  private SwerveDrive m_swerveDrive;
-  private Gamepad m_driverController;
+  protected SwerveDrive m_swerveDrive;
+  protected Gamepad m_driverController;
   /** Creates a new DriverRelativeAngleDrive. */
   public DriverRelativeAngleDrive(SwerveDrive swerveDrive, Gamepad driverController) {
     m_swerveDrive = swerveDrive;
@@ -25,22 +25,33 @@ public class DriverRelativeAngleDrive extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_swerveDrive.resetPids();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double xMetersPerSecond = m_driverController.getLeftY();
     double yMetersPerSecond = -m_driverController.getLeftX();
-    Rotation2d rightAngle = Rotation2d.fromRadians(m_driverController.getRightAngle() - Math.PI/2);
-    double rightMagnitude = m_driverController.getRightMagnitude();
+    Rotation2d rightAngle = getTargetRotation();
+    double rightMagnitude = getTargetMagnitude();
     m_swerveDrive.moveFieldRelativeAngle(xMetersPerSecond, yMetersPerSecond, rightAngle, rightMagnitude);
+  }
+
+  protected Rotation2d getTargetRotation() {
+    return Rotation2d.fromRadians(m_driverController.getRightAngle() - Math.PI/2);
+  }
+
+  protected double getTargetMagnitude() {
+    return m_driverController.getRightMagnitude();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_swerveDrive.stop();
+    m_swerveDrive.resetPids();
   }
 
   // Returns true when the command should end.

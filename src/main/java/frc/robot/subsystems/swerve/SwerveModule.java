@@ -48,6 +48,7 @@ public abstract class SwerveModule {
   public abstract double getAngleEncoderRatio();
   public abstract double getVelocityEncoderRatio();
   public abstract double getWheelCircumference();
+  public abstract double getRawAbsoluteAngle();
 
   public void setTarget(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
@@ -96,6 +97,7 @@ public abstract class SwerveModule {
     m_velocity.config_kP(0, update.P);
     m_velocity.config_kI(0, update.I);
     m_velocity.config_kD(0, update.D);
+    m_velocity.config_kF(0, update.F);
   }
 
   public void UpdateAnglePIDConstants(PIDUpdate update) {
@@ -113,6 +115,7 @@ public abstract class SwerveModule {
     SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
     SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
+    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteEncoder", getRawAbsoluteAngle());
   }
 
   public double encoderToDegrees(double counts) {

@@ -132,19 +132,20 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(1, 0, 0);
     m_YPid = new PIDController(1, 0, 0);
-    m_AnglePid = new PIDController(1, 0, 0);
+    m_AnglePid = new PIDController(8.5, 0.001, 0);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
     m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
-    m_AnglePidTuner = new PIDTuner("Angel PID Tuner", true, m_AnglePid);
+    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
     double velocityP = 0.1;
     double velocityI = 0;
     double velocityD = 0;
+    double velocityF = 0.049;
     // `this::updateVelocityPIDConstants` is basically shorthand for `(PIDUpdate update) -> updateVelocityPIDConstants(update)`
-    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity", true, velocityP, velocityI, velocityD, this::updateVelocityPIDConstants);
+    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity", true, velocityP, velocityI, velocityD, velocityF, this::updateVelocityPIDConstants);
     double angleP = 0.2;
     double angleI = 0;
     double angleD = 0;
@@ -201,6 +202,12 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(new SwerveModuleState(0, Rotation2d.fromDegrees(225)));
   }
 
+  public void debug_setSwerveModule(SwerveModuleState swerveModuleState) {
+    m_frontLeft.setTarget(swerveModuleState);
+    m_frontRight.setTarget(swerveModuleState);
+    m_backLeft.setTarget(swerveModuleState);
+    m_backRight.setTarget(swerveModuleState);
+  }
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
@@ -214,7 +221,7 @@ public class SwerveDrive extends SubsystemBase {
     }
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
     move(speeds);
-  }
+  } 
 
   public void moveRobotRelative(double xForwardSpeedMetersPerSecond, double ySidewaySpeedMetersPerSecond,
       double omegaRadianPerSecond) {
@@ -306,6 +313,12 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     m_odometry.resetPosition(getGyroRotation(), getModulePositions(), targetPose);
+  }
+
+  public void resetHeading(Rotation2d targetHeading) {
+    var currentPose = m_odometry.getPoseMeters();
+    var updatedPose = new Pose2d(currentPose.getX(), currentPose.getY(), targetHeading);
+    resetPose(updatedPose);
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {

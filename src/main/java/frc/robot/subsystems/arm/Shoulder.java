@@ -28,8 +28,9 @@ public class Shoulder {
     CANSparkMax m_shoulderR_B;
     SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
     PIDTuner m_PidTuner;
+    SafetyZoneHelper m_SafetyZoneHelper;
 
-    public Shoulder (){
+    public Shoulder () {
         m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
         m_shoulderL_B = new CANSparkMax(ShoulderConstants.CanIdShoulderL_B, MotorType.kBrushless);
         m_shoulderR_A = new CANSparkMax(ShoulderConstants.CanIdShoulderR_A, MotorType.kBrushless);
@@ -45,33 +46,35 @@ public class Shoulder {
         initializeSparkMaxEncoder(m_shoulderL_B, getRotation());
         initializeSparkMaxEncoder(m_shoulderR_A, getRotation());
         initializeSparkMaxEncoder(m_shoulderR_B, getRotation());
+        m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngle, ShoulderConstants.MaximumAngle);
     }
 
-    public Rotation2d getRotation(){
+    public Rotation2d getRotation() {
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
-    public void setTargetAngle(Rotation2d targetAngle){
-        m_shoulderL_A.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
-        m_shoulderL_B.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
-        m_shoulderR_A.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
-        m_shoulderR_B.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
+    public void setTargetAngle(Rotation2d targetAngle) {
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(targetAngle.getDegrees());
+        m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
     }
 
-    public void tunePID(PIDUpdate pidUpdate){
+    public void tunePID(PIDUpdate pidUpdate) {
         setPID(pidUpdate, m_shoulderL_A.getPIDController());
         setPID(pidUpdate, m_shoulderL_B.getPIDController());
         setPID(pidUpdate, m_shoulderR_A.getPIDController());
         setPID(pidUpdate, m_shoulderR_B.getPIDController());
     }
 
-    public void setPID(PIDUpdate pidUpdate, SparkMaxPIDController controller){
+    public void setPID(PIDUpdate pidUpdate, SparkMaxPIDController controller) {
         controller.setP(pidUpdate.P);
         controller.setI(pidUpdate.I);
         controller.setD(pidUpdate.D);
     }
     
-    private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle){
+    private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
        RelativeEncoder encoder = sparkMax.getEncoder();
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
        encoder.setPosition(absoluteAngle.getDegrees());

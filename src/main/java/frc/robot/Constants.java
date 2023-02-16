@@ -97,6 +97,8 @@ public final class Constants {
       public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
       public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double MinimumAngle = -225; //TODO confirm values
+      public static final double MaximumAngle = 45; //TODO confirm values
     }
 
     public static class ExtenderConstants{

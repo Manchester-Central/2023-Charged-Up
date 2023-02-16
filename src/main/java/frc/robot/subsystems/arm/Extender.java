@@ -31,6 +31,7 @@ public class Extender {
 
     public void ExtendToTarget(double targetPositionMeters){
         m_SparkMax.getPIDController().setReference(targetPositionMeters, ControlType.kPosition);
+        //TODO use safetyzonehelper
     }
 
     public double getPositionMeters(){

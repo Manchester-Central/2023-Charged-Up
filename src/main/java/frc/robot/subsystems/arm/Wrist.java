@@ -21,7 +21,7 @@ public class Wrist {
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
-
+        //TODO use safetyzonehelper
     }
 
     public void setTarget(Rotation2d target){

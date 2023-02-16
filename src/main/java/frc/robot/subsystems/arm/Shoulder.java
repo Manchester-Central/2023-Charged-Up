@@ -7,15 +7,17 @@ package frc.robot.subsystems.arm;
 import com.chaos131.pid.PIDTuner;
 import com.chaos131.pid.PIDUpdate;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.logging.LogManager;
 
 /** Add your docs here. */
@@ -28,25 +30,32 @@ public class Shoulder {
     PIDTuner m_PidTuner;
 
     public Shoulder (){
-        m_shoulderL_A = new CANSparkMax(ArmConstants.CanIdShoulderL_A, MotorType.kBrushless);
-        m_shoulderL_B = new CANSparkMax(ArmConstants.CanIdShoulderL_B, MotorType.kBrushless);
-        m_shoulderR_A = new CANSparkMax(ArmConstants.CanIdShoulderR_A, MotorType.kBrushless);
-        m_shoulderR_B = new CANSparkMax(ArmConstants.CanIdShoulderR_B, MotorType.kBrushless);
+        m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
+        m_shoulderL_B = new CANSparkMax(ShoulderConstants.CanIdShoulderL_B, MotorType.kBrushless);
+        m_shoulderR_A = new CANSparkMax(ShoulderConstants.CanIdShoulderR_A, MotorType.kBrushless);
+        m_shoulderR_B = new CANSparkMax(ShoulderConstants.CanIdShoulderR_B, MotorType.kBrushless);
         m_shoulderR_A.setInverted(true);
         m_shoulderR_B.setInverted(true);
         m_AbsoluteEncoder = m_shoulderL_A.getAbsoluteEncoder(Type.kDutyCycle);
-        m_AbsoluteEncoder.setPositionConversionFactor(ArmConstants.ShoulderAngleConversionFactor);
-        m_AbsoluteEncoder.setZeroOffset(ArmConstants.ShoulderAngleZeroOffset);
+        m_AbsoluteEncoder.setPositionConversionFactor(ShoulderConstants.AbsoluteAngleConversionFactor);
+        m_AbsoluteEncoder.setZeroOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         m_PidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
+        initializeSparkMaxEncoder(m_shoulderL_A, getRotation());
+        initializeSparkMaxEncoder(m_shoulderL_B, getRotation());
+        initializeSparkMaxEncoder(m_shoulderR_A, getRotation());
+        initializeSparkMaxEncoder(m_shoulderR_B, getRotation());
     }
 
     public Rotation2d getRotation(){
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
-    public void setTargetAngle(){
-        //TODO
+    public void setTargetAngle(Rotation2d targetAngle){
+        m_shoulderL_A.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
+        m_shoulderL_B.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
+        m_shoulderR_A.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
+        m_shoulderR_B.getPIDController().setReference(targetAngle.getDegrees(), ControlType.kPosition);
     }
 
     public void tunePID(PIDUpdate pidUpdate){
@@ -61,4 +70,11 @@ public class Shoulder {
         controller.setI(pidUpdate.I);
         controller.setD(pidUpdate.D);
     }
+    
+    private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle){
+       RelativeEncoder encoder = sparkMax.getEncoder();
+       encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
+       encoder.setPosition(absoluteAngle.getDegrees());
+    }
+    
 }

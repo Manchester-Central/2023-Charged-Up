@@ -89,8 +89,6 @@ public final class Constants {
   public static final boolean Is2022Robot = false;
 
   public static class ArmConstants{
-    public static final int CanIdWrist = 15;
-
     public static class ShoulderConstants{
       public static final int CanIdShoulderL_A = 10;
       public static final int CanIdShoulderL_B = 11;
@@ -106,6 +104,10 @@ public final class Constants {
       public static final double LinearPotConversionFactor = 1; //TODO confirm values
       public static final double LinearPotOffsetMeters = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+    }
+
+    public static class WristConstants{
+      public static final int CanIdWrist = 15;
     }
   } 
 }

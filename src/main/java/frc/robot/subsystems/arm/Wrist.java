@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import java.lang.annotation.Target;
 
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmConstants.WristConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -19,8 +19,9 @@ public class Wrist {
     private CANSparkMax m_SparkMax;
     private PIDTuner m_pidTuner;
     public Wrist(){
-        m_SparkMax = new CANSparkMax(ArmConstants.CanIdWrist, MotorType.kBrushless);
+        m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
+
     }
 
     public void setTarget(Rotation2d target){

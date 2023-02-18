@@ -12,13 +12,14 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
-import frc.robot.Constants.ArmConstants.ExtenderConstants;;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 
 /** Add your docs here. */
 public class Extender {
     private CANSparkMax m_SparkMax;
     private PIDTuner m_pidTuner;
     private SparkMaxAnalogSensor m_linearPot;
+    private SafetyZoneHelper m_SafetyZoneHelper;
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
@@ -27,11 +28,13 @@ public class Extender {
         double absPos = getPositionMeters();
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
         m_SparkMax.getEncoder().setPosition(absPos);
+        m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
     }
 
-    public void ExtendToTarget(double targetPositionMeters){
-        m_SparkMax.getPIDController().setReference(targetPositionMeters, ControlType.kPosition);
-        //TODO use safetyzonehelper
+    public void ExtendToTarget(double targetPositionMeters) {
+        double targetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
+        m_SparkMax.getPIDController().setReference(targetPosition, ControlType.kPosition);
+        
     }
 
     public double getPositionMeters(){

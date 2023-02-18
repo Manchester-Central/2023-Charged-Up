@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Wrist;
 import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
@@ -18,21 +19,24 @@ public class MoveArm extends CommandBase {
   private double m_extenderPosition;
   private Rotation2d m_wristPosition;
   private CoordinateType m_coordinateType;
+  private ArmPose m_armPose;
   
   /** Creates a new MoveArm. */
   public MoveArm(Arm arm, Rotation2d shoulderPosition, double extenderPosition, Rotation2d wristPosition, CoordinateType coordinateType) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    this(arm, new ArmPose(shoulderPosition, extenderPosition, wristPosition), coordinateType);
+  }
+
+  public MoveArm(Arm arm, ArmPose armPose, CoordinateType coordinateType) {
     m_arm = arm;
-    m_shoulderPosition = shoulderPosition;
-    m_extenderPosition = extenderPosition;
-    m_wristPosition = wristPosition;
+    m_armPose = armPose;
     m_coordinateType = coordinateType;
+    addRequirements(m_arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_arm.setArmTarget(m_shoulderPosition, m_extenderPosition);
+    m_arm.setArmTarget(m_armPose);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

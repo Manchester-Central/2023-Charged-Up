@@ -27,7 +27,7 @@ public final class Constants {
     public static final double RobotLength_in = 22.25;
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
-    public static final double MaxRobotSpeed_mps = 2.5; //TODO 3.8 is measured MAX
+    public static final double MaxRobotSpeed_mps = 2.5; //TODO confirm
     public static final double MaxRobotRotation_radps = 1; //TODO revert rotation speed to 2 after testing.
     public static final int CanIdFrontLeftAngle = 2;
     public static final int CanIdFrontLeftVelocity = 1;
@@ -37,8 +37,8 @@ public final class Constants {
     public static final int CanIdBackLeftVelocity = 5;
     public static final int CanIdBackRightAngle = 8;
     public static final int CanIdBackRightVelocity = 7;
-    public static final double AngleEncoderRatio = 144.0 / 14.0; // TODO confirm
-    public static final double VelocityEncoderRatio = 7.8; // TODO confirm
+    public static final double AngleEncoderRatio = 144.0 / 14.0;
+    public static final double VelocityEncoderRatio = 72 / 11;
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
     public static final int AnalogInputFrontLeftAbsoluteEncoder = 1;

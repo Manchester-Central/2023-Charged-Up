@@ -29,6 +29,8 @@ public class Shoulder {
     SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
     PIDTuner m_PidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
+    double m_simAngle = 0;
+    double m_simTarget;
 
     public Shoulder () {
         m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
@@ -50,16 +52,36 @@ public class Shoulder {
     }
 
     public Rotation2d getRotation() {
+        if(Robot.isSimulation()) {
+            return Rotation2d.fromDegrees(m_simAngle);
+        }
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
     public void setTargetAngle(Rotation2d targetAngle) {
-        double targetDegrees = m_SafetyZoneHelper.getSafeValue(targetAngle.getDegrees());
+        double targetDegrees = normalize(targetAngle);
+        targetDegrees = m_SafetyZoneHelper.getSafeValue(targetDegrees);
+        m_simTarget = targetDegrees;
         m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
     }
+    public double normalize(double targetDegrees) {
+        targetDegrees %= 360;
+        if (targetDegrees <= -230) {
+            targetDegrees += 360;
+        } else if (targetDegrees >= 50) {
+            targetDegrees -= 360;
+        }
+        return targetDegrees;
+    } 
+    // we have positions, degrees are associated with them
+
+    public double normalize(Rotation2d targetRotation2d) {
+        return normalize(targetRotation2d.getDegrees());
+    }
+
 
     public void tunePID(PIDUpdate pidUpdate) {
         setPID(pidUpdate, m_shoulderL_A.getPIDController());
@@ -79,5 +101,15 @@ public class Shoulder {
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
        encoder.setPosition(absoluteAngle.getDegrees());
     }
-    
+
+    public void periodic() {
+        double increment = 2;
+        if (Math.abs(m_simAngle - m_simTarget) <= Math.abs(increment)) {
+            m_simAngle = m_simTarget;
+        } else if(m_simTarget <= m_simAngle) {
+            m_simAngle = m_simAngle - increment;
+        } else {
+            m_simAngle = m_simAngle + increment; 
+        }
+    }
 }

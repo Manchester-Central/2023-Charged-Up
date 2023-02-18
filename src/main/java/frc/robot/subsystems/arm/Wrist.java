@@ -17,6 +17,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
 public class Wrist {
+    public enum CoordinateType{
+        FieldRelative,
+        ArmRelative
+    }
     private CANSparkMax m_SparkMax;
     private PIDTuner m_pidTuner;
     private SafetyZoneHelper m_SafetyZoneHelper;

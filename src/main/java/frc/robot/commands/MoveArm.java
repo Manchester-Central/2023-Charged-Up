@@ -32,7 +32,7 @@ public class MoveArm extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_arm.setArmTarget(m_shoulderPosition);
+    m_arm.setArmTarget(m_shoulderPosition, m_extenderPosition);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -12,20 +12,25 @@ import frc.robot.Robot;
 
 public class Arm extends SubsystemBase {
   Shoulder m_shoulder;
+  Extender m_extender;
   /** Creates a new Arm. */
   public Arm() {
     m_shoulder = new Shoulder();
+    m_extender = new Extender();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm/ShoulderRotation", m_shoulder.getRotation().getDegrees());
+    SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
     m_shoulder.periodic();
+    m_extender.periodic();
     // This method will be called once per scheduler run
   }
 
-  public void setArmTarget(Rotation2d shoulderTargetAngle) {
+  public void setArmTarget(Rotation2d shoulderTargetAngle, double extenderTargetPosition) {
     m_shoulder.setTargetAngle(shoulderTargetAngle);
+    m_extender.ExtendToTarget(extenderTargetPosition);
     // TODO other joints
   }
 

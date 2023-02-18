@@ -101,8 +101,8 @@ public class RobotContainer {
 
     m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
-    m_driver.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-87), 0.0, Rotation2d.fromDegrees(0), CoordinateType.FieldRelative));
-    m_driver.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), 0.0, Rotation2d.fromDegrees(0), CoordinateType.FieldRelative));
+    m_driver.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-87), 0.5, Rotation2d.fromDegrees(0), CoordinateType.FieldRelative));
+    m_driver.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), 0.2, Rotation2d.fromDegrees(0), CoordinateType.FieldRelative));
   }
 
   /**

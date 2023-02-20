@@ -352,35 +352,3 @@ public class SwerveDrive extends SubsystemBase {
     m_driveToTargetTolerance = tolerance;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //mallard was here 

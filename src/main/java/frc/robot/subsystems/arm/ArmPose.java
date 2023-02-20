@@ -8,12 +8,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
 public class ArmPose {
-    public Rotation2d m_shoulderAngle;
-    public double m_extenderPos;
-    public Rotation2d m_wristAngle;
+    public final Rotation2d shoulderAngle;
+    public final double extenderPos;
+    public final Rotation2d wristAngle;
     public ArmPose(Rotation2d shoulderAngle, double extenderPos, Rotation2d wristAngle){
-        m_shoulderAngle = shoulderAngle;
-        m_extenderPos = extenderPos;
-        m_wristAngle = wristAngle;
+        this.shoulderAngle = shoulderAngle;
+        this.extenderPos = extenderPos;
+        this.wristAngle = wristAngle;
     }
 }

@@ -114,6 +114,9 @@ public final class Constants {
       public static final int CanIdWrist = 15;
       public static final double MinimumAngle = -90; //TODO confirm values
       public static final double MaximumAngle = 90; //TODO confirm values
+      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
+      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
     }
   } 
 }

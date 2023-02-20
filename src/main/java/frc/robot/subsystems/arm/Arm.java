@@ -28,6 +28,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
     m_shoulder.periodic();
     m_extender.periodic();
+    m_wrist.periodic();
 
     double [] ArmState = {m_shoulder.getRotation().getDegrees(), m_extender.getPositionMeters(), m_wrist.getRotation().getDegrees()};
     SmartDashboard.putNumberArray("Arm/State", ArmState);
@@ -35,9 +36,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmTarget(ArmPose armPose) {
-    m_shoulder.setTargetAngle(armPose.m_shoulderAngle);
-    m_extender.ExtendToTarget(armPose.m_extenderPos);
-    // TODO other joints
+    m_shoulder.setTargetAngle(armPose.shoulderAngle);
+    m_extender.ExtendToTarget(armPose.extenderPos);
+    m_wrist.setTarget(armPose.wristAngle);
   }
 
   public boolean reachedTarget() {

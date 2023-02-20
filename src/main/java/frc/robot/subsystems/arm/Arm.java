@@ -13,18 +13,24 @@ import frc.robot.Robot;
 public class Arm extends SubsystemBase {
   Shoulder m_shoulder;
   Extender m_extender;
+  Wrist m_wrist;
   /** Creates a new Arm. */
   public Arm() {
     m_shoulder = new Shoulder();
     m_extender = new Extender();
+    m_wrist = new Wrist();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm/ShoulderRotation", m_shoulder.getRotation().getDegrees());
     SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
+    SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
     m_shoulder.periodic();
     m_extender.periodic();
+
+    double [] ArmState = {m_shoulder.getRotation().getDegrees(), m_extender.getPositionMeters(), m_wrist.getRotation().getDegrees()};
+    SmartDashboard.putNumberArray("Arm/State", ArmState);
     // This method will be called once per scheduler run
   }
 

@@ -21,7 +21,7 @@ public class Extender {
     private PIDTuner m_pidTuner;
     private SparkMaxAnalogSensor m_linearPot;
     private SafetyZoneHelper m_SafetyZoneHelper;
-    private double m_simPos = 0;
+    private double m_simPos = ExtenderConstants.MinimumPositionMeters;
     private double m_simTarget;
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);

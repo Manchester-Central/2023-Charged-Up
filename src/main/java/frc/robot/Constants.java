@@ -106,8 +106,8 @@ public final class Constants {
       public static final double LinearPotConversionFactor = 1; //TODO confirm values
       public static final double LinearPotOffsetMeters = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
-      public static final double MinimumPositionMeters = 1; //TODO confirm values
-      public static final double MaximumPositionMeters = 9; //TODO confirm values
+      public static final double MinimumPositionMeters = 0.78; //TODO confirm values
+      public static final double MaximumPositionMeters = 1.32; //TODO confirm values
     }
 
     public static class WristConstants{

@@ -35,7 +35,7 @@ public class Wrist {
         m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
     }
 
-    public Rotation2d getLocation(){
+    public Rotation2d getRotation(){
         return Rotation2d.fromDegrees(0); //TODO fake value
     }
 

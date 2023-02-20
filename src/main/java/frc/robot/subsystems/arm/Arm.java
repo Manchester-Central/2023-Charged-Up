@@ -53,5 +53,7 @@ public class Arm extends SubsystemBase {
 
   public void stop() {
     m_shoulder.setTargetAngle(m_shoulder.getRotation());
+    m_extender.ExtendToTarget(m_extender.getPositionMeters());
+    m_wrist.setTarget(m_wrist.getRotation());
   }
 }

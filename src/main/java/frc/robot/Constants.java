@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -97,5 +99,9 @@ public final class Constants {
     public static final double ShoulderAngleZeroOffset = 0; //TODO confirm values
     public static final int CanIdExtender = 14;
     public static final int CanIdWrist = 15;
+  }
+
+  public static class CommConstants {
+    public static final String arduinoPort = ""; // We need to determine what port the arduino will be connected to.
   }
 }

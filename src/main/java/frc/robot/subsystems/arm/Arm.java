@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 public class Arm extends SubsystemBase {
   Shoulder m_shoulder;
@@ -38,7 +39,12 @@ public class Arm extends SubsystemBase {
   public void setArmTarget(ArmPose armPose) {
     m_shoulder.setTargetAngle(armPose.shoulderAngle);
     m_extender.ExtendToTarget(armPose.extenderPos);
-    m_wrist.setTarget(armPose.wristAngle);
+    if (armPose.wristCoordinate == CoordinateType.ArmRelative){
+      m_wrist.setTarget(armPose.wristAngle);
+    }
+    else {
+      m_wrist.setTarget(armPose.wristAngle.minus(armPose.shoulderAngle));
+    }
   }
 
   public boolean reachedTarget() {

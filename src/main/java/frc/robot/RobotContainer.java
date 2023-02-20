@@ -5,10 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
+import frc.robot.commands.MoveArm;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
@@ -16,6 +18,8 @@ import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 import com.chaos131.auto.AutoBuilder;
@@ -24,6 +28,8 @@ import com.chaos131.auto.ParsedCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,6 +49,7 @@ public class RobotContainer {
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
+  private Arm m_arm = new Arm();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
@@ -95,6 +102,8 @@ public class RobotContainer {
 
     m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
+    m_driver.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-87), ExtenderConstants.MinimumPositionMeters, Rotation2d.fromDegrees(-45), CoordinateType.FieldRelative));
+    m_driver.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(45), CoordinateType.FieldRelative));
   }
 
   /**

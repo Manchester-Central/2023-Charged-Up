@@ -5,17 +5,47 @@
 //Always owns shoulder and wrist
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class Arm extends SubsystemBase {
-  Shoulder m_Shoulder;
+  Shoulder m_shoulder;
+  Extender m_extender;
+  Wrist m_wrist;
   /** Creates a new Arm. */
   public Arm() {
-    m_Shoulder = new Shoulder();
+    m_shoulder = new Shoulder();
+    m_extender = new Extender();
+    m_wrist = new Wrist();
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Arm/ShoulderRotation", m_shoulder.getRotation().getDegrees());
+    SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
+    SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
+    m_shoulder.periodic();
+    m_extender.periodic();
+    m_wrist.periodic();
+
+    double [] ArmState = {m_shoulder.getRotation().getDegrees(), m_extender.getPositionMeters(), m_wrist.getRotation().getDegrees()};
+    SmartDashboard.putNumberArray("Arm/State", ArmState);
     // This method will be called once per scheduler run
+  }
+
+  public void setArmTarget(ArmPose armPose) {
+    m_shoulder.setTargetAngle(armPose.shoulderAngle);
+    m_extender.ExtendToTarget(armPose.extenderPos);
+    m_wrist.setTarget(armPose.wristAngle);
+  }
+
+  public boolean reachedTarget() {
+    return false; // TODO
+  }
+
+  public void stop() {
+    m_shoulder.setTargetAngle(m_shoulder.getRotation());
   }
 }

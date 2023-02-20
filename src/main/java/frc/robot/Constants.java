@@ -89,13 +89,34 @@ public final class Constants {
   public static final boolean Is2022Robot = false;
 
   public static class ArmConstants{
-    public static final int CanIdShoulderL_A = 10;
-    public static final int CanIdShoulderL_B = 11;
-    public static final int CanIdShoulderR_A = 12;
-    public static final int CanIdShoulderR_B = 13;
-    public static final double ShoulderAngleConversionFactor = 360; //TODO confirm values
-    public static final double ShoulderAngleZeroOffset = 0; //TODO confirm values
-    public static final int CanIdExtender = 14;
-    public static final int CanIdWrist = 15;
-  }
+    public static class ShoulderConstants{
+      public static final int CanIdShoulderL_A = 10;
+      public static final int CanIdShoulderL_B = 11;
+      public static final int CanIdShoulderR_A = 12;
+      public static final int CanIdShoulderR_B = 13;
+      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
+      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double MinimumAngle = -225; //TODO confirm values
+      public static final double MaximumAngle = 45; //TODO confirm values
+    }
+
+    public static class ExtenderConstants{
+      public static final int CanIdExtender = 14;
+      public static final double LinearPotConversionFactor = 1; //TODO confirm values
+      public static final double LinearPotOffsetMeters = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double MinimumPositionMeters = 0.78; //TODO confirm values
+      public static final double MaximumPositionMeters = 1.32; //TODO confirm values
+    }
+
+    public static class WristConstants{
+      public static final int CanIdWrist = 15;
+      public static final double MinimumAngle = -90; //TODO confirm values
+      public static final double MaximumAngle = 90; //TODO confirm values
+      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
+      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+    }
+  } 
 }

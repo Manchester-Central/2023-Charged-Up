@@ -152,9 +152,6 @@ public abstract class SwerveModule {
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
-  
-
-
 
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());

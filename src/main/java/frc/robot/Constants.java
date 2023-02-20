@@ -99,6 +99,8 @@ public final class Constants {
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
       public static final double MinimumAngle = -225; //TODO confirm values
       public static final double MaximumAngle = 45; //TODO confirm values
+      public static final double MinDangerAngle = -120; //TODO confirm values
+      public static final double MaxDangerAngle = -60; //TODO confirm values 
     }
 
     public static class ExtenderConstants{
@@ -108,6 +110,7 @@ public final class Constants {
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
       public static final double MinimumPositionMeters = 0.78; //TODO confirm values
       public static final double MaximumPositionMeters = 1.32; //TODO confirm values
+      public static final double ExtenderSafeLimit = 1; //TODO confirm values
     }
 
     public static class WristConstants{

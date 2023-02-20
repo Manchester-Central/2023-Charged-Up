@@ -12,8 +12,10 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.ShoulderConstants;
 
 /** Add your docs here. */
 public class Extender {
@@ -32,6 +34,17 @@ public class Extender {
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
         m_SparkMax.getEncoder().setPosition(absPos);
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
+    }
+
+    public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
+        double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
+        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
+        if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
+        || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
+            //Use full min max on extender
+        } else{
+            //limit to < extenderSafeMax constant
+        }
     }
 
     public void ExtendToTarget(double targetPositionMeters) {

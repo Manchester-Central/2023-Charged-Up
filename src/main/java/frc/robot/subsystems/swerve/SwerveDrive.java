@@ -51,6 +51,7 @@ public class SwerveDrive extends SubsystemBase {
   private PIDTuner m_AnglePidTuner;
   private PIDTuner m_moduleVelocityPIDTuner;
   private PIDTuner m_moduleAnglePIDTuner;
+  private double m_driveToTargetTolerance = Constants.DriveToTargetTolerance;
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive() {
@@ -136,6 +137,9 @@ public class SwerveDrive extends SubsystemBase {
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
     m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
+    m_XPid.setTolerance(Constants.DriveToTargetTolerance);
+    m_YPid.setTolerance(Constants.DriveToTargetTolerance);
+    m_AnglePid.setTolerance(Constants.AnglePIDTolerance);
     m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
@@ -234,10 +238,14 @@ public class SwerveDrive extends SubsystemBase {
     m_XPid.reset();
     m_YPid.reset();
     m_AnglePid.reset();
+    setDriveTranslationTolerance(Constants.DriveToTargetTolerance);
   }
 
   public boolean atTarget() {
-    return m_XPid.atSetpoint() && m_YPid.atSetpoint() && m_AnglePid.atSetpoint();
+    boolean isXTolerable = Math.abs(m_odometry.getPoseMeters().getX() - m_XPid.getSetpoint()) <= m_driveToTargetTolerance;
+    boolean isYTolerable = Math.abs(m_odometry.getPoseMeters().getY() - m_YPid.getSetpoint()) <= m_driveToTargetTolerance;
+    return isXTolerable && isYTolerable && m_AnglePid.atSetpoint();
+
   }
 
   public void setTarget(double x, double y, Rotation2d angle) {
@@ -311,7 +319,6 @@ public class SwerveDrive extends SubsystemBase {
     if (Robot.isSimulation()) {
     m_simrotation = targetPose.getRotation();
     }
-
     m_odometry.resetPosition(getGyroRotation(), getModulePositions(), targetPose);
   }
 
@@ -341,4 +348,7 @@ public class SwerveDrive extends SubsystemBase {
     m_backLeft.UpdateAnglePIDConstants(update);
   }
 
+  public void setDriveTranslationTolerance(double tolerance) {
+    m_driveToTargetTolerance = tolerance;
+  }
 }

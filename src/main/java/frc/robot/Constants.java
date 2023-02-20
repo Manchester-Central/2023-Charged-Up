@@ -87,6 +87,8 @@ public final class Constants {
 
   public static final double UpdateFrequency_Hz = 50;
   public static final boolean Is2022Robot = false;
+  public static final double DriveToTargetTolerance = 0.03;
+  public static final double AnglePIDTolerance = 3.0;
 
   public static class ArmConstants{
     public static class ShoulderConstants{

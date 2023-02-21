@@ -82,4 +82,10 @@ public class Extender {
             m_simPos += increment; 
         }
     }
+    public void stop(){
+        //TODO After testing, should remain at current position instead.
+        m_SparkMax.stopMotor();
+    }
 }
+
+//“MMMMMMM, Mcstender.” -John, 2/20/2023

@@ -127,4 +127,11 @@ public class Shoulder {
             m_simAngle = m_simAngle + increment; 
         }
     }
+    public void stop(){
+     //TODO After testing, should remain at current position instead.
+        m_shoulderL_A.stopMotor();
+        m_shoulderL_B.stopMotor();
+        m_shoulderR_A.stopMotor();
+        m_shoulderR_B.stopMotor();
+    }
 }

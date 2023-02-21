@@ -17,6 +17,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.logging.LogManager;
 
@@ -58,6 +59,20 @@ public class Shoulder {
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
+    public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters){
+        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
+            double normalizedCurrentAngle = normalize(getRotation());
+            if (normalizedCurrentAngle < -90) {
+                m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);
+            } else{
+                m_SafetyZoneHelper.excludeDown(ShoulderConstants.MaxDangerAngle);
+            }
+        }
+        else {
+            m_SafetyZoneHelper.resetToDefault();
+        }
+    }
+
     public void setTargetAngle(Rotation2d targetAngle) {
         double targetDegrees = normalize(targetAngle);
         targetDegrees = m_SafetyZoneHelper.getSafeValue(targetDegrees);
@@ -67,7 +82,7 @@ public class Shoulder {
         m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
     }
-    public double normalize(double targetDegrees) {
+    public static double normalize(double targetDegrees) {
         targetDegrees %= 360;
         if (targetDegrees <= -230) {
             targetDegrees += 360;
@@ -78,7 +93,7 @@ public class Shoulder {
     } 
     // we have positions, degrees are associated with them
 
-    public double normalize(Rotation2d targetRotation2d) {
+    public static double normalize(Rotation2d targetRotation2d) {
         return normalize(targetRotation2d.getDegrees());
     }
 
@@ -111,5 +126,12 @@ public class Shoulder {
         } else {
             m_simAngle = m_simAngle + increment; 
         }
+    }
+    public void stop(){
+     //TODO After testing, should remain at current position instead.
+        m_shoulderL_A.stopMotor();
+        m_shoulderL_B.stopMotor();
+        m_shoulderR_A.stopMotor();
+        m_shoulderR_B.stopMotor();
     }
 }

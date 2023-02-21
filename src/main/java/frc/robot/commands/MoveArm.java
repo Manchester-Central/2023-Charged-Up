@@ -15,33 +15,28 @@ import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 public class MoveArm extends CommandBase {
   private Arm m_arm;
-  private Rotation2d m_shoulderPosition;
-  private double m_extenderPosition;
-  private Rotation2d m_wristPosition;
-  private CoordinateType m_coordinateType;
   private ArmPose m_armPose;
   
   /** Creates a new MoveArm. */
-  public MoveArm(Arm arm, Rotation2d shoulderPosition, double extenderPosition, Rotation2d wristPosition, CoordinateType coordinateType) {
-    this(arm, new ArmPose(shoulderPosition, extenderPosition, wristPosition), coordinateType);
+  public MoveArm(Arm arm, Rotation2d shoulderPosition, double extenderPosition, Rotation2d wristPosition, CoordinateType wristCoordinateType) {
+    this(arm, new ArmPose(shoulderPosition, extenderPosition, wristPosition, wristCoordinateType));
   }
 
-  public MoveArm(Arm arm, ArmPose armPose, CoordinateType coordinateType) {
+  public MoveArm(Arm arm, ArmPose armPose) {
     m_arm = arm;
     m_armPose = armPose;
-    m_coordinateType = coordinateType;
     addRequirements(m_arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_arm.setArmTarget(m_armPose);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_arm.setArmTarget(m_armPose);
   }
 
   // Called once the command ends or is interrupted.

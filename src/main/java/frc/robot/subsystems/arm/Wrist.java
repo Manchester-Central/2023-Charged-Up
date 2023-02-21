@@ -79,4 +79,8 @@ public class Wrist {
             m_simAngle = m_simAngle + increment; 
         }
     }
+    public void stop(){
+        //TODO After testing, should remain at current position instead.
+        m_SparkMax.stopMotor();
+    }
 }

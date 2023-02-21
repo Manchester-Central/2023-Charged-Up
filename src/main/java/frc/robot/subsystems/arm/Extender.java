@@ -12,8 +12,10 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.ShoulderConstants;
 
 /** Add your docs here. */
 public class Extender {
@@ -34,12 +36,25 @@ public class Extender {
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
     }
 
-    public void ExtendToTarget(double targetPositionMeters) {
-        if (Robot.isSimulation()) {
-            m_simTarget = targetPositionMeters;
+    public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
+        double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
+        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
+        if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
+        || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
+            m_SafetyZoneHelper.resetToDefault();
+        } else{
+            m_SafetyZoneHelper.excludeUp(ExtenderConstants.MinimumPositionMeters);
         }
-        double targetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
-        m_SparkMax.getPIDController().setReference(targetPosition, ControlType.kPosition);
+    }
+
+    public void ExtendToTarget(double targetPositionMeters) {
+
+        double safeTargetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
+
+        if (Robot.isSimulation()) {
+            m_simTarget = safeTargetPosition;
+        }
+        m_SparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
         
     }
 
@@ -67,4 +82,10 @@ public class Extender {
             m_simPos += increment; 
         }
     }
+    public void stop(){
+        //TODO After testing, should remain at current position instead.
+        m_SparkMax.stopMotor();
+    }
 }
+
+//“MMMMMMM, Mcstender.” -John, 2/20/2023

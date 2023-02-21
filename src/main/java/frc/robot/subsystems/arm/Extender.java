@@ -41,18 +41,20 @@ public class Extender {
         double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
         if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
         || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
-            //Use full min max on extender
+            m_SafetyZoneHelper.resetToDefault();
         } else{
-            //limit to < extenderSafeMax constant
+            m_SafetyZoneHelper.excludeUp(ExtenderConstants.MinimumPositionMeters);
         }
     }
 
     public void ExtendToTarget(double targetPositionMeters) {
+
+        double safeTargetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
+
         if (Robot.isSimulation()) {
-            m_simTarget = targetPositionMeters;
+            m_simTarget = safeTargetPosition;
         }
-        double targetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
-        m_SparkMax.getPIDController().setReference(targetPosition, ControlType.kPosition);
+        m_SparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
         
     }
 

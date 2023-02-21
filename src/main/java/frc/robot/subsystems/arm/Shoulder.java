@@ -63,10 +63,13 @@ public class Shoulder {
         if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
             double normalizedCurrentAngle = normalize(getRotation());
             if (normalizedCurrentAngle < -90) {
-                //exclude above minDangerAngle
+                m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);
             } else{
-                //exclude below maxDangerAngle
+                m_SafetyZoneHelper.excludeDown(ShoulderConstants.MaxDangerAngle);
             }
+        }
+        else {
+            m_SafetyZoneHelper.resetToDefault();
         }
     }
 

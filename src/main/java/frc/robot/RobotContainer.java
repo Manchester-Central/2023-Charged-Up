@@ -15,6 +15,7 @@ import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
+import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
@@ -43,6 +44,8 @@ public class RobotContainer {
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
+  private ArduinoIO m_arduinoIO = new ArduinoIO();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 

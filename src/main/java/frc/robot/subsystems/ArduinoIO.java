@@ -11,7 +11,7 @@ public class ArduinoIO extends SubsystemBase {
     private final int INCOMING_BYTES = 3; // We know beforehand how many bytes we should receive each read cycle. In this, we should only receive one byte for each RGB value.
 
     private SerialPort m_arduino;
-    private RGB m_rgbValues;
+    private RGB m_rgbValues = new RGB(0, 0, 0);
     private Object mutexObject;
 
     public ArduinoIO() {
@@ -30,6 +30,9 @@ public class ArduinoIO extends SubsystemBase {
             }
         }
         m_arduino.closePort();
+        System.out.println(getRGBValues().R);
+        System.out.println(getRGBValues().G);
+        System.out.println(getRGBValues().B);
     }
 
     public RGB getRGBValues() {

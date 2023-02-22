@@ -49,13 +49,11 @@ public class Shoulder {
             initializeSparkMaxEncoder(canSparkMax, getRotation());
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
+            //open loop = no pid, closed loop = pid
         }
         m_PidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngle, ShoulderConstants.MaximumAngle);
-        
-       
-        //open loop = no pid, closed loop = pid (mallard)
     }
 
     public Rotation2d getRotation() {

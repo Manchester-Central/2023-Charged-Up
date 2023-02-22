@@ -5,8 +5,6 @@
 //Always owns shoulder and wrist
 package frc.robot.subsystems.arm;
 
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

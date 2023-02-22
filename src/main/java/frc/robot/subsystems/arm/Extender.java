@@ -82,8 +82,8 @@ public class Extender {
             m_simPos -= increment;
         } else {
             m_simPos += increment; 
-            
         }
+        m_pidTuner.tune();
     }
     public void stop(){
         //TODO After testing, should remain at current position instead.

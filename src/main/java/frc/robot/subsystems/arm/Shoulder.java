@@ -29,7 +29,7 @@ public class Shoulder {
     CANSparkMax m_shoulderR_A;
     CANSparkMax m_shoulderR_B;
     SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
-    PIDTuner m_PidTuner;
+    PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_simAngle = 0;
     double m_simTarget = m_simAngle;
@@ -51,7 +51,7 @@ public class Shoulder {
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
             //open loop = no pid, closed loop = pid
         }
-        m_PidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngle, ShoulderConstants.MaximumAngle);
     }
@@ -130,6 +130,7 @@ public class Shoulder {
         } else {
             m_simAngle = m_simAngle + increment; 
         }
+        m_pidTuner.tune();
     }
     public void stop() {
      //TODO After testing, should remain at current position instead.

@@ -81,6 +81,7 @@ public class Wrist {
         } else {
             m_simAngle = m_simAngle + increment; 
         }
+        m_pidTuner.tune();
     }
     public void stop(){
         //TODO After testing, should remain at current position instead.

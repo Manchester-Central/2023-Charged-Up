@@ -16,6 +16,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import java.lang.annotation.Target;
 
 import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,6 +42,8 @@ public class Wrist {
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
+        m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
+        m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {

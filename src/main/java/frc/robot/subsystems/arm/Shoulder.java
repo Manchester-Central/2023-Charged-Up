@@ -16,6 +16,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
@@ -43,13 +44,18 @@ public class Shoulder {
         m_AbsoluteEncoder = m_shoulderL_A.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(ShoulderConstants.AbsoluteAngleConversionFactor);
         m_AbsoluteEncoder.setZeroOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
+        CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
+        for (CANSparkMax canSparkMax : motorControllers) {
+            initializeSparkMaxEncoder(canSparkMax, getRotation());
+            canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
+            canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
+        }
         m_PidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
-        initializeSparkMaxEncoder(m_shoulderL_A, getRotation());
-        initializeSparkMaxEncoder(m_shoulderL_B, getRotation());
-        initializeSparkMaxEncoder(m_shoulderR_A, getRotation());
-        initializeSparkMaxEncoder(m_shoulderR_B, getRotation());
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngle, ShoulderConstants.MaximumAngle);
+        
+       
+        //open loop = no pid, closed loop = pid (mallard)
     }
 
     public Rotation2d getRotation() {
@@ -59,7 +65,7 @@ public class Shoulder {
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
-    public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters){
+    public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters) {
         if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
             double normalizedCurrentAngle = normalize(getRotation());
             if (normalizedCurrentAngle < -90) {
@@ -127,7 +133,7 @@ public class Shoulder {
             m_simAngle = m_simAngle + increment; 
         }
     }
-    public void stop(){
+    public void stop() {
      //TODO After testing, should remain at current position instead.
         m_shoulderL_A.stopMotor();
         m_shoulderL_B.stopMotor();

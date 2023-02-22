@@ -34,6 +34,8 @@ public class Extender {
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
         m_SparkMax.getEncoder().setPosition(absPos);
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
+        m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
+        m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){

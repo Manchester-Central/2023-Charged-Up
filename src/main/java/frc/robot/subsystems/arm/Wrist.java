@@ -32,7 +32,7 @@ public class Wrist {
     private PIDTuner m_pidTuner;
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simAngle = 0;
-    private double m_simTarget;
+    private double m_simTarget = m_simAngle;
 
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
@@ -85,5 +85,6 @@ public class Wrist {
     public void stop(){
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
+        m_simTarget = m_simAngle;
     }
 }

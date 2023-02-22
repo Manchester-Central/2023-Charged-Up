@@ -32,7 +32,7 @@ public class Shoulder {
     PIDTuner m_PidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_simAngle = 0;
-    double m_simTarget;
+    double m_simTarget = m_simAngle;
 
     public Shoulder () {
         m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
@@ -137,5 +137,6 @@ public class Shoulder {
         m_shoulderL_B.stopMotor();
         m_shoulderR_A.stopMotor();
         m_shoulderR_B.stopMotor();
+        m_simTarget = m_simAngle;
     }
 }

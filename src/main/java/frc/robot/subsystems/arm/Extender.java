@@ -24,7 +24,7 @@ public class Extender {
     private SparkMaxAnalogSensor m_linearPot;
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simPos = ExtenderConstants.MinimumPositionMeters;
-    private double m_simTarget;
+    private double m_simTarget = m_simPos;
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
@@ -83,11 +83,13 @@ public class Extender {
         } else {
             m_simPos += increment; 
         }
+        m_pidTuner.tune();
     }
     public void stop(){
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
+        m_simTarget = m_simPos;
     }
 }
 
-//“MMMMMMM, Mcstender.” -John, 2/20/2023
+//“MMMMMMM, Mcextender.” -John, 2/20/2023

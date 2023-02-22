@@ -309,6 +309,8 @@ public class SwerveDrive extends SubsystemBase {
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
+    m_moduleVelocityPIDTuner.tune();
+    m_moduleAnglePIDTuner.tune();
     m_frontLeft.getModuleInfo("FL");
     m_frontRight.getModuleInfo("FR");
     m_backLeft.getModuleInfo("BL");
@@ -352,3 +354,4 @@ public class SwerveDrive extends SubsystemBase {
     m_driveToTargetTolerance = tolerance;
   }
 }
+//“I love polyester.” -Kenny

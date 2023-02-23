@@ -32,7 +32,7 @@ public class Shoulder {
     PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_simAngle = 0;
-    double m_simTarget = m_simAngle;
+    double m_targetDegrees = m_simAngle;
 
     public Shoulder () {
         m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
@@ -80,7 +80,7 @@ public class Shoulder {
     public void setTargetAngle(Rotation2d targetAngle) {
         double targetDegrees = normalize(targetAngle);
         targetDegrees = m_SafetyZoneHelper.getSafeValue(targetDegrees);
-        m_simTarget = targetDegrees;
+        m_targetDegrees = targetDegrees;
         m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
@@ -121,11 +121,15 @@ public class Shoulder {
        encoder.setPosition(absoluteAngle.getDegrees());
     }
 
+    public boolean atTarget(){
+        return Math.abs(getRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
+    }
+
     public void periodic() {
         double increment = 2;
-        if (Math.abs(m_simAngle - m_simTarget) <= Math.abs(increment)) {
-            m_simAngle = m_simTarget;
-        } else if(m_simTarget <= m_simAngle) {
+        if (Math.abs(m_simAngle - m_targetDegrees) <= Math.abs(increment)) {
+            m_simAngle = m_targetDegrees;
+        } else if(m_targetDegrees <= m_simAngle) {
             m_simAngle = m_simAngle - increment;
         } else {
             m_simAngle = m_simAngle + increment; 
@@ -138,6 +142,6 @@ public class Shoulder {
         m_shoulderL_B.stopMotor();
         m_shoulderR_A.stopMotor();
         m_shoulderR_B.stopMotor();
-        m_simTarget = m_simAngle;
+        m_targetDegrees = m_simAngle;
     }
 }

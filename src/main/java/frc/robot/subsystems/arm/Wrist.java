@@ -32,7 +32,7 @@ public class Wrist {
     private PIDTuner m_pidTuner;
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simAngle = 0;
-    private double m_simTarget = m_simAngle;
+    private double m_targetDegrees = m_simAngle;
 
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
@@ -55,7 +55,7 @@ public class Wrist {
     public void setTarget(Rotation2d target) {
         double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees());
         m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
-        m_simTarget = targetDegrees;
+        m_targetDegrees = targetDegrees;
     }
 
     public Rotation2d getRotation() {
@@ -72,11 +72,15 @@ public class Wrist {
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
     }
 
+    public boolean atTarget(){
+        return Math.abs(getRotation().getDegrees() - m_targetDegrees) < WristConstants.ToleranceDegrees;
+    }
+
     public void periodic() {
         double increment = 2;
-        if (Math.abs(m_simAngle - m_simTarget) <= Math.abs(increment)) {
-            m_simAngle = m_simTarget;
-        } else if(m_simTarget <= m_simAngle) {
+        if (Math.abs(m_simAngle - m_targetDegrees) <= Math.abs(increment)) {
+            m_simAngle = m_targetDegrees;
+        } else if(m_targetDegrees <= m_simAngle) {
             m_simAngle = m_simAngle - increment;
         } else {
             m_simAngle = m_simAngle + increment; 
@@ -86,6 +90,6 @@ public class Wrist {
     public void stop(){
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
-        m_simTarget = m_simAngle;
+        m_targetDegrees = m_simAngle;
     }
 }

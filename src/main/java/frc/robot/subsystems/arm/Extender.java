@@ -24,7 +24,7 @@ public class Extender {
     private SparkMaxAnalogSensor m_linearPot;
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simPos = ExtenderConstants.MinimumPositionMeters;
-    private double m_simTarget = m_simPos;
+    private double m_targetMeters = m_simPos;
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
@@ -53,9 +53,7 @@ public class Extender {
 
         double safeTargetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
 
-        if (Robot.isSimulation()) {
-            m_simTarget = safeTargetPosition;
-        }
+        m_targetMeters = safeTargetPosition;
         m_SparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
         
     }
@@ -74,11 +72,15 @@ public class Extender {
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
     }
 
+    public boolean atTarget(){
+        return Math.abs(getPositionMeters() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
+    }
+
     public void periodic() {
-        double increment = 0.004;
-        if (Math.abs(m_simPos - m_simTarget) <= Math.abs(increment)) {
-            m_simPos = m_simTarget;
-        } else if(m_simTarget <= m_simPos) {
+        double increment = 0.012;
+        if (Math.abs(m_simPos - m_targetMeters) <= Math.abs(increment)) {
+            m_simPos = m_targetMeters;
+        } else if(m_targetMeters <= m_simPos) {
             m_simPos -= increment;
         } else {
             m_simPos += increment; 
@@ -88,7 +90,7 @@ public class Extender {
     public void stop(){
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
-        m_simTarget = m_simPos;
+        m_targetMeters = m_simPos;
     }
 }
 

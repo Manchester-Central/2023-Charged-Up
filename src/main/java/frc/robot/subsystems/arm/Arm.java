@@ -64,7 +64,7 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean reachedTarget() {
-    return false; // TODO
+    return m_shoulder.atTarget() && m_extender.atTarget() && m_wrist.atTarget();
   }
 
   public void stop() {

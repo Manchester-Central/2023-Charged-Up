@@ -104,6 +104,7 @@ public final class Constants {
       public static final double MinDangerAngle = -120; //TODO confirm values
       public static final double MaxDangerAngle = -60; //TODO confirm values 
       public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceDegrees = 0.5; //TODO confirm values
     }
 
     public static class ExtenderConstants{
@@ -115,6 +116,7 @@ public final class Constants {
       public static final double MaximumPositionMeters = 1.32; //TODO confirm values
       public static final double ExtenderSafeLimit = 1; //TODO confirm values
       public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceMeters = 0.02; //TODO confirm values
     }
 
     public static class WristConstants{
@@ -125,6 +127,7 @@ public final class Constants {
       public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
       public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceDegrees = 0.5; //TODO confirm values
     }
 
     public static class GripperConstants{

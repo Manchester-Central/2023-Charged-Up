@@ -12,9 +12,18 @@ import frc.robot.Constants.ArmConstants.GripperConstants;
 /** Add your docs here. */
 public class Gripper {
     public enum GripperMode{
-        grip,
-        unGrip,
-        stop
+        grip(0.5),
+        unGrip(-0.5),
+        stop(0);
+
+        private double m_power;
+        GripperMode(double power){
+            m_power = power;
+        }
+
+        public double getPower(){
+            return m_power;
+        }
     }
     private CANSparkMax m_sparkMax;
     private GripperMode m_gripperMode = GripperMode.stop;
@@ -32,31 +41,6 @@ public class Gripper {
     }
 
     public void periodic() {
-        switch (m_gripperMode) {
-            case grip:
-                grip();
-                break;
-            case unGrip:
-                unGrip();
-                break;
-            case stop:
-                stop();
-                break;
-        } 
+        m_sparkMax.getPIDController().setReference(m_gripperMode.getPower(), ControlType.kDutyCycle);
     }
-
-    private void grip() {
-        m_sparkMax.getPIDController().setReference(0.5, ControlType.kDutyCycle);
-    }
-
-    private void unGrip() {
-        m_sparkMax.getPIDController().setReference(-0.5, ControlType.kDutyCycle);
-    }
-
-    private void stop() {
-        m_sparkMax.getPIDController().setReference(0.0, ControlType.kDutyCycle);
-    }
-    
-    
-
 }

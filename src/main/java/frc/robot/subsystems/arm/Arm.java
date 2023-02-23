@@ -36,7 +36,12 @@ public class Arm extends SubsystemBase {
     m_wrist.periodic();
     m_gripper.periodic();
 
-    double [] ArmState = {m_shoulder.getRotation().getDegrees(), m_extender.getPositionMeters(), m_wrist.getRotation().getDegrees()};
+    double [] ArmState = {
+      m_shoulder.getRotation().getDegrees(), 
+      m_extender.getPositionMeters(), 
+      m_wrist.getRotation().getDegrees(), 
+      m_gripper.getGripperMode().getPower()
+    };
     SmartDashboard.putNumberArray("Arm/State", ArmState);
     // This method will be called once per scheduler run
   }

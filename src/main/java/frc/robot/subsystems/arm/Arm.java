@@ -9,17 +9,20 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 public class Arm extends SubsystemBase {
   Shoulder m_shoulder;
   Extender m_extender;
   Wrist m_wrist;
+  Gripper m_gripper;
   /** Creates a new Arm. */
   public Arm() {
     m_shoulder = new Shoulder();
     m_extender = new Extender();
     m_wrist = new Wrist();
+    m_gripper = new Gripper();
   }
 
   @Override
@@ -27,13 +30,19 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm/ShoulderRotation", m_shoulder.getRotation().getDegrees());
     SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
     SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
+    SmartDashboard.putString("Arm/Grippermode", m_gripper.getGripperMode().name());
     m_shoulder.periodic();
     m_extender.periodic();
     m_wrist.periodic();
+    m_gripper.periodic();
 
     double [] ArmState = {m_shoulder.getRotation().getDegrees(), m_extender.getPositionMeters(), m_wrist.getRotation().getDegrees()};
     SmartDashboard.putNumberArray("Arm/State", ArmState);
     // This method will be called once per scheduler run
+  }
+
+  public void setGripperMode(GripperMode mode) {
+    m_gripper.setGripperMode(mode);
   }
 
   public void setArmTarget(ArmPose armPose) {
@@ -57,7 +66,8 @@ public class Arm extends SubsystemBase {
     m_shoulder.stop();
     m_extender.stop();
     m_wrist.stop();
+    m_gripper.setGripperMode(GripperMode.stop);
   }
 }
 
-//“Kenny, Is your mom a color sensor?” -Josh 2/13/23
+// “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23

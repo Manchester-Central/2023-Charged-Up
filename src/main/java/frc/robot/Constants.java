@@ -126,5 +126,9 @@ public final class Constants {
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
       public static final double RampUpRate = 0.5; //TODO confirm values
     }
+
+    public static class GripperConstants{
+      public static final int CanIdGripper = 16;
+    }
   } 
 }

@@ -105,13 +105,15 @@ public class RobotContainer {
 
     m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
-    m_driver.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
-    m_driver.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-135), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
   }
 
   private void operaterControls(){
-    m_operator.leftBumper().whileTrue(new Grip(m_arm));
-    m_operator.leftTrigger().whileTrue(new UnGrip(m_arm));
+    m_operator.a().whileTrue(new Grip(m_arm));
+    m_operator.b().whileTrue(new UnGrip(m_arm));
+    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(90), CoordinateType.ArmRelative));
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-225), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(-90), CoordinateType.ArmRelative));
+    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-135), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
   }
 
   /**

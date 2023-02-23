@@ -75,7 +75,7 @@ public class Extender {
     }
 
     public void periodic() {
-        double increment = 0.004;
+        double increment = 0.012;
         if (Math.abs(m_simPos - m_simTarget) <= Math.abs(increment)) {
             m_simPos = m_simTarget;
         } else if(m_simTarget <= m_simPos) {

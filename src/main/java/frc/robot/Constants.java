@@ -102,6 +102,6 @@ public final class Constants {
   }
 
   public static class CommConstants {
-    public static final String arduinoPort = ""; // We need to determine what port the arduino will be connected to.
+    public static final String arduinoPort = "COM6"; // We need to determine what port the arduino will be connected to.
   }
 }

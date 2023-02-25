@@ -115,7 +115,7 @@ public final class Constants {
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
       public static final double MinimumPositionMeters = 0.78; //TODO confirm values
       public static final double MaximumPositionMeters = 1.32; //TODO confirm values
-      public static final double ExtenderSafeLimit = 1; //TODO confirm values
+      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.02; //TODO confirm values
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceMeters = 0.02; //TODO confirm values
     }

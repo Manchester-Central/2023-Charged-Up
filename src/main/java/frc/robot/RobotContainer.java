@@ -110,8 +110,8 @@ public class RobotContainer {
   private void operaterControls(){
     m_operator.a().whileTrue(new Grip(m_arm));
     m_operator.b().whileTrue(new UnGrip(m_arm));
-    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(90), CoordinateType.ArmRelative));
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-225), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(-90), CoordinateType.ArmRelative));
+    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-225), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
     m_operator.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
     m_operator.leftBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-135), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
   }

@@ -25,6 +25,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
+import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.logging.LogManager;
 
 /** Add your docs here. */
@@ -79,8 +80,8 @@ public class Shoulder {
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
 
-    public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters) {
-        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
+    public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
+        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit || wristAngle.getDegrees() >= WristConstants.MaximumSafeAngleDegrees || wristAngle.getDegrees() <= WristConstants.MinimumSafeAngleDegrees) {
             double normalizedCurrentAngle = normalize(getRotation());
             if (normalizedCurrentAngle < -90) {
                 m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);

@@ -99,12 +99,13 @@ public final class Constants {
       public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
       public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
-      public static final double MinimumAngle = -225; //TODO confirm values
-      public static final double MaximumAngle = 45; //TODO confirm values
+      public static final double MinimumAngleDegrees = -225; //TODO confirm values
+      public static final double MaximumAngleDegrees = 45; //TODO confirm values
       public static final double MinDangerAngle = -120; //TODO confirm values
       public static final double MaxDangerAngle = -60; //TODO confirm values 
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
+      public static final double Gearing = 24576/180.0; //TODO confirm values
     }
 
     public static class ExtenderConstants{

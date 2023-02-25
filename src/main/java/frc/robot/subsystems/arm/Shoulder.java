@@ -14,8 +14,13 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
@@ -31,8 +36,19 @@ public class Shoulder {
     SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
     PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
-    double m_simAngle = 0;
-    double m_targetDegrees = m_simAngle;
+    double m_targetDegrees = Double.NaN;
+    PIDController m_simPid = new PIDController(0, 0, 0);
+
+    final SingleJointedArmSim m_armSim = 
+    new SingleJointedArmSim(
+        DCMotor.getNEO(4), 
+        ShoulderConstants.Gearing, 
+        SingleJointedArmSim.estimateMOI(ExtenderConstants.MaximumPositionMeters, 13.687), 
+        ExtenderConstants.MaximumPositionMeters, 
+        Rotation2d.fromDegrees(ShoulderConstants.MinimumAngleDegrees).getRadians(), 
+        Rotation2d.fromDegrees(ShoulderConstants.MaximumAngleDegrees).getRadians(), 
+        true
+        );
 
     public Shoulder () {
         m_shoulderL_A = new CANSparkMax(ShoulderConstants.CanIdShoulderL_A, MotorType.kBrushless);
@@ -53,12 +69,12 @@ public class Shoulder {
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.0001, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
-        m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngle, ShoulderConstants.MaximumAngle);
+        m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
     }
 
     public Rotation2d getRotation() {
         if(Robot.isSimulation()) {
-            return Rotation2d.fromDegrees(m_simAngle);
+            return Rotation2d.fromRadians(m_armSim.getAngleRads());
         }
         return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
     }
@@ -107,6 +123,7 @@ public class Shoulder {
         setPID(pidUpdate, m_shoulderL_B.getPIDController());
         setPID(pidUpdate, m_shoulderR_A.getPIDController());
         setPID(pidUpdate, m_shoulderR_B.getPIDController());
+        m_simPid.setPID(pidUpdate.P, pidUpdate.I, pidUpdate.D);
     }
 
     public void setPID(PIDUpdate pidUpdate, SparkMaxPIDController controller) {
@@ -126,15 +143,16 @@ public class Shoulder {
     }
 
     public void periodic() {
-        double increment = 2;
-        if (Math.abs(m_simAngle - m_targetDegrees) <= Math.abs(increment)) {
-            m_simAngle = m_targetDegrees;
-        } else if(m_targetDegrees <= m_simAngle) {
-            m_simAngle = m_simAngle - increment;
-        } else {
-            m_simAngle = m_simAngle + increment; 
-        }
         m_pidTuner.tune();
+        if (Robot.isSimulation()) {
+            if(DriverStation.isEnabled() && Double.isFinite(m_targetDegrees)) {
+                double voltage = MathUtil.clamp(m_simPid.calculate(getRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
+                m_armSim.setInput(voltage);
+            } else{
+                m_armSim.setInput(0);
+            }
+            m_armSim.update(0.02);
+        }
     }
     public void stop() {
      //TODO After testing, should remain at current position instead.
@@ -142,6 +160,6 @@ public class Shoulder {
         m_shoulderL_B.stopMotor();
         m_shoulderR_A.stopMotor();
         m_shoulderR_B.stopMotor();
-        m_targetDegrees = m_simAngle;
+        m_targetDegrees = Double.NaN;
     }
 }

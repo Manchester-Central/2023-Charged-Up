@@ -11,10 +11,12 @@ import frc.robot.Constants;
 // TODO clean up code and prioritize readability.
 
 public class ArduinoIO extends SubsystemBase {
-    private final int NUM_BYTES_TO_RECEIVE = 12; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
+    private final int NUM_BYTES_TO_RECEIVE = 14; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
     private SerialPort m_arduino;
-        private RGB m_rgbValues = new RGB(0, 0, 0);
-        private Object mutexObject = new Object();
+    private RGBIR m_RGBIRirValues = new RGBIR(0, 0, 0, 0);
+    private int proximityData = 0;
+    private Object rgbirMutex = new Object();
+    private Object infaredMutex = new Object();
 
     public ArduinoIO() {
         m_arduino = SerialPort.getCommPort(Constants.CommConstants.arduinoPort);
@@ -23,17 +25,17 @@ public class ArduinoIO extends SubsystemBase {
     @Override
     public void periodic() {
         m_arduino.openPort();
-            if(m_arduino.bytesAvailable() >= 12) {
+            if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
                 readAndInterpretColors();
             }
-            SmartDashboard.putNumber("Red", (double) m_rgbValues.R); 
-            SmartDashboard.putNumber("Green", (double) m_rgbValues.G); 
-            SmartDashboard.putNumber("Blue", (double) m_rgbValues.B); 
+            SmartDashboard.putNumber("Red", (double) m_RGBIRirValues.R); 
+            SmartDashboard.putNumber("Green", (double) m_RGBIRirValues.G); 
+            SmartDashboard.putNumber("Blue", (double) m_RGBIRirValues.B); 
     }
 
-    public RGB getRGBValues() {
-        synchronized(mutexObject) {
-            return m_rgbValues;
+    public RGBIR getRGBIRValues() {
+        synchronized(rgbirMutex) {
+            return m_RGBIRirValues;
         }
     }
 
@@ -46,37 +48,32 @@ public class ArduinoIO extends SubsystemBase {
   [11-13]: Red sensor data.
 */
 
-    private void readProximityData() {
-
-    }
-
-    private void readInfaredData() {
-        
-    }
-
-    private void readAndInterpretColors() {
+    private void readArduinoOutput() {
         byte[] incomingBytes = new byte[NUM_BYTES_TO_RECEIVE];
         m_arduino.readBytes(incomingBytes, NUM_BYTES_TO_RECEIVE);
+        int infared = 0; // TODO test these values when we have the robot.
+        proximityData = 0; // TODO test this value when we have the robot.
         int green = (incomingBytes[5]&0xff)|((incomingBytes[6]&0xff)<<8);
         int blue = (incomingBytes[8]&0xff)|((incomingBytes[9]&0xff)<<8);
         int red = (incomingBytes[11]&0xff)|(((incomingBytes[12]&0xff)<<8));
-
         if(red > blue && red > green && red < 210) { // Color correction. These values were aquired via testing.
             red += 75;
         }
-        synchronized(mutexObject) {
-            m_rgbValues = new RGB(red, green, blue);
+        synchronized(rgbirMutex) {
+            m_RGBIRirValues = new RGBIR(red, green, blue, infared);
         }
     }
 
-    public class RGB {
+    public class RGBIR {
         private int R = 0;
         private int G = 0;
         private int B = 0;
-        public RGB(int iR, int iG, int iB) {
+        private int IR = 0;
+        public RGBIR(int iR, int iG, int iB, int iIR) {
             R = iR;
             G = iG;
             B = iB;
+            IR = iIR;
         }
        
     }

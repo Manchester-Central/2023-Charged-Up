@@ -31,7 +31,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
     SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
     SmartDashboard.putString("Arm/Grippermode", m_gripper.getGripperMode().name());
-    m_shoulder.periodic();
+    m_shoulder.periodic(m_extender.getPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();
     m_gripper.periodic();
@@ -74,6 +74,10 @@ public class Arm extends SubsystemBase {
     m_wrist.stop();
     m_gripper.setGripperMode(GripperMode.stop);
   }
+
+public Object getDegrees() {
+    return null;
+}
 }
 
 // “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23

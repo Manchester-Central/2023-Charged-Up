@@ -31,6 +31,8 @@ public class MoveArm extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_arm.setArmTarget(m_armPose);
+    System.out.println("Move Arm Started");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,12 +44,14 @@ public class MoveArm extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.stop();
+    // m_arm.stop();
+    System.out.println("Move Arm Finished");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println(m_arm.reachedTarget());
     return m_arm.reachedTarget();
   }
 }

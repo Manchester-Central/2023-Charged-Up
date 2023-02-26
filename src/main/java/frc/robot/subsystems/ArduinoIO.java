@@ -56,7 +56,7 @@ public class ArduinoIO extends SubsystemBase {
         int green = (incomingBytes[5]&0xff)|((incomingBytes[6]&0xff)<<8);
         int blue = (incomingBytes[8]&0xff)|((incomingBytes[9]&0xff)<<8);
         int red = (incomingBytes[11]&0xff)|(((incomingBytes[12]&0xff)<<8));
-        if(red > blue && red > green && red < 210) { // Color correction. These values were aquired via testing.
+        if(red > blue && red > green && red < 210) { // Color correction. These values were acquired via testing.
             red += 75;
         }
         synchronized(rgbirMutex) {
@@ -79,7 +79,11 @@ public class ArduinoIO extends SubsystemBase {
     }
 
     // This function will be available to all subsystems and commands. However, it can only be utilized by one at a time.
-    public synchronized void queueLEDS(int red, int green, int blue) {
-        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue}, 3);
+    public synchronized void queueLEDS(int red, int green, int blue, LED target) {
+        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue, (byte) ((target==LED.CURRENT_GAME_PIECE_INDICATOR) ? 0:1)}, 4); // if the desired LED is CURRENT_GAME_PIECE_INDICATOR,  send 0. If not, send 1.
+    }
+
+    public enum LED {
+        CURRENT_GAME_PIECE_INDICATOR, DESIRED_GAME_PIECE_INDICATOR
     }
 }

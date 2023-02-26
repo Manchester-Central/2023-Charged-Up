@@ -37,12 +37,30 @@ public class ArduinoIO extends SubsystemBase {
         }
     }
 
+    /**
+  Index values:
+  [0-1]: Proximity sensor.
+  [2-4]: Infared.
+  [5-7]: Green sensor data.
+  [8-10]: Blue sensor data.
+  [11-13]: Red sensor data.
+*/
+
+    private void readProximityData() {
+
+    }
+
+    private void readInfaredData() {
+        
+    }
+
     private void readAndInterpretColors() {
         byte[] incomingBytes = new byte[NUM_BYTES_TO_RECEIVE];
         m_arduino.readBytes(incomingBytes, NUM_BYTES_TO_RECEIVE);
-        int green = (incomingBytes[3]&0xff)|((incomingBytes[4]&0xff)<<8);
-        int blue = (incomingBytes[6]&0xff)|((incomingBytes[7]&0xff)<<8);
-        int red = (incomingBytes[9]&0xff)|(((incomingBytes[10]&0xff)<<8));
+        int green = (incomingBytes[5]&0xff)|((incomingBytes[6]&0xff)<<8);
+        int blue = (incomingBytes[8]&0xff)|((incomingBytes[9]&0xff)<<8);
+        int red = (incomingBytes[11]&0xff)|(((incomingBytes[12]&0xff)<<8));
+
         if(red > blue && red > green && red < 210) { // Color correction. These values were aquired via testing.
             red += 75;
         }
@@ -50,11 +68,6 @@ public class ArduinoIO extends SubsystemBase {
             m_rgbValues = new RGB(red, green, blue);
         }
     }
-
-    private RGB normalizeColors() {
-        return new RGB(0, 0, 0);
-    }
-
 
     public class RGB {
         private int R = 0;

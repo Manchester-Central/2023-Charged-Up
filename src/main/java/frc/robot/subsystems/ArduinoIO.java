@@ -77,4 +77,9 @@ public class ArduinoIO extends SubsystemBase {
         }
        
     }
+
+    // This function will be available to all subsystems and commands. However, it can only be utilized by one at a time.
+    public synchronized void queueLEDS(int red, int green, int blue) {
+        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue}, 3);
+    }
 }

@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.fazecast.jSerialComm.SerialPort;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -11,7 +12,6 @@ import frc.robot.Constants;
 
 public class ArduinoIO extends SubsystemBase {
     private final int NUM_BYTES_TO_RECEIVE = 12; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
-
     private SerialPort m_arduino;
         private RGB m_rgbValues = new RGB(0, 0, 0);
         private Object mutexObject = new Object();
@@ -26,12 +26,9 @@ public class ArduinoIO extends SubsystemBase {
             if(m_arduino.bytesAvailable() >= 12) {
                 readAndInterpretColors();
             }
-            System.out.print("RED: ");
-            System.out.println(getRGBValues().R);
-            System.out.print("GREEN: ");
-            System.out.println(getRGBValues().G);
-            System.out.print("BLUE: ");
-            System.out.println(getRGBValues().B);
+            SmartDashboard.putNumber("Red", (double) m_rgbValues.R); 
+            SmartDashboard.putNumber("Green", (double) m_rgbValues.G); 
+            SmartDashboard.putNumber("Blue", (double) m_rgbValues.B); 
     }
 
     public RGB getRGBValues() {

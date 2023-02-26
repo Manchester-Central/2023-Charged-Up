@@ -87,15 +87,54 @@ public final class Constants {
 
   public static final double UpdateFrequency_Hz = 50;
   public static final boolean Is2022Robot = false;
+  public static final double DriveToTargetTolerance = 0.03;
+  public static final double AnglePIDTolerance = 3.0;
 
   public static class ArmConstants{
-    public static final int CanIdShoulderL_A = 10;
-    public static final int CanIdShoulderL_B = 11;
-    public static final int CanIdShoulderR_A = 12;
-    public static final int CanIdShoulderR_B = 13;
-    public static final double ShoulderAngleConversionFactor = 360; //TODO confirm values
-    public static final double ShoulderAngleZeroOffset = 0; //TODO confirm values
-    public static final int CanIdExtender = 14;
-    public static final int CanIdWrist = 15;
-  }
+    public static class ShoulderConstants{
+      public static final int CanIdShoulderL_A = 10;
+      public static final int CanIdShoulderL_B = 11;
+      public static final int CanIdShoulderR_A = 12;
+      public static final int CanIdShoulderR_B = 13;
+      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
+      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double MinimumAngleDegrees = -225; //TODO confirm values
+      public static final double MaximumAngleDegrees = 45; //TODO confirm values
+      public static final double MinDangerAngle = -120; //TODO confirm values
+      public static final double MaxDangerAngle = -60; //TODO confirm values 
+      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceDegrees = 0.5; //TODO confirm values
+      public static final double Gearing = 24576/180.0; //TODO confirm values
+    }
+
+    public static class ExtenderConstants{
+      public static final int CanIdExtender = 14;
+      public static final double LinearPotConversionFactor = 1; //TODO confirm values
+      public static final double LinearPotOffsetMeters = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double MinimumPositionMeters = 0.78; //TODO confirm values
+      public static final double MaximumPositionMeters = 1.32; //TODO confirm values
+      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.02; //TODO confirm values
+      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceMeters = 0.02; //TODO confirm values
+    }
+
+    public static class WristConstants{
+      public static final int CanIdWrist = 15;
+      public static final double MinimumAngle = -10; //TODO confirm values
+      public static final double MaximumAngle = 370; //TODO confirm values
+      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
+      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
+      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ToleranceDegrees = 0.5; //TODO confirm values
+      public static final double MinimumSafeAngleDegrees = 150;
+      public static final double MaximumSafeAngleDegrees = 210;
+    }
+
+    public static class GripperConstants{
+      public static final int CanIdGripper = 16;
+    }
+  } 
 }

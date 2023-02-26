@@ -152,9 +152,6 @@ public abstract class SwerveModule {
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
-  
-
-
 
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());
@@ -180,3 +177,4 @@ public abstract class SwerveModule {
 
 
 }
+//“If you don’t agree to focus, you’re going to the business team.” -Josh 2/21/2023

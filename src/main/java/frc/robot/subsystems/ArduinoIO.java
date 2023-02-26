@@ -26,7 +26,7 @@ public class ArduinoIO extends SubsystemBase {
     public void periodic() {
         m_arduino.openPort();
             if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
-                readAndInterpretColors();
+                readArduinoOutput();
             }
             SmartDashboard.putNumber("Red", (double) m_RGBIRirValues.R); 
             SmartDashboard.putNumber("Green", (double) m_RGBIRirValues.G); 

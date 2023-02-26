@@ -4,15 +4,23 @@
 
 package frc.robot;
 
+import com.chaos131.auto.AutoBuilder;
+import com.chaos131.auto.ParsedCommand;
+import com.chaos131.gamepads.Gamepad;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
-import frc.robot.commands.RecalibrateModules;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
@@ -21,24 +29,8 @@ import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Wrist.CoordinateType;
+import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.swerve.SwerveDrive;
-
-import com.chaos131.auto.AutoBuilder;
-import com.chaos131.auto.ParsedCommand;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-
-import com.chaos131.gamepads.Gamepad;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -83,6 +75,7 @@ public class RobotContainer {
   private void configureBindings() {
     driverControls();
     operaterControls();
+    dashboardCommands();
     //m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -110,10 +103,15 @@ public class RobotContainer {
   private void operaterControls(){
     m_operator.a().whileTrue(new Grip(m_arm));
     m_operator.b().whileTrue(new UnGrip(m_arm));
-    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-225), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
-    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-45), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
-    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, Rotation2d.fromDegrees(-135), ExtenderConstants.MaximumPositionMeters, Rotation2d.fromDegrees(0), CoordinateType.ArmRelative));
+    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
+    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
+  }
+
+  private void dashboardCommands() {
+    // created a test command on Shuffleboard for each known pose (waits 2 seconds because the ChaosBoard needs to be in focus to run correctly)
+    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new WaitCommand(2).andThen(new MoveArm(m_arm, pose))));
   }
 
   /**

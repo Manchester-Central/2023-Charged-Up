@@ -74,10 +74,6 @@ public class Arm extends SubsystemBase {
     m_wrist.stop();
     m_gripper.setGripperMode(GripperMode.stop);
   }
-
-public Object getDegrees() {
-    return null;
-}
 }
 
 // “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23

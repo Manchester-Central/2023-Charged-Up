@@ -107,6 +107,7 @@ public class RobotContainer {
     m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
     m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
     m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
+    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
   }
 
   private void dashboardCommands() {

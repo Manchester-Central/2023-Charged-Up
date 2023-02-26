@@ -42,6 +42,8 @@ public class ArmPose {
     public static final ArmPose TopLeftTestPose = addStaticPose("TopLeft", -225, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
     public static final ArmPose BottomRightTestPose = addStaticPose("BottomRight", -45, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
     public static final ArmPose BottomLeftTestPose = addStaticPose("BottomLeft", -135, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
+    public static final ArmPose StraightPose = addStaticPose("Straight", 0, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
+
 
     public static void forAllPoses(BiConsumer<String, ArmPose> lambdaFunction) {
         ArmPoses.forEach(lambdaFunction);

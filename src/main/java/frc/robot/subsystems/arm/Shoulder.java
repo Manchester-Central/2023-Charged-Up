@@ -21,6 +21,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
@@ -40,12 +41,14 @@ public class Shoulder {
     double m_targetDegrees = Double.NaN;
     PIDController m_simPid = new PIDController(0, 0, 0);
 
+    private final double kSimExtenderFixedPosition = ExtenderConstants.MaximumPositionMeters;
+
     final SingleJointedArmSim m_armSim = 
     new SingleJointedArmSim(
         DCMotor.getNEO(4), 
         ShoulderConstants.Gearing, 
-        SingleJointedArmSim.estimateMOI(ExtenderConstants.MaximumPositionMeters, 13.687), 
-        ExtenderConstants.MaximumPositionMeters, 
+        SingleJointedArmSim.estimateMOI(kSimExtenderFixedPosition, 13.687), 
+        kSimExtenderFixedPosition, 
         Rotation2d.fromDegrees(ShoulderConstants.MinimumAngleDegrees).getRadians(), 
         Rotation2d.fromDegrees(ShoulderConstants.MaximumAngleDegrees).getRadians(), 
         true
@@ -140,21 +143,43 @@ public class Shoulder {
     }
 
     public boolean atTarget(){
+        if (Double.isNaN(m_targetDegrees)) {
+            return false;
+        }
         return Math.abs(getRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
     }
 
-    public void periodic() {
+    private double getFeedForward(double currentExtensionMeters) {
+        double slope = (ShoulderConstants.MaximumFeedForwardVoltage - ShoulderConstants.MinimumFeedForwardVoltage) / 
+        (ExtenderConstants.MaximumPositionMeters - ExtenderConstants.MinimumPositionMeters);
+        double offset = ShoulderConstants.MinimumFeedForwardVoltage - (ExtenderConstants.MinimumPositionMeters * slope);
+        double maxFeedForward = (slope * currentExtensionMeters) + offset;
+        return maxFeedForward * getRotation().getCos();
+    }
+
+    public void periodic(double currentExtensionMeters) {
+        double feedForwardVoltage = getFeedForward(currentExtensionMeters);
+        m_shoulderL_A.getPIDController().setFF(feedForwardVoltage);
+        m_shoulderL_B.getPIDController().setFF(feedForwardVoltage);
+        m_shoulderR_A.getPIDController().setFF(feedForwardVoltage);
+        m_shoulderR_B.getPIDController().setFF(feedForwardVoltage);
         m_pidTuner.tune();
         if (Robot.isSimulation()) {
+            feedForwardVoltage = getFeedForward(kSimExtenderFixedPosition);
             if(DriverStation.isEnabled() && Double.isFinite(m_targetDegrees)) {
                 double voltage = MathUtil.clamp(m_simPid.calculate(getRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
-                m_armSim.setInput(voltage);
+                double voltageWithFeedForward = voltage + feedForwardVoltage;
+                m_armSim.setInput(voltageWithFeedForward);
+                SmartDashboard.putNumber("Arm/VoltageWithFeedForward", voltageWithFeedForward);
+                SmartDashboard.putNumber("Arm/Voltage", voltage);
             } else{
                 m_armSim.setInput(0);
             }
-            m_armSim.update(0.02);
+            m_armSim.update(0.02);          
         }
+        SmartDashboard.putNumber("Arm/CosineValue", getRotation().getCos());
     }
+
     public void stop() {
      //TODO After testing, should remain at current position instead.
         m_shoulderL_A.stopMotor();

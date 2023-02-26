@@ -106,6 +106,8 @@ public final class Constants {
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double Gearing = 24576/180.0; //TODO confirm values
+      public static final double MinimumFeedForwardVoltage = 0.45;
+      public static final double MaximumFeedForwardVoltage = 0.75;
     }
 
     public static class ExtenderConstants{

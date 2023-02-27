@@ -89,22 +89,22 @@ public class RobotContainer {
   }
 
   private void driverControls() {
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
+    // m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(0)));
-    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(180)));
-    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
-    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
+    // m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(0)));
+    // m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(180)));
+    // m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
+    // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
-    m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
-    m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
-    m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
+    // m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
+    // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
+    // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
-    m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
+    // m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
+    // m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
-    m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
+    // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
+    // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
   }
 
   private void operaterControls(){

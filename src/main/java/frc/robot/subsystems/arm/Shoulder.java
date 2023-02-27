@@ -6,6 +6,7 @@ package frc.robot.subsystems.arm;
 
 import com.chaos131.pid.PIDTuner;
 import com.chaos131.pid.PIDUpdate;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,7 +37,7 @@ public class Shoulder {
     CANSparkMax m_shoulderL_B;
     CANSparkMax m_shoulderR_A;
     CANSparkMax m_shoulderR_B;
-    SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
+    DutyCycleEncoder m_AbsoluteEncoder;
     PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_targetDegrees = Double.NaN;
@@ -61,9 +63,9 @@ public class Shoulder {
         m_shoulderR_B = new CANSparkMax(ShoulderConstants.CanIdShoulderR_B, MotorType.kBrushless);
         m_shoulderR_A.setInverted(true);
         m_shoulderR_B.setInverted(true);
-        m_AbsoluteEncoder = m_shoulderL_B.getAbsoluteEncoder(Type.kDutyCycle);
-        m_AbsoluteEncoder.setPositionConversionFactor(ShoulderConstants.AbsoluteAngleConversionFactor);
-        m_AbsoluteEncoder.setZeroOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
+        m_AbsoluteEncoder = new DutyCycleEncoder(ShoulderConstants.AbsoluteEncoderDIOPort);
+        m_AbsoluteEncoder.setDistancePerRotation(ShoulderConstants.AbsoluteAngleConversionFactor);
+        m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
         for (CANSparkMax canSparkMax : motorControllers) {
             initializeSparkMaxEncoder(canSparkMax, getRotation());
@@ -80,7 +82,7 @@ public class Shoulder {
         if(Robot.isSimulation()) {
             return Rotation2d.fromRadians(m_armSim.getAngleRads());
         }
-        return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
+        return Rotation2d.fromDegrees(m_AbsoluteEncoder.get());
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
@@ -170,14 +172,11 @@ public class Shoulder {
                 double voltage = MathUtil.clamp(m_simPid.calculate(getRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
                 double voltageWithFeedForward = voltage + feedForwardVoltage;
                 m_armSim.setInput(voltageWithFeedForward);
-                SmartDashboard.putNumber("Arm/VoltageWithFeedForward", voltageWithFeedForward);
-                SmartDashboard.putNumber("Arm/Voltage", voltage);
             } else{
                 m_armSim.setInput(0);
             }
             m_armSim.update(0.02);          
         }
-        SmartDashboard.putNumber("Arm/CosineValue", getRotation().getCos());
     }
 
     public void setManual(double speed) {

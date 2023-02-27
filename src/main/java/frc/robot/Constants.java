@@ -97,6 +97,7 @@ public final class Constants {
       public static final int CanIdShoulderL_B = 11;
       public static final int CanIdShoulderR_A = 12;
       public static final int CanIdShoulderR_B = 13;
+      public static final int AbsoluteEncoderDIOPort = 0;
       public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
       public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
       public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values

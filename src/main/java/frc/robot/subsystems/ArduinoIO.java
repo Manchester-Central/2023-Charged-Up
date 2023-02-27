@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.fazecast.jSerialComm.SerialPort;
@@ -17,13 +18,23 @@ public class ArduinoIO extends SubsystemBase {
     private int proximityData = 0;
     private Object PeripheralDataMutex = new Object();
     private Object infaredMutex = new Object();
-
+    
     public ArduinoIO() {
-        m_arduino = SerialPort.getCommPort(Constants.CommConstants.arduinoPort);
+        SerialPort[] availablePorts;
+        availablePorts = SerialPort.getCommPorts();
+        for(int i = 0; i < availablePorts.length; i++) {
+            System.out.println(availablePorts[i].getDescriptivePortName());
+        }
+        try {
+        m_arduino = availablePorts[0];
+        } catch(Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
     public void periodic() {
+        if(m_arduino == null) return;
         m_arduino.openPort();
             if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
                 readArduinoOutput();

@@ -30,8 +30,8 @@ public final class Constants {
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 2.5; //TODO confirm
     public static final double MaxRobotRotation_radps = 1; //TODO revert rotation speed to 2 after testing.
-    public static final int CanIdFrontLeftAngle = 2;
-    public static final int CanIdFrontLeftVelocity = 1;
+    public static final int CanIdFrontLeftAngle = 1;
+    public static final int CanIdFrontLeftVelocity = 2;
     public static final int CanIdFrontRightAngle = 4;
     public static final int CanIdFrontRightVelocity = 3;
     public static final int CanIdBackLeftAngle = 6;
@@ -42,14 +42,14 @@ public final class Constants {
     public static final double VelocityEncoderRatio = 72 / 11;
     public static final double WheelDiameter = 0.092;
     public static final double WheelCircumference = WheelDiameter * Math.PI;
-    public static final int AnalogInputFrontLeftAbsoluteEncoder = 1;
-    public static final int AnalogInputFrontRightAbsoluteEncoder = 2;
-    public static final int AnalogInputBackLeftAbsoluteEncoder = 3;
-    public static final int AnalogInputBackRightAbsoluteEncoder = 0;
-    public static final double AbsoluteAngleOffsetFrontLeft = 244;
-    public static final double AbsoluteAngleOffsetFrontRight =  164.2;
-    public static final double AbsoluteAngleOffsetBackLeft = 213.5;
-    public static final double AbsoluteAngleOffsetBackRight = 216.5;
+    public static final int AnalogInputFrontLeftAbsoluteEncoder = 3;
+    public static final int AnalogInputFrontRightAbsoluteEncoder = 0;
+    public static final int AnalogInputBackLeftAbsoluteEncoder = 2;
+    public static final int AnalogInputBackRightAbsoluteEncoder = 1;
+    public static final double AbsoluteAngleOffsetFrontLeft = 238.3;
+    public static final double AbsoluteAngleOffsetFrontRight =  231.6;
+    public static final double AbsoluteAngleOffsetBackLeft = 327.2;
+    public static final double AbsoluteAngleOffsetBackRight = 100.0;
   }
 
   public static class SwerveConstants2022 {

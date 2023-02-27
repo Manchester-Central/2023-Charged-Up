@@ -38,25 +38,25 @@ public class ArmPose {
     }
 
     //Stowed Pose
-    public static final ArmPose StowedPose = addStaticPose("Stowed", -90, ExtenderConstants.MinimumPositionMeters, -180, CoordinateType.ArmRelative);
+    public static final ArmPose StowedPose = addStaticPose("Stowed", -90, ExtenderConstants.MinimumPositionMeters, 180, CoordinateType.ArmRelative);
     
     //Pick Poses
-    public static final ArmPose PickFlatPose = addStaticPose("PickFlatPose", -20, ExtenderConstants.MinimumPositionMeters, 20, CoordinateType.ArmRelative);
-    public static final ArmPose PickWithWristUpPose = addStaticPose("PickWithWristUp", -70, ExtenderConstants.MinimumPositionMeters, 70, CoordinateType.ArmRelative);
+    public static final ArmPose PickFlatPose = addStaticPose("PickFlatPose", 45, ExtenderConstants.MinimumPositionMeters, 20, CoordinateType.ArmRelative);
+    public static final ArmPose PickWithWristUpPose = addStaticPose("PickWithWristUpPose", 30, ExtenderConstants.MinimumPositionMeters, 70, CoordinateType.ArmRelative);
 
     //Intake Poses
     public static final ArmPose IntakeFlatPose = addStaticPose("IntakeFlatPose", -60, ExtenderConstants.MinimumPositionMeters,60, CoordinateType.ArmRelative);
-    public static final ArmPose IntakeWithWristUpPose = addStaticPose("IntakeWithWristUpPose", -50, ExtenderConstants.MinimumPositionMeters + 0.3, 50, CoordinateType.ArmRelative);
+    public static final ArmPose IntakeWithWristDownPose = addStaticPose("IntakeWithWristDownPose", -50, ExtenderConstants.MinimumPositionMeters + 0.3, 50, CoordinateType.ArmRelative);
 
     //Cube Poses
-    public static final ArmPose CubeLowPose = addStaticPose("CubeLowPose", 10, ExtenderConstants.MinimumPositionMeters, -90, CoordinateType.ArmRelative);
-    public static final ArmPose CubeMidPose = addStaticPose("CubeMidPose", -10, ExtenderConstants.MinimumPositionMeters + 0.3, -180, CoordinateType.ArmRelative);
-    public static final ArmPose CubeHighPose = addStaticPose("CubeHighPose", -20, ExtenderConstants.MinimumPositionMeters + 0.5, -90, CoordinateType.ArmRelative);
+    public static final ArmPose CubeLowPose = addStaticPose("CubeLowPose", -40, ExtenderConstants.MinimumPositionMeters + 0.1, 320, CoordinateType.ArmRelative);
+    public static final ArmPose CubeMidPose = addStaticPose("CubeMidPose", -10, ExtenderConstants.MinimumPositionMeters + 0.2, 310, CoordinateType.ArmRelative);
+    public static final ArmPose CubeHighPose = addStaticPose("CubeHighPose", 10, ExtenderConstants.MinimumPositionMeters + 0.5, 310, CoordinateType.ArmRelative);
 
     //Cone Poses
-    public static final ArmPose ConeLowPose = addStaticPose("ConeLowPose", -80, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative);
-    public static final ArmPose ConeMidPose = addStaticPose("ConeMidPose", -60, ExtenderConstants.MinimumPositionMeters + 0.3, 0, CoordinateType.ArmRelative);
-    public static final ArmPose ConeHighPose = addStaticPose("ConeHighPose", -10, ExtenderConstants.MinimumPositionMeters + 0.5, 0, CoordinateType.ArmRelative);
+    public static final ArmPose ConeLowPose = addStaticPose("ConeLowPose", -50, ExtenderConstants.MinimumPositionMeters + 0.1, 53, CoordinateType.ArmRelative);
+    public static final ArmPose ConeMidPose = addStaticPose("ConeMidPose", 5, ExtenderConstants.MinimumPositionMeters + 0.15, 0, CoordinateType.ArmRelative);
+    public static final ArmPose ConeHighPose = addStaticPose("ConeHighPose", 15, ExtenderConstants.MinimumPositionMeters + 1.32, -5, CoordinateType.ArmRelative);
 
     //Test Poses
     public static final ArmPose TopRightTestPose = addStaticPose("TopRight", 45, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);

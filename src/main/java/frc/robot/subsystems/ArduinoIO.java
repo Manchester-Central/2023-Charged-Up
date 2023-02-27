@@ -13,9 +13,9 @@ import frc.robot.Constants;
 public class ArduinoIO extends SubsystemBase {
     private final int NUM_BYTES_TO_RECEIVE = 14; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
     private SerialPort m_arduino;
-    private RGBIR m_RGBIRirValues = new RGBIR(0, 0, 0, 0);
+    private PeripheralData m_PeripheralDataValues = new PeripheralData(0, 0, 0, 0, 0);
     private int proximityData = 0;
-    private Object rgbirMutex = new Object();
+    private Object PeripheralDataMutex = new Object();
     private Object infaredMutex = new Object();
 
     public ArduinoIO() {
@@ -28,14 +28,16 @@ public class ArduinoIO extends SubsystemBase {
             if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
                 readArduinoOutput();
             }
-            SmartDashboard.putNumber("Red", (double) m_RGBIRirValues.R); 
-            SmartDashboard.putNumber("Green", (double) m_RGBIRirValues.G); 
-            SmartDashboard.putNumber("Blue", (double) m_RGBIRirValues.B); 
+            SmartDashboard.putNumber("Red", (double) m_PeripheralDataValues.R); 
+            SmartDashboard.putNumber("Green", (double) m_PeripheralDataValues.G); 
+            SmartDashboard.putNumber("Blue", (double) m_PeripheralDataValues.B); 
+            SmartDashboard.putNumber("Infared", m_PeripheralDataValues.IR);
+            SmartDashboard.putNumber("Proximity Sensor", m_PeripheralDataValues.proximity);
     }
 
-    public RGBIR getRGBIRValues() {
-        synchronized(rgbirMutex) {
-            return m_RGBIRirValues;
+    public PeripheralData getPeripheralDataValues() {
+        synchronized(PeripheralDataMutex) {
+            return m_PeripheralDataValues;
         }
     }
 
@@ -51,30 +53,38 @@ public class ArduinoIO extends SubsystemBase {
     private void readArduinoOutput() {
         byte[] incomingBytes = new byte[NUM_BYTES_TO_RECEIVE];
         m_arduino.readBytes(incomingBytes, NUM_BYTES_TO_RECEIVE);
-        int infared = 0; // TODO test these values when we have the robot.
-        proximityData = 0; // TODO test this value when we have the robot.
+        int proximityData = incomingBytes[0]&0xff; // TODO test these values when we have the robot.
+        int infared = (incomingBytes[2]&0xff)|((incomingBytes[3]&0xff)<<8); // TODO test this value when we have the robot.
         int green = (incomingBytes[5]&0xff)|((incomingBytes[6]&0xff)<<8);
         int blue = (incomingBytes[8]&0xff)|((incomingBytes[9]&0xff)<<8);
         int red = (incomingBytes[11]&0xff)|(((incomingBytes[12]&0xff)<<8));
-        if(red > blue && red > green && red < 210) { // Color correction. These values were aquired via testing.
-            red += 75;
-        }
-        synchronized(rgbirMutex) {
-            m_RGBIRirValues = new RGBIR(red, green, blue, infared);
+        synchronized(PeripheralDataMutex) {
+            m_PeripheralDataValues = new PeripheralData(red, green, blue, infared, proximityData);
         }
     }
 
-    public class RGBIR {
+    public class PeripheralData {
         private int R = 0;
         private int G = 0;
         private int B = 0;
         private int IR = 0;
-        public RGBIR(int iR, int iG, int iB, int iIR) {
+        private int proximity;
+        public PeripheralData(int iR, int iG, int iB, int iIR, int iProx) {
             R = iR;
             G = iG;
             B = iB;
             IR = iIR;
+            proximity = iProx;
         }
        
+    }
+
+    // This function will be available to all subsystems and commands. However, it can only be utilized by one at a time.
+    public synchronized void queueLEDS(int red, int green, int blue, LED target) {
+        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue, (byte) ((target==LED.CURRENT_GAME_PIECE_INDICATOR) ? 0:1)}, 4); // if the desired LED is CURRENT_GAME_PIECE_INDICATOR,  send 0. If not, send 1.
+    }
+
+    public enum LED {
+        CURRENT_GAME_PIECE_INDICATOR, DESIRED_GAME_PIECE_INDICATOR
     }
 }

@@ -31,6 +31,7 @@ import frc.robot.commands.UnGrip;
 import frc.robot.commands.test.TestExtender;
 import frc.robot.commands.test.TestShoulder;
 import frc.robot.commands.test.TestWrist;
+import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -48,6 +49,8 @@ public class RobotContainer {
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
   private Arm m_arm = new Arm();
+  private ArduinoIO m_arduinoIO = new ArduinoIO();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 

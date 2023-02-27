@@ -41,6 +41,6 @@ public class Gripper {
     }
 
     public void periodic() {
-        m_sparkMax.getPIDController().setReference(m_gripperMode.getPower(), ControlType.kDutyCycle);
+        m_sparkMax.set(m_gripperMode.getPower());
     }
 }

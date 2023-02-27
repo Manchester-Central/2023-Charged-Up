@@ -87,6 +87,11 @@ public class Extender {
         }
         m_pidTuner.tune();
     }
+
+    public void setManual(double speed) {
+        m_SparkMax.set(speed);
+    }
+    
     public void stop(){
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();

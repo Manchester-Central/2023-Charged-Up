@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
@@ -27,6 +28,9 @@ import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
+import frc.robot.commands.test.TestExtender;
+import frc.robot.commands.test.TestShoulder;
+import frc.robot.commands.test.TestWrist;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -48,6 +52,8 @@ public class RobotContainer {
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
+
+  private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
@@ -76,6 +82,7 @@ public class RobotContainer {
     driverControls();
     operaterControls();
     dashboardCommands();
+    testCommands();
     //m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -101,18 +108,27 @@ public class RobotContainer {
   }
 
   private void operaterControls(){
-    m_operator.a().whileTrue(new Grip(m_arm));
-    m_operator.b().whileTrue(new UnGrip(m_arm));
-    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
-    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
-    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
-    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
+    // m_operator.a().whileTrue(new Grip(m_arm));
+    // m_operator.b().whileTrue(new UnGrip(m_arm));
+    // m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
+    // m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
+    // m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
+    // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
   }
 
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose (waits 2 seconds because the ChaosBoard needs to be in focus to run correctly)
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new WaitCommand(2).andThen(new MoveArm(m_arm, pose))));
+  }
+
+  private void testCommands() {
+    m_tester.a().whileTrue(new TestShoulder(m_arm, m_tester));
+    m_tester.b().whileTrue(new TestExtender(m_arm, m_tester));
+    m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
+    m_operator.rightBumper().whileTrue(new Grip(m_arm));
+    m_operator.leftBumper().whileTrue(new UnGrip(m_arm));
   }
 
   /**

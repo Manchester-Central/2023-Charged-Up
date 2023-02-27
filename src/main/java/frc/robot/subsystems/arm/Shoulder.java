@@ -61,7 +61,7 @@ public class Shoulder {
         m_shoulderR_B = new CANSparkMax(ShoulderConstants.CanIdShoulderR_B, MotorType.kBrushless);
         m_shoulderR_A.setInverted(true);
         m_shoulderR_B.setInverted(true);
-        m_AbsoluteEncoder = m_shoulderL_A.getAbsoluteEncoder(Type.kDutyCycle);
+        m_AbsoluteEncoder = m_shoulderL_B.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(ShoulderConstants.AbsoluteAngleConversionFactor);
         m_AbsoluteEncoder.setZeroOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
@@ -178,6 +178,13 @@ public class Shoulder {
             m_armSim.update(0.02);          
         }
         SmartDashboard.putNumber("Arm/CosineValue", getRotation().getCos());
+    }
+
+    public void setManual(double speed) {
+        m_shoulderL_A.set(speed);
+        m_shoulderL_B.set(speed);
+        m_shoulderR_A.set(speed);
+        m_shoulderR_B.set(speed);
     }
 
     public void stop() {

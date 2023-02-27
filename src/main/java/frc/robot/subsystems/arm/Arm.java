@@ -68,6 +68,18 @@ public class Arm extends SubsystemBase {
     return m_shoulder.atTarget() && m_extender.atTarget() && m_wrist.atTarget();
   }
 
+  public void manualShoulder(double speed) {
+    m_shoulder.setManual(speed);
+  }
+
+  public void manualExtend(double speed) {
+    m_extender.setManual(speed);
+  }
+
+  public void manualWrist(double speed) {
+    m_wrist.setManual(speed);
+  }
+
   public void stop() {
     m_shoulder.stop();
     m_extender.stop();

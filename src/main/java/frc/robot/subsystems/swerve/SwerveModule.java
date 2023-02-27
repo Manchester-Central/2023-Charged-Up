@@ -35,6 +35,8 @@ public abstract class SwerveModule {
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     m_angle = new TalonFX(canIdAngle);
     m_velocity = new TalonFX(canIdVelocity);
+    m_angle.configFactoryDefault();
+    m_velocity.configFactoryDefault();
     m_angle.configAllowableClosedloopError(0, degreesToEncoder(0.5));
     m_velocity.setNeutralMode(NeutralMode.Coast);
     m_angle.setNeutralMode(NeutralMode.Brake);

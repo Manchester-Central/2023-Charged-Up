@@ -100,7 +100,7 @@ public class RobotContainer {
     // m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
     // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
-    // m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
+    m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
     // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     

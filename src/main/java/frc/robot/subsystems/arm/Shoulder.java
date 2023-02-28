@@ -108,9 +108,9 @@ public class Shoulder {
     }
     public static double normalize(double targetDegrees) {
         targetDegrees %= 360;
-        if (targetDegrees <= -230) {
+        if (targetDegrees <= -269) {
             targetDegrees += 360;
-        } else if (targetDegrees >= 50) {
+        } else if (targetDegrees >= 89) {
             targetDegrees -= 360;
         }
         return targetDegrees;

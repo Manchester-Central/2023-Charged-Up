@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
@@ -60,7 +61,15 @@ public class Arm extends SubsystemBase {
       m_wrist.setTarget(armPose.wristAngle);
     }
     else {
-      m_wrist.setTarget(armPose.wristAngle.minus(armPose.shoulderAngle));
+      double fieldRelativeAngle = armPose.wristAngle.minus(armPose.shoulderAngle).getDegrees();
+      m_wrist.setTarget(fieldRelativeAngle); //TODO INCOMPLETE
+      fieldRelativeAngle %= 360;
+      if (fieldRelativeAngle <= WristConstants.MinimumAngle) {
+        fieldRelativeAngle += 360;
+      } else if (fieldRelativeAngle >= WristConstants.MaximumAngle) {
+        fieldRelativeAngle -= 360;
+      }
+      
     }
   }
 

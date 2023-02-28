@@ -100,11 +100,11 @@ public final class Constants {
       public static final int CanIdShoulderR_A = 12;
       public static final int CanIdShoulderR_B = 13;
       public static final int AbsoluteEncoderDIOPort = 0;
-      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
-      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
-      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
-      public static final double MinimumAngleDegrees = -225; //TODO confirm values
-      public static final double MaximumAngleDegrees = 45; //TODO confirm values
+      public static final double AbsoluteAngleConversionFactor = 360; 
+      public static final double AbsoluteAngleZeroOffset = -190; 
+      public static final double SparkMaxEncoderConversionFactor = 2.6768; 
+      public static final double MinimumAngleDegrees = -205; 
+      public static final double MaximumAngleDegrees = 25; 
       public static final double MinDangerAngle = -120; //TODO confirm values
       public static final double MaxDangerAngle = -60; //TODO confirm values 
       public static final double RampUpRate = 0.5; //TODO confirm values

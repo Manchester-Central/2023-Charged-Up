@@ -61,11 +61,13 @@ public class Shoulder {
         m_shoulderL_B = new CANSparkMax(ShoulderConstants.CanIdShoulderL_B, MotorType.kBrushless);
         m_shoulderR_A = new CANSparkMax(ShoulderConstants.CanIdShoulderR_A, MotorType.kBrushless);
         m_shoulderR_B = new CANSparkMax(ShoulderConstants.CanIdShoulderR_B, MotorType.kBrushless);
-        m_shoulderR_A.setInverted(true);
-        m_shoulderR_B.setInverted(true);
+        m_shoulderL_A.setInverted(true);
+        m_shoulderL_B.setInverted(true);
+        m_shoulderR_A.setInverted(false);
+        m_shoulderR_B.setInverted(false);
         m_AbsoluteEncoder = new DutyCycleEncoder(ShoulderConstants.AbsoluteEncoderDIOPort);
-        m_AbsoluteEncoder.setDistancePerRotation(ShoulderConstants.AbsoluteAngleConversionFactor);
-        m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
+        // m_AbsoluteEncoder.setDistancePerRotation(ShoulderConstants.AbsoluteAngleConversionFactor);
+        // m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
         for (CANSparkMax canSparkMax : motorControllers) {
             initializeSparkMaxEncoder(canSparkMax, getRotation());
@@ -82,7 +84,7 @@ public class Shoulder {
         if(Robot.isSimulation()) {
             return Rotation2d.fromRadians(m_armSim.getAngleRads());
         }
-        return Rotation2d.fromDegrees(m_AbsoluteEncoder.get());
+        return Rotation2d.fromDegrees((m_AbsoluteEncoder.getAbsolutePosition() * ShoulderConstants.AbsoluteAngleConversionFactor) + ShoulderConstants.AbsoluteAngleZeroOffset);
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
@@ -142,6 +144,7 @@ public class Shoulder {
        RelativeEncoder encoder = sparkMax.getEncoder();
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
        encoder.setPosition(absoluteAngle.getDegrees());
+       Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", ()->encoder.getPosition());
     }
 
     public boolean atTarget(){

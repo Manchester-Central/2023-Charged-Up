@@ -36,20 +36,25 @@ public class Wrist {
 
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
+        m_SparkMax.setInverted(true);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor);
         m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+        m_AbsoluteEncoder.setInverted(true);
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
+        Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
+  
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
         encoder.setPositionConversionFactor(WristConstants.SparkMaxEncoderConversionFactor);
         encoder.setPosition(absoluteAngle.getDegrees());
+        Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle) {

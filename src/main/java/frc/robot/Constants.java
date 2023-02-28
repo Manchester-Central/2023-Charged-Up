@@ -130,9 +130,9 @@ public final class Constants {
       public static final int CanIdWrist = 15;
       public static final double MinimumAngle = -10; //TODO confirm values
       public static final double MaximumAngle = 370; //TODO confirm values
-      public static final double AbsoluteAngleConversionFactor = 360; //TODO confirm values
-      public static final double AbsoluteAngleZeroOffset = 0; //TODO confirm values
-      public static final double SparkMaxEncoderConversionFactor = 1; //TODO confirm values
+      public static final double AbsoluteAngleConversionFactor = 360;
+      public static final double AbsoluteAngleZeroOffset = -140;
+      public static final double SparkMaxEncoderConversionFactor = 6.19259;
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double MinimumSafeAngleDegrees = 150;

@@ -75,6 +75,7 @@ public class Shoulder {
             initializeSparkMaxEncoder(canSparkMax, getRotation());
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
+            canSparkMax.getPIDController().setOutputRange(-ShoulderConstants.MaxPIDOutput, ShoulderConstants.MaxPIDOutput);
             //open loop = no pid, closed loop = pid
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.01, 0, 0, this::tunePID);
@@ -104,15 +105,17 @@ public class Shoulder {
         }
     }
 
-    public void setTargetAngle(Rotation2d targetAngle) {
+    public void setTargetAngle(Rotation2d targetAngle, double currentExtensionMeters) {
         double targetDegrees = normalize(targetAngle);
+        double feedForwardVoltage = getArbitraryFeedForward(currentExtensionMeters);
         targetDegrees = m_SafetyZoneHelper.getSafeValue(targetDegrees);
         m_targetDegrees = targetDegrees;
-        m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
-        m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
-        m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition);
-        m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
     }
+
     public static double normalize(double targetDegrees) {
         targetDegrees %= 360;
         if (targetDegrees <= -230) {
@@ -157,7 +160,9 @@ public class Shoulder {
         return Math.abs(getRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
     }
 
-    private double getFeedForward(double currentExtensionMeters) {
+    // We want to add an arbitrary feed forward that applies outside the PID control loop.
+    // https://docs.revrobotics.com/sparkmax/operating-modes/closed-loop-control
+    private double getArbitraryFeedForward(double currentExtensionMeters) {
         double slope = (ShoulderConstants.MaximumFeedForwardVoltage - ShoulderConstants.MinimumFeedForwardVoltage) / 
         (ExtenderConstants.MaximumPositionMeters - ExtenderConstants.MinimumPositionMeters);
         double offset = ShoulderConstants.MinimumFeedForwardVoltage - (ExtenderConstants.MinimumPositionMeters * slope);
@@ -166,15 +171,9 @@ public class Shoulder {
     }
 
     public void periodic(double currentExtensionMeters) {
-        double feedForwardVoltage = getFeedForward(currentExtensionMeters);
-        SmartDashboard.putNumber("shoulder/ff", feedForwardVoltage);
-        m_shoulderL_A.getPIDController().setFF(feedForwardVoltage);
-        m_shoulderL_B.getPIDController().setFF(feedForwardVoltage);
-        m_shoulderR_A.getPIDController().setFF(feedForwardVoltage);
-        m_shoulderR_B.getPIDController().setFF(feedForwardVoltage);
         m_pidTuner.tune();
         if (Robot.isSimulation()) {
-            feedForwardVoltage = getFeedForward(kSimExtenderFixedPosition);
+            double feedForwardVoltage = getArbitraryFeedForward(kSimExtenderFixedPosition);
             if(DriverStation.isEnabled() && Double.isFinite(m_targetDegrees)) {
                 double voltage = MathUtil.clamp(m_simPid.calculate(getRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
                 double voltageWithFeedForward = voltage + feedForwardVoltage;

@@ -40,6 +40,7 @@ public class Extender {
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        m_SparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
         Robot.logManager.addNumber("Extender/ExtensionMeters", () -> getPositionMeters());
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_SparkMax.getEncoder().getPosition());
     }

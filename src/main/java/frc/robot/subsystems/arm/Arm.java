@@ -51,10 +51,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmTarget(ArmPose armPose) {
-    m_shoulder.updateSafetyZones(armPose, m_extender.getPositionMeters(), m_wrist.getRotation());
+    double extensionMeters = m_extender.getPositionMeters();
+    m_shoulder.updateSafetyZones(armPose, extensionMeters, m_wrist.getRotation());
     m_extender.updateSafetyZones(armPose, m_shoulder.getRotation());
     m_wrist.updateSafetyZones(armPose, m_shoulder.getRotation());
-    m_shoulder.setTargetAngle(armPose.shoulderAngle);
+    m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
     m_extender.ExtendToTarget(armPose.extenderPos);
     if (armPose.wristCoordinate == CoordinateType.ArmRelative){
       m_wrist.setTarget(armPose.wristAngle);

@@ -112,6 +112,7 @@ public final class Constants {
       public static final double Gearing = 24576/180.0; //TODO confirm values
       public static final double MinimumFeedForwardVoltage = 0.45;
       public static final double MaximumFeedForwardVoltage = 0.75;
+      public static final double MaxPIDOutput = 0.5; //TODO confirm values
     }
 
     public static class ExtenderConstants{
@@ -124,6 +125,7 @@ public final class Constants {
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.02; //TODO confirm values
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceMeters = 0.02; //TODO confirm values
+      public static final double MaxPIDOutput = 0.5; //TODO confirm values
     }
 
     public static class WristConstants{
@@ -137,6 +139,7 @@ public final class Constants {
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;
+      public static final double MaxPIDOutput = 0.3;
     }
 
     public static class GripperConstants{

@@ -62,14 +62,13 @@ public class Arm extends SubsystemBase {
     }
     else {
       double fieldRelativeAngle = armPose.wristAngle.minus(armPose.shoulderAngle).getDegrees();
-      m_wrist.setTarget(fieldRelativeAngle); //TODO INCOMPLETE
       fieldRelativeAngle %= 360;
       if (fieldRelativeAngle <= WristConstants.MinimumAngle) {
         fieldRelativeAngle += 360;
       } else if (fieldRelativeAngle >= WristConstants.MaximumAngle) {
         fieldRelativeAngle -= 360;
       }
-      
+      m_wrist.setTarget(fieldRelativeAngle);
     }
   }
 

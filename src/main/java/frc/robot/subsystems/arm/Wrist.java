@@ -72,6 +72,12 @@ public class Wrist {
         m_targetDegrees = targetDegrees;
     }
 
+    public void setTarget(double fieldRelativeAngle) {
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(fieldRelativeAngle);
+        m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_targetDegrees = targetDegrees;
+    }
+
     public Rotation2d getRotation() {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);

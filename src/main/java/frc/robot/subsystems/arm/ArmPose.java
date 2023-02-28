@@ -45,8 +45,8 @@ public class ArmPose {
     public static final ArmPose PickWithWristUpPose = addStaticPose("PickWithWristUpPose", -180, ExtenderConstants.MinimumPositionMeters + 0.5, 330, CoordinateType.ArmRelative);
 
     //Intake Poses
-    public static final ArmPose IntakeFlatPose = addStaticPose("IntakeFlatPose", -130, ExtenderConstants.MinimumPositionMeters + 0.5, 305, CoordinateType.ArmRelative);
-    public static final ArmPose IntakeWithWristDownPose = addStaticPose("IntakeWithWristDownPose", -130, ExtenderConstants.MinimumPositionMeters + 0.25, 35, CoordinateType.ArmRelative);
+    public static final ArmPose IntakeFlatPose = addStaticPose("IntakeFlatPose", -130, ExtenderConstants.MinimumPositionMeters + 0.5, -185, CoordinateType.FieldRelative);
+    public static final ArmPose IntakeWithWristDownPose = addStaticPose("IntakeWithWristDownPose", -130, ExtenderConstants.MinimumPositionMeters + 0.25, -90, CoordinateType.FieldRelative);
 
     //Cube Poses
     public static final ArmPose CubeLowPose = addStaticPose("CubeLowPose", -40, ExtenderConstants.MinimumPositionMeters + 0.1, 320, CoordinateType.ArmRelative);

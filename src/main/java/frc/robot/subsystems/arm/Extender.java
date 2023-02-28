@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
@@ -27,6 +28,7 @@ public class Extender {
     private double m_targetMeters = m_simPos;
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
+        m_SparkMax.setInverted(true);
         m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
         m_linearPot = m_SparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
@@ -36,6 +38,8 @@ public class Extender {
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        Robot.logManager.addNumber("Extender/ExtensionMeters", () -> getPositionMeters());
+        Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_SparkMax.getEncoder().getPosition());
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){

@@ -131,8 +131,8 @@ public class RobotContainer {
     m_tester.a().whileTrue(new TestShoulder(m_arm, m_tester));
     m_tester.b().whileTrue(new TestExtender(m_arm, m_tester));
     m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
-    m_operator.rightBumper().whileTrue(new Grip(m_arm));
-    m_operator.leftBumper().whileTrue(new UnGrip(m_arm));
+    m_tester.rightBumper().whileTrue(new Grip(m_arm));
+    m_tester.leftBumper().whileTrue(new UnGrip(m_arm));
   }
 
   /**

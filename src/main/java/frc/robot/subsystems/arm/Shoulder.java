@@ -164,6 +164,7 @@ public class Shoulder {
 
     public void periodic(double currentExtensionMeters) {
         double feedForwardVoltage = getFeedForward(currentExtensionMeters);
+        SmartDashboard.putNumber("shoulder/ff", feedForwardVoltage);
         m_shoulderL_A.getPIDController().setFF(feedForwardVoltage);
         m_shoulderL_B.getPIDController().setFF(feedForwardVoltage);
         m_shoulderR_A.getPIDController().setFF(feedForwardVoltage);

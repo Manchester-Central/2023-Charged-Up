@@ -48,10 +48,10 @@ public final class Constants {
     public static final int AnalogInputFrontRightAbsoluteEncoder = 0;
     public static final int AnalogInputBackLeftAbsoluteEncoder = 2;
     public static final int AnalogInputBackRightAbsoluteEncoder = 1;
-    public static final double AbsoluteAngleOffsetFrontLeft = 238.3;
-    public static final double AbsoluteAngleOffsetFrontRight =  231.6;
-    public static final double AbsoluteAngleOffsetBackLeft = 327.2;
-    public static final double AbsoluteAngleOffsetBackRight = 100.0;
+    public static final double AbsoluteAngleOffsetFrontLeft = 238.3 - 180;
+    public static final double AbsoluteAngleOffsetFrontRight =  231.6 - 180;
+    public static final double AbsoluteAngleOffsetBackLeft = 327.2 - 180;
+    public static final double AbsoluteAngleOffsetBackRight = 100.0 + 180;
   }
 
   public static class SwerveConstants2022 {

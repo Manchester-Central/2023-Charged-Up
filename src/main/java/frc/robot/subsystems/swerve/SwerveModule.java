@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
@@ -24,8 +25,8 @@ public abstract class SwerveModule {
   private Translation2d m_translation;
   private double m_simdistance;
   private SwerveModuleState m_targetState;
-  private TalonFX m_angle;
-  private TalonFX m_velocity;
+  private WPI_TalonFX m_angle;
+  private WPI_TalonFX m_velocity;
   private double initialEncoder;
 
   /** Creates a new SwerveModule. */
@@ -33,8 +34,8 @@ public abstract class SwerveModule {
     m_translation = translation;
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-    m_angle = new TalonFX(canIdAngle);
-    m_velocity = new TalonFX(canIdVelocity);
+    m_angle = new WPI_TalonFX(canIdAngle);
+    m_velocity = new WPI_TalonFX(canIdVelocity);
     m_angle.configFactoryDefault();
     m_velocity.configFactoryDefault();
     m_angle.configAllowableClosedloopError(0, degreesToEncoder(0.5));

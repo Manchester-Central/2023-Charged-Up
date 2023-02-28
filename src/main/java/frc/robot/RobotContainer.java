@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
@@ -35,6 +36,7 @@ import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -131,8 +133,11 @@ public class RobotContainer {
     m_tester.a().whileTrue(new TestShoulder(m_arm, m_tester));
     m_tester.b().whileTrue(new TestExtender(m_arm, m_tester));
     m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
-    m_operator.rightBumper().whileTrue(new Grip(m_arm));
-    m_operator.leftBumper().whileTrue(new UnGrip(m_arm));
+    m_tester.rightBumper().whileTrue(new Grip(m_arm));
+    m_tester.leftBumper().whileTrue(new UnGrip(m_arm));
+    m_tester.povRight().whileTrue(new MoveArm(m_arm, new ArmPose(-45, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
+    m_tester.povDown().whileTrue(new MoveArm(m_arm, new ArmPose(-90, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
+    m_tester.povLeft().whileTrue(new MoveArm(m_arm, new ArmPose(-135, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
   }
 
   /**

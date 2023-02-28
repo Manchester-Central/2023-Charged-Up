@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -70,6 +71,7 @@ public class Shoulder {
         // m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
         for (CANSparkMax canSparkMax : motorControllers) {
+            canSparkMax.setIdleMode(IdleMode.kBrake);
             initializeSparkMaxEncoder(canSparkMax, getRotation());
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
@@ -77,6 +79,7 @@ public class Shoulder {
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.01, 0, 0, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
+        Robot.logManager.addNumber("Shoulder/appliedOutput", () -> m_shoulderL_A.getAppliedOutput());
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
     }
 
@@ -164,6 +167,7 @@ public class Shoulder {
 
     public void periodic(double currentExtensionMeters) {
         double feedForwardVoltage = getFeedForward(currentExtensionMeters);
+        SmartDashboard.putNumber("shoulder/ff", feedForwardVoltage);
         m_shoulderL_A.getPIDController().setFF(feedForwardVoltage);
         m_shoulderL_B.getPIDController().setFF(feedForwardVoltage);
         m_shoulderR_A.getPIDController().setFF(feedForwardVoltage);

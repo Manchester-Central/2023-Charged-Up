@@ -13,6 +13,7 @@ public class UnGrip extends CommandBase {
   /** Creates a new UnGrip. */
   public UnGrip(Arm arm) {
     m_arm = arm;
+    addRequirements(arm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -73,6 +73,7 @@ public class Shoulder {
             initializeSparkMaxEncoder(canSparkMax, getRotation());
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
+            canSparkMax.getPIDController().setOutputRange(-ShoulderConstants.MaxPIDOutput, ShoulderConstants.MaxPIDOutput);
             //open loop = no pid, closed loop = pid
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.01, 0, 0, this::tunePID);

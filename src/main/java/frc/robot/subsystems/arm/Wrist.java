@@ -46,6 +46,7 @@ public class Wrist {
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
+        m_SparkMax.getPIDController().setOutputRange(-WristConstants.MaxPIDOutput, WristConstants.MaxPIDOutput);
         Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
   
     }

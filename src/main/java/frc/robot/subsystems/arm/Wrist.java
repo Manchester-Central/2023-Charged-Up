@@ -20,6 +20,7 @@ import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class Wrist {
@@ -46,6 +47,10 @@ public class Wrist {
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
         Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
+        Robot.logManager.addNumber("Wrist/appliedOutput", () -> m_SparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Wrist/targetDegrees", () -> m_targetDegrees);
+        SmartDashboard.putNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
+        SmartDashboard.putNumber("Wrist/rampRate", WristConstants.RampUpRate);
   
     }
 
@@ -79,7 +84,18 @@ public class Wrist {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }
-        return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition() + WristConstants.AbsoluteAngleZeroOffset);
+        SmartDashboard.putNumber("Wrist/rawAngle", m_AbsoluteEncoder.getPosition());
+        var rawValue = m_AbsoluteEncoder.getPosition();
+        var belowWrapAround = rawValue < 130;
+        var shiftedValue = rawValue;
+        if(belowWrapAround) {
+            shiftedValue += 360;
+        }
+        SmartDashboard.putNumber("Wrist/rawAngle", rawValue);
+        SmartDashboard.putNumber("Wrist/shiftedRawAngle", shiftedValue);
+        var calculatedAngle = (shiftedValue * 0.822) + WristConstants.AbsoluteAngleZeroOffset;
+        SmartDashboard.putNumber("Wrist/convertAngleDegrees", calculatedAngle);
+        return Rotation2d.fromDegrees(calculatedAngle);
     }
 
     public void tunePID(PIDUpdate pidUpdate){
@@ -87,6 +103,11 @@ public class Wrist {
         m_SparkMax.getPIDController().setI(pidUpdate.I);        
         m_SparkMax.getPIDController().setD(pidUpdate.D);
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
+        var maxOutput = SmartDashboard.getNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
+        var rampRate = SmartDashboard.getNumber("Wrist/rampRate", WristConstants.RampUpRate);
+        m_SparkMax.getPIDController().setOutputRange(-maxOutput, maxOutput);
+        m_SparkMax.setOpenLoopRampRate(rampRate);
+        m_SparkMax.setClosedLoopRampRate(rampRate);
     }
 
     public boolean atTarget(){

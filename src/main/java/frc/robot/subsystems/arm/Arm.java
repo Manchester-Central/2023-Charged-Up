@@ -63,7 +63,7 @@ public class Arm extends SubsystemBase {
 
   public void setWristTargetManual(Rotation2d angle) {
     m_wrist.updateSafetyZones(new ArmPose(m_shoulder.getRotation(), m_extender.getPositionMeters(), angle, CoordinateType.ArmRelative), m_shoulder.getRotation());
-    //m_wrist.setTarget(angle);
+    m_wrist.setTarget(angle);
   }
 
   public void setArmTarget(ArmPose armPose) {
@@ -74,7 +74,7 @@ public class Arm extends SubsystemBase {
     m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
     m_extender.ExtendToTarget(armPose.extenderPos);
     if (armPose.wristCoordinate == CoordinateType.ArmRelative){
-      //m_wrist.setTarget(armPose.wristAngle);
+      m_wrist.setTarget(armPose.wristAngle);
     }
     else {
       //m_wrist.setTarget(armPose.wristAngle.minus(armPose.shoulderAngle));

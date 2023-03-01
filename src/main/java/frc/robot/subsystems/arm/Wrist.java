@@ -43,7 +43,7 @@ public class Wrist {
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
         m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
-        m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.004, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);

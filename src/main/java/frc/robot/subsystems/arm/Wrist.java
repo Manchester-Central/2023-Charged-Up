@@ -39,14 +39,12 @@ public class Wrist {
         m_SparkMax.setInverted(true);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor);
-        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
         m_AbsoluteEncoder.setInverted(true);
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
-        m_SparkMax.getPIDController().setOutputRange(-WristConstants.MaxPIDOutput, WristConstants.MaxPIDOutput);
         Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
   
     }
@@ -81,7 +79,7 @@ public class Wrist {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }
-        return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
+        return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition() + WristConstants.AbsoluteAngleZeroOffset);
     }
 
     public void tunePID(PIDUpdate pidUpdate){

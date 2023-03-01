@@ -135,6 +135,7 @@ public class RobotContainer {
     m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
     m_tester.rightBumper().whileTrue(new Grip(m_arm));
     m_tester.leftBumper().whileTrue(new UnGrip(m_arm));
+    m_tester.povUp().whileTrue(new MoveArm(m_arm, new ArmPose(0, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
     m_tester.povRight().whileTrue(new MoveArm(m_arm, new ArmPose(-45, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
     m_tester.povDown().whileTrue(new MoveArm(m_arm, new ArmPose(-90, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
     m_tester.povLeft().whileTrue(new MoveArm(m_arm, new ArmPose(-135, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));

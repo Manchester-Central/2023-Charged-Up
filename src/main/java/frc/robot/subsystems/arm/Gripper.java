@@ -31,6 +31,7 @@ public class Gripper {
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
+        m_sparkMax.burnFlash();
     }
 
     public void setGripperMode(GripperMode gripperMode) {

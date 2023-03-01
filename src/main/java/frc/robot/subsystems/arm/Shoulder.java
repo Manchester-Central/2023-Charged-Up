@@ -81,6 +81,7 @@ public class Shoulder {
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.getPIDController().setOutputRange(-ShoulderConstants.MaxPIDOutput, ShoulderConstants.MaxPIDOutput);
             //open loop = no pid, closed loop = pid
+            canSparkMax.burnFlash();
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());

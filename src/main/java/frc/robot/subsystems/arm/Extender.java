@@ -9,11 +9,13 @@ import com.chaos131.pid.PIDUpdate;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
@@ -29,7 +31,8 @@ public class Extender {
     public Extender(){
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_SparkMax.setInverted(true);
-        m_pidTuner = new PIDTuner("ExtenderPID", true, 0.09, 0, 0, this::tunePID);
+        m_SparkMax.setIdleMode(IdleMode.kBrake);
+        m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
         m_linearPot = m_SparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
         double absPos = getPositionMeters();
@@ -39,8 +42,12 @@ public class Extender {
         m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
+        m_SparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/ExtensionMeters", () -> getPositionMeters());
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_SparkMax.getEncoder().getPosition());
+        Robot.logManager.addNumber("Extender/appliedOutput", () -> m_SparkMax.getAppliedOutput());
+        SmartDashboard.putNumber("Extender/maxOutput", ExtenderConstants.MaxPIDOutput);
+        SmartDashboard.putNumber("Extender/rampRate", ExtenderConstants.RampUpRate);
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
@@ -75,6 +82,11 @@ public class Extender {
         m_SparkMax.getPIDController().setI(pidUpdate.I);        
         m_SparkMax.getPIDController().setD(pidUpdate.D);
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
+        var maxOutput = SmartDashboard.getNumber("Extender/maxOutput", ExtenderConstants.MaxPIDOutput);
+        var rampRate = SmartDashboard.getNumber("Extender/rampRate", ExtenderConstants.RampUpRate);
+        m_SparkMax.getPIDController().setOutputRange(-maxOutput, maxOutput);
+        m_SparkMax.setOpenLoopRampRate(rampRate);
+        m_SparkMax.setClosedLoopRampRate(rampRate);
     }
 
     public boolean atTarget(){

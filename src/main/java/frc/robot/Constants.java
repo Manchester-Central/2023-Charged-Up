@@ -107,12 +107,12 @@ public final class Constants {
       public static final double MaximumAngleDegrees = 25; 
       public static final double MinDangerAngle = -120; //TODO confirm values
       public static final double MaxDangerAngle = -60; //TODO confirm values 
-      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double RampUpRate = 0.15; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double Gearing = 24576/180.0; //TODO confirm values
-      public static final double MinimumFeedForwardVoltage = 0.45;
+      public static final double MinimumFeedForwardVoltage = 0.45; // +0.02, -0.03 when measured on the robot in duty cycle (-1.0, 1.0)
       public static final double MaximumFeedForwardVoltage = 0.75;
-      public static final double MaxPIDOutput = 0.5; //TODO confirm values
+      public static final double MaxPIDOutput = 1.0; //TODO confirm values
     }
 
     public static class ExtenderConstants{
@@ -122,19 +122,19 @@ public final class Constants {
       public static final double SparkMaxEncoderConversionFactor = 0.0069; 
       public static final double MinimumPositionMeters = 0.78; 
       public static final double MaximumPositionMeters = 1.32; 
-      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.02; //TODO confirm values
-      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.04; //TODO confirm values
+      public static final double RampUpRate = 0.012; //TODO confirm values
       public static final double ToleranceMeters = 0.02; //TODO confirm values
-      public static final double MaxPIDOutput = 0.5; //TODO confirm values
+      public static final double MaxPIDOutput = 1.0; //TODO confirm values
     }
 
     public static class WristConstants{
       public static final int CanIdWrist = 15;
       public static final double MinimumAngle = -10; //TODO confirm values
       public static final double MaximumAngle = 370; //TODO confirm values
-      public static final double AbsoluteAngleConversionFactor = 360;
-      public static final double AbsoluteAngleZeroOffset = -140;
-      public static final double SparkMaxEncoderConversionFactor = 6.19259;
+      public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
+      public static final double AbsoluteAngleZeroOffset = 213;
+      public static final double SparkMaxEncoderConversionFactor = 7.93;
       public static final double RampUpRate = 0.5; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double MinimumSafeAngleDegrees = 150;

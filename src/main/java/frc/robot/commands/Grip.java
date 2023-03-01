@@ -14,6 +14,7 @@ public class Grip extends CommandBase {
   /** Creates a new Grip. */
   public Grip(Arm arm) {
     m_arm = arm;
+    addRequirements(arm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

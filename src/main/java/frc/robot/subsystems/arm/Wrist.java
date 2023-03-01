@@ -20,6 +20,7 @@ import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class Wrist {
@@ -36,18 +37,23 @@ public class Wrist {
 
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
+        m_SparkMax.restoreFactoryDefaults();
         m_SparkMax.setInverted(true);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-        m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor);
-        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+        m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
-        m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
+        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.004, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
-        m_SparkMax.getPIDController().setOutputRange(-WristConstants.MaxPIDOutput, WristConstants.MaxPIDOutput);
+        m_SparkMax.burnFlash();
         Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
+        Robot.logManager.addNumber("Wrist/appliedOutput", () -> m_SparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Wrist/targetDegrees", () -> m_targetDegrees);
+        SmartDashboard.putNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
+        SmartDashboard.putNumber("Wrist/rampRate", WristConstants.RampUpRate);
   
     }
 
@@ -81,7 +87,14 @@ public class Wrist {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }
-        return Rotation2d.fromDegrees(m_AbsoluteEncoder.getPosition());
+        SmartDashboard.putNumber("Wrist/rawAngle", m_AbsoluteEncoder.getPosition());
+        var rawValue = m_AbsoluteEncoder.getPosition();
+        var belowWrapAround = rawValue > 400;
+        var shiftedValue = rawValue;
+        if(belowWrapAround) {
+            shiftedValue = rawValue - 460;
+        }
+        return Rotation2d.fromDegrees(shiftedValue);
     }
 
     public void tunePID(PIDUpdate pidUpdate){
@@ -89,6 +102,11 @@ public class Wrist {
         m_SparkMax.getPIDController().setI(pidUpdate.I);        
         m_SparkMax.getPIDController().setD(pidUpdate.D);
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
+        var maxOutput = SmartDashboard.getNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
+        var rampRate = SmartDashboard.getNumber("Wrist/rampRate", WristConstants.RampUpRate);
+        m_SparkMax.getPIDController().setOutputRange(-maxOutput, maxOutput);
+        m_SparkMax.setOpenLoopRampRate(rampRate);
+        m_SparkMax.setClosedLoopRampRate(rampRate);
     }
 
     public boolean atTarget(){

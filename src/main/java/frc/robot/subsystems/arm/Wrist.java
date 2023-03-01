@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
@@ -77,6 +78,12 @@ public class Wrist {
         m_targetDegrees = targetDegrees;
     }
 
+    public void setTarget(double target) {
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(target);
+        m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_targetDegrees = targetDegrees;
+    }
+
     public Rotation2d getRotation() {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
@@ -116,4 +123,8 @@ public class Wrist {
         m_SparkMax.stopMotor();
         m_targetDegrees = m_simAngle;
     }
+
+    
 }
+
+//“Everything works perfectly the first time.” -John’s joke 2/27/2023

@@ -113,6 +113,7 @@ public final class Constants {
       public static final double MinimumFeedForwardVoltage = 0.45;
       public static final double MaximumFeedForwardVoltage = 0.75;
       public static final double MaxPIDOutput = 0.5; //TODO confirm values
+
     }
 
     public static class ExtenderConstants{
@@ -144,6 +145,8 @@ public final class Constants {
 
     public static class GripperConstants{
       public static final int CanIdGripper = 16;
+      public static final int intakeTimeS = 1;
+      public static final int releaseTimeS = 1;
     }
   } 
 

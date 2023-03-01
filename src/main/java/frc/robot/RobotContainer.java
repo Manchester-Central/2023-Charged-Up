@@ -11,10 +11,13 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
@@ -25,6 +28,7 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
+import frc.robot.commands.ScoreCommandBuilder;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
@@ -46,11 +50,15 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  // Command sequences.
+  Command scoreLowCube = 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
   private Arm m_arm = new Arm();
   private ArduinoIO m_arduinoIO = new ArduinoIO();
   
+  private Command operatorQueuedCommand;
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
@@ -120,6 +128,14 @@ public class RobotContainer {
     // m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
     // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
     // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+    // Cone scoring.
+    m_operator.a().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    m_operator.b().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    m_operator.y().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeHighPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    // Cube scoring.
+    m_operator.povDown().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    m_operator.povLeft().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    m_operator.povUp().onTrue(new InstantCommand(() -> operatorQueuedCommand = score(new MoveArm(m_arm, ArmPose.CubeHighPose))), 2);
   }
 
   private void dashboardCommands() {
@@ -149,5 +165,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("Driver Right X", m_driver.getRightX());
     SmartDashboard.putNumber("Driver Left Y", m_driver.getLeftY());
     SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
+  }
+
+  private Command score(Command goToScorePosition, int timeS) {
+    Command stow = new MoveArm(m_arm, ArmPose.StowedPose);
+    Command release = new UnGrip(m_arm).withTimeout(timeS);
+    return stow.andThen(goToScorePosition).andThen(release).andThen(stow);
   }
 }

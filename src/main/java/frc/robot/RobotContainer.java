@@ -4,34 +4,43 @@
 
 package frc.robot;
 
+import com.chaos131.auto.AutoBuilder;
+import com.chaos131.auto.ParsedCommand;
+import com.chaos131.gamepads.Gamepad;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
-import frc.robot.commands.RecalibrateModules;
+import frc.robot.commands.Grip;
+import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveExtender;
+import frc.robot.commands.MoveShoulder;
+import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
+import frc.robot.commands.UnGrip;
+import frc.robot.commands.test.TestExtender;
+import frc.robot.commands.test.TestShoulder;
+import frc.robot.commands.test.TestWrist;
 import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.SwerveDrive;
-
-import com.chaos131.auto.AutoBuilder;
-import com.chaos131.auto.ParsedCommand;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import com.chaos131.gamepads.Gamepad;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,12 +53,15 @@ public class RobotContainer {
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
+  public final Arm m_arm = new Arm();
   private ArduinoIO m_arduinoIO = new ArduinoIO();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
+
+  private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
@@ -76,6 +88,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driverControls();
+    operaterControls();
+    dashboardCommands();
+    testCommands();
     //m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -83,21 +98,54 @@ public class RobotContainer {
 
   private void driverControls() {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
+    // m_swerveDrive.setDefaultCommand(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(0)));
-    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(180)));
-    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
-    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
+    // m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(0)));
+    // m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(180)));
+    // m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
+    // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
     m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
-    m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
-    m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
+    // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
+    // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
-    m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
+    // m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
+    // m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
-    m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
+    // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
+    // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
+  }
+
+  private void operaterControls(){
+    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
+    // m_operator.a().whileTrue(new Grip(m_arm));
+    // m_operator.b().whileTrue(new UnGrip(m_arm));
+    // m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
+    // m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
+    // m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
+    // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+  }
+
+  private void dashboardCommands() {
+    // created a test command on Shuffleboard for each known pose (waits 2 seconds because the ChaosBoard needs to be in focus to run correctly)
+    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new WaitCommand(2).andThen(new MoveArm(m_arm, pose))));
+  }
+
+  private void testCommands() {
+    m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
+    m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
+    m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
+    m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
+    m_tester.back().whileTrue(new Grip(m_arm));
+    m_tester.start().whileTrue(new UnGrip(m_arm));
+    m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
+    m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
+    m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
+    m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
+    m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
+    m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
+    m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
   }
 
   /**

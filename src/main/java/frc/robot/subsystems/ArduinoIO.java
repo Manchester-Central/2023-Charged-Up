@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.fazecast.jSerialComm.SerialPort;

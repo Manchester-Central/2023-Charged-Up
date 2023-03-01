@@ -50,6 +50,22 @@ public class Arm extends SubsystemBase {
     m_gripper.setGripperMode(mode);
   }
 
+  public void setShoulderTargetManual(Rotation2d angle) {
+    double extensionMeters = m_extender.getPositionMeters();
+    m_shoulder.updateSafetyZones(new ArmPose(angle, extensionMeters, m_wrist.getRotation(), CoordinateType.ArmRelative), extensionMeters, m_wrist.getRotation());
+    m_shoulder.setTargetAngle(angle, extensionMeters);
+  }
+
+  public void setExtenderTargetManual(double positionMeters) {
+    m_extender.updateSafetyZones(new ArmPose(m_shoulder.getRotation(), positionMeters, m_wrist.getRotation(), CoordinateType.ArmRelative), m_shoulder.getRotation());
+    m_extender.ExtendToTarget(positionMeters);
+  }
+
+  public void setWristTargetManual(Rotation2d angle) {
+    m_wrist.updateSafetyZones(new ArmPose(m_shoulder.getRotation(), m_extender.getPositionMeters(), angle, CoordinateType.ArmRelative), m_shoulder.getRotation());
+    //m_wrist.setTarget(armPose.wristAngle);
+  }
+
   public void setArmTarget(ArmPose armPose) {
     double extensionMeters = m_extender.getPositionMeters();
     m_shoulder.updateSafetyZones(armPose, extensionMeters, m_wrist.getRotation());

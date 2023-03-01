@@ -23,6 +23,8 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveExtender;
+import frc.robot.commands.MoveShoulder;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
@@ -50,7 +52,7 @@ public class RobotContainer {
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
-  private Arm m_arm = new Arm();
+  public final Arm m_arm = new Arm();
   private ArduinoIO m_arduinoIO = new ArduinoIO();
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -130,15 +132,15 @@ public class RobotContainer {
   }
 
   private void testCommands() {
-    m_tester.a().whileTrue(new TestShoulder(m_arm, m_tester));
-    m_tester.b().whileTrue(new TestExtender(m_arm, m_tester));
-    m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
+    m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.10));
+    m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
+    m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.10));
     m_tester.rightBumper().whileTrue(new Grip(m_arm));
     m_tester.leftBumper().whileTrue(new UnGrip(m_arm));
-    m_tester.povUp().whileTrue(new MoveArm(m_arm, new ArmPose(0, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
-    m_tester.povRight().whileTrue(new MoveArm(m_arm, new ArmPose(-45, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
-    m_tester.povDown().whileTrue(new MoveArm(m_arm, new ArmPose(-90, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
-    m_tester.povLeft().whileTrue(new MoveArm(m_arm, new ArmPose(-135, ExtenderConstants.MinimumPositionMeters, 0, CoordinateType.ArmRelative)));
+    m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
+    m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
+    m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
+    m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
   }
 
   /**

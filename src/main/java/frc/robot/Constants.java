@@ -123,9 +123,9 @@ public final class Constants {
       public static final double MinimumPositionMeters = 0.78; 
       public static final double MaximumPositionMeters = 1.32; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.04; //TODO confirm values
-      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double RampUpRate = 0.012; //TODO confirm values
       public static final double ToleranceMeters = 0.02; //TODO confirm values
-      public static final double MaxPIDOutput = 0.5; //TODO confirm values
+      public static final double MaxPIDOutput = 1.0; //TODO confirm values
     }
 
     public static class WristConstants{

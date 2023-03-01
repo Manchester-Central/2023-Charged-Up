@@ -66,14 +66,14 @@ public class Wrist {
         }
     }
 
-    public void setTarget(Rotation2d fieldRelativeAngle) {
-        double targetDegrees = m_SafetyZoneHelper.getSafeValue(fieldRelativeAngle.getDegrees());
+    public void setTarget(Rotation2d target) {
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees());
         m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_targetDegrees = targetDegrees;
     }
 
-    public void setTarget(double fieldRelativeAngle) {
-        double targetDegrees = m_SafetyZoneHelper.getSafeValue(fieldRelativeAngle);
+    public void setTarget(double target) {
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(target);
         m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_targetDegrees = targetDegrees;
     }

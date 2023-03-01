@@ -37,16 +37,18 @@ public class Wrist {
 
     public Wrist(){
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
+        m_SparkMax.restoreFactoryDefaults();
         m_SparkMax.setInverted(true);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-        //m_AbsoluteEncoder.setPositionConversionFactor(360); // TODO: need this?
+        m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
+        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
         m_pidTuner = new PIDTuner("WristPID", true, 0.09, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
-        // m_SparkMax.burnFlash(); // TODO: need this?
+        m_SparkMax.burnFlash();
         Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
         Robot.logManager.addNumber("Wrist/appliedOutput", () -> m_SparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Wrist/targetDegrees", () -> m_targetDegrees);
@@ -87,16 +89,12 @@ public class Wrist {
         }
         SmartDashboard.putNumber("Wrist/rawAngle", m_AbsoluteEncoder.getPosition());
         var rawValue = m_AbsoluteEncoder.getPosition();
-        var belowWrapAround = rawValue < 130;
+        var belowWrapAround = rawValue > 400;
         var shiftedValue = rawValue;
         if(belowWrapAround) {
-            shiftedValue += 360;
+            shiftedValue = rawValue - 460;
         }
-        SmartDashboard.putNumber("Wrist/rawAngle", rawValue);
-        SmartDashboard.putNumber("Wrist/shiftedRawAngle", shiftedValue);
-        var calculatedAngle = (shiftedValue * WristConstants.AbsoluteAngleConversionFactor) + WristConstants.AbsoluteAngleZeroOffset;
-        SmartDashboard.putNumber("Wrist/convertAngleDegrees", calculatedAngle);
-        return Rotation2d.fromDegrees(calculatedAngle);
+        return Rotation2d.fromDegrees(shiftedValue);
     }
 
     public void tunePID(PIDUpdate pidUpdate){

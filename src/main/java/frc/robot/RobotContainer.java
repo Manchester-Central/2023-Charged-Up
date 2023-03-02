@@ -11,6 +11,8 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,6 +31,7 @@ import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
+import frc.robot.commands.Score;
 import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
@@ -64,6 +67,7 @@ public class RobotContainer {
 
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
+  private ArmPose m_nextPose = ArmPose.StowedPose;
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
 
@@ -107,7 +111,11 @@ public class RobotContainer {
     // m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
     // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
-    m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
+    // Practice score commands - should move targets to operator
+    m_driver.rightTrigger().onTrue(new Score(m_arm, () -> m_nextPose));
+    m_driver.a().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.LowScorePose));
+    m_driver.b().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeMidPose));
+    m_driver.y().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeHighPose));
     // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     

@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -61,6 +62,10 @@ public class Shoulder {
         m_shoulderL_B = new CANSparkMax(ShoulderConstants.CanIdShoulderL_B, MotorType.kBrushless);
         m_shoulderR_A = new CANSparkMax(ShoulderConstants.CanIdShoulderR_A, MotorType.kBrushless);
         m_shoulderR_B = new CANSparkMax(ShoulderConstants.CanIdShoulderR_B, MotorType.kBrushless);
+        m_shoulderL_A.getPIDController().setFF(0);
+        m_shoulderL_B.getPIDController().setFF(0);
+        m_shoulderR_A.getPIDController().setFF(0);
+        m_shoulderR_B.getPIDController().setFF(0);
         m_shoulderL_A.setInverted(true);
         m_shoulderL_B.setInverted(true);
         m_shoulderR_A.setInverted(false);
@@ -70,14 +75,20 @@ public class Shoulder {
         // m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
         for (CANSparkMax canSparkMax : motorControllers) {
+            canSparkMax.setIdleMode(IdleMode.kBrake);
             initializeSparkMaxEncoder(canSparkMax, getRotation());
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.getPIDController().setOutputRange(-ShoulderConstants.MaxPIDOutput, ShoulderConstants.MaxPIDOutput);
             //open loop = no pid, closed loop = pid
+            canSparkMax.burnFlash();
         }
-        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.01, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
         Robot.logManager.addNumber("Shoulder/Shoulder_rotation", () -> getRotation().getDegrees());
+        Robot.logManager.addNumber("Shoulder/appliedOutput", () -> m_shoulderL_A.getAppliedOutput());
+        Robot.logManager.addNumber("Shoulder/targetDegrees", () -> m_targetDegrees);
+        SmartDashboard.putNumber("Shoulder/maxOutput", ShoulderConstants.MaxPIDOutput);
+        SmartDashboard.putNumber("Shoulder/rampRate", ShoulderConstants.RampUpRate);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
     }
 
@@ -136,17 +147,23 @@ public class Shoulder {
 
 
     public void tunePID(PIDUpdate pidUpdate) {
-        setPID(pidUpdate, m_shoulderL_A.getPIDController());
-        setPID(pidUpdate, m_shoulderL_B.getPIDController());
-        setPID(pidUpdate, m_shoulderR_A.getPIDController());
-        setPID(pidUpdate, m_shoulderR_B.getPIDController());
+        setPID(pidUpdate, m_shoulderL_A);
+        setPID(pidUpdate, m_shoulderL_B);
+        setPID(pidUpdate, m_shoulderR_A);
+        setPID(pidUpdate, m_shoulderR_B);
         m_simPid.setPID(pidUpdate.P, pidUpdate.I, pidUpdate.D);
     }
 
-    public void setPID(PIDUpdate pidUpdate, SparkMaxPIDController controller) {
+    public void setPID(PIDUpdate pidUpdate, CANSparkMax sparkMax) {
+        var controller = sparkMax.getPIDController();
         controller.setP(pidUpdate.P);
         controller.setI(pidUpdate.I);
         controller.setD(pidUpdate.D);
+        var maxOutput = SmartDashboard.getNumber("Shoulder/maxOutput", ShoulderConstants.MaxPIDOutput);
+        var rampRate = SmartDashboard.getNumber("Shoulder/rampRate", ShoulderConstants.RampUpRate);
+        controller.setOutputRange(-maxOutput, maxOutput);
+        sparkMax.setOpenLoopRampRate(rampRate);
+        sparkMax.setClosedLoopRampRate(rampRate);
     }
     
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {

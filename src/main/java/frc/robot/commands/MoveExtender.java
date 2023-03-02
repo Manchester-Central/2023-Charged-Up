@@ -7,33 +7,37 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
-public class DefaultArmCommand extends CommandBase {
-  
+public class MoveExtender extends CommandBase {
   private Arm m_arm;
-
-  /** Creates a new DefaultArmCommand. */
-  public DefaultArmCommand(Arm arm) {
+  private double m_extenderMeters;
+  
+  /** Creates a new MoveArm. */
+  public MoveExtender(Arm arm, double extenderLengthMeters) {
     m_arm = arm;
+    m_extenderMeters = extenderLengthMeters;
     addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_arm.setExtenderTargetManual(m_extenderMeters);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.maintain();
+    m_arm.setExtenderTargetManual(m_extenderMeters);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_arm.reachedTarget();
   }
 }

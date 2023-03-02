@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeAngleDrive;
@@ -25,6 +26,9 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveExtender;
+import frc.robot.commands.MoveShoulder;
+import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
@@ -39,6 +43,7 @@ import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -53,7 +58,7 @@ public class RobotContainer {
   // Command sequences.
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
-  private Arm m_arm = new Arm();
+  public final Arm m_arm = new Arm();
   private ArduinoIO m_arduinoIO = new ArduinoIO();
   
   private Command operatorQueuedCommand;
@@ -143,11 +148,19 @@ public class RobotContainer {
   }
 
   private void testCommands() {
-    m_tester.a().whileTrue(new TestShoulder(m_arm, m_tester));
-    m_tester.b().whileTrue(new TestExtender(m_arm, m_tester));
-    m_tester.y().whileTrue(new TestWrist(m_arm, m_tester));
-    m_operator.rightBumper().whileTrue(new Grip(m_arm));
-    m_operator.leftBumper().whileTrue(new UnGrip(m_arm));
+    m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
+    m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
+    m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
+    m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
+    m_tester.back().whileTrue(new Grip(m_arm));
+    m_tester.start().whileTrue(new UnGrip(m_arm));
+    m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
+    m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
+    m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
+    m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
+    m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
+    m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
+    m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
   }
 
   /**

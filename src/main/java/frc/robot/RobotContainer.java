@@ -156,7 +156,7 @@ public class RobotContainer {
     // }));
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
-    
+    m_driver.leftStick().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, ArmPose.IntakeBack).repeatedly()));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
     // m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));

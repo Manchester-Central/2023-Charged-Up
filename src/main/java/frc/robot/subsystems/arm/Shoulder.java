@@ -83,7 +83,7 @@ public class Shoulder {
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
         }
-        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
         Robot.logManager.addNumber("Shoulder/target", () -> m_targetDegrees);
     }

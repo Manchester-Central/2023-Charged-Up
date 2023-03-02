@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,8 @@ import frc.robot.commands.RecalibrateModules;
 import frc.robot.logging.LogManager;
 
 public class SwerveDrive extends SubsystemBase {
+
+  public static double SpeedModifier = 1.0;
 
   private SwerveModule m_frontLeft;
   private SwerveModule m_frontRight;
@@ -185,9 +188,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {
-    chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps;
-    chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps;
-    chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps;
+    chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
+    chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
+    chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps * SpeedModifier;
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
       stop();
       return;
@@ -214,16 +217,26 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    ChassisSpeeds speeds;
+    if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    } else {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation().minus(new Rotation2d(Math.PI)));
+    }
     move(speeds);
   }
 
   public void moveFieldRelativeAngle(double xMetersPerSecond, double yMetersPerSecond, Rotation2d angle, double magnitude){
     double omega = 0;
+    ChassisSpeeds speeds;
     if (Math.abs(magnitude) >= 0.2) {
       omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians());
     }
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
+    if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
+    } else {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation().minus(new Rotation2d(Math.PI)));
+    }
     move(speeds);
   } 
 

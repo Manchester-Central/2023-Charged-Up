@@ -30,8 +30,8 @@ public final class Constants {
     public static final double RobotLength_in = 22.25;
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
-    public static final double MaxRobotSpeed_mps = 4.6; 
-    public static final double MaxRobotRotation_radps = 5; 
+    public static final double MaxRobotSpeed_mps = 2; //4.6 
+    public static final double MaxRobotRotation_radps = 2; //5
     public static final int CanIdFrontLeftAngle = 1;
     public static final int CanIdFrontLeftVelocity = 2;
     public static final int CanIdFrontRightAngle = 4;
@@ -108,7 +108,7 @@ public final class Constants {
       public static final double MinDangerAngle = -110; 
       public static final double MaxDangerAngle = -70; 
       public static final double RampUpRate = 0.2; 
-      public static final double ToleranceDegrees = 0.5; 
+      public static final double ToleranceDegrees = 1.5; 
       public static final double Gearing = 24576/180.0; 
       public static final double MinimumFeedForwardVoltage = 0.45; // +0.02, -0.03 when measured on the robot in duty cycle (-1.0, 1.0)
       public static final double MaximumFeedForwardVoltage = 0.75;
@@ -136,7 +136,7 @@ public final class Constants {
       public static final double AbsoluteAngleZeroOffset = 213;
       public static final double SparkMaxEncoderConversionFactor = 7.93;
       public static final double RampUpRate = 0.3; 
-      public static final double ToleranceDegrees = 0.5; 
+      public static final double ToleranceDegrees = 7.0; 
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;
       public static final double MaxPIDOutput = 1.0;

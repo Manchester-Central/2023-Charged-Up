@@ -16,7 +16,9 @@ public class Gripper {
     public static double customPower = 0;
     public enum GripperMode{
         grip(0.5),
+        slowGrip(0.25),
         unGrip(-0.5),
+        slowUngrip(-0.25),
         stop(0),
         hold(0.03),
         custom((double)Double.NaN);

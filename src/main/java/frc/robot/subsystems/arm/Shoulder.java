@@ -89,15 +89,21 @@ public class Shoulder {
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
-        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit || wristAngle.getDegrees() >= WristConstants.MaximumSafeAngleDegrees || wristAngle.getDegrees() <= WristConstants.MinimumSafeAngleDegrees) {
-            double normalizedCurrentAngle = normalize(getRotation());
-            if (normalizedCurrentAngle < -90) {
+        double normalizedRotation = normalize(getRotation());
+        double normalizedTarget = normalize(targetArmPose.shoulderAngle);
+        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
+            if (normalizedTarget > normalizedRotation) {
+                m_SafetyZoneHelper.excludeUp(normalizedRotation);
+            } else {
+                m_SafetyZoneHelper.excludeDown(normalizedRotation);
+            }
+        } else if (wristAngle.getDegrees() >= WristConstants.MaximumSafeAngleDegrees || wristAngle.getDegrees() <= WristConstants.MinimumSafeAngleDegrees) {
+            if (normalizedRotation < -90) {
                 m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);
             } else{
                 m_SafetyZoneHelper.excludeDown(ShoulderConstants.MaxDangerAngle);
             }
-        }
-        else {
+        } else {
             m_SafetyZoneHelper.resetToDefault();
         }
     }

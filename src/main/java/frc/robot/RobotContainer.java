@@ -51,7 +51,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Command sequences.
-  Command scoreLowCube = 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_Limelight = new Limelight();
   private Arm m_arm = new Arm();
@@ -129,13 +128,13 @@ public class RobotContainer {
     // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
     // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
     // Cone scoring.
-    m_operator.a().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
-    m_operator.b().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
-    m_operator.y().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeHighPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    // m_operator.a().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    // m_operator.b().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    // m_operator.y().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.ConeHighPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
     // Cube scoring.
-    m_operator.povDown().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
-    m_operator.povLeft().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
-    m_operator.povUp().onTrue(new InstantCommand(() -> operatorQueuedCommand = score(new MoveArm(m_arm, ArmPose.CubeHighPose))), 2);
+    //m_operator.povDown().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeLowPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    //m_operator.povLeft().onTrue(new ScoreCommandBuilder(new MoveArm(m_arm, ArmPose.CubeMidPose), GripperConstants.releaseTimeS, operatorQueuedCommand, m_arm));
+    m_operator.povUp().onTrue(new InstantCommand(() -> operatorQueuedCommand = score(new MoveArm(m_arm, ArmPose.CubeHighPose), 2)));
   }
 
   private void dashboardCommands() {

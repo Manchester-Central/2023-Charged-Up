@@ -67,6 +67,7 @@ public class RobotContainer {
 
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
+  private ArmPose m_nextPrepPose = ArmPose.StowedPose;
   private ArmPose m_nextPose = ArmPose.StowedPose;
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
@@ -112,10 +113,31 @@ public class RobotContainer {
     // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
     // Practice score commands - should move targets to operator
-    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPose));
-    m_driver.a().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.LowScorePose));
-    m_driver.b().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeMidPose));
-    m_driver.y().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeHighPose));
+    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose));
+    m_driver.a().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.StowedPose;
+      m_nextPose = ArmPose.LowScorePose;
+    }));
+    m_driver.b().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.StowedPose;
+      m_nextPose = ArmPose.CubeMidPose;
+    }));
+    m_driver.y().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.StowedPose;
+      m_nextPose = ArmPose.CubeHighPose;
+    }));
+    m_driver.povDown().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.StowedPose;
+      m_nextPose = ArmPose.LowScorePose;
+    }));
+    m_driver.povLeft().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.ConeMidPosePrep;
+      m_nextPose = ArmPose.ConeMidPose;
+    }));
+    m_driver.povUp().onTrue(new InstantCommand(() -> {
+      m_nextPrepPose = ArmPose.ConeHighPosePrep;
+      m_nextPose = ArmPose.ConeHighPose;
+    }));
     // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
@@ -140,8 +162,8 @@ public class RobotContainer {
 
     // Cones
     m_operator.povDown().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
-    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.ConeMidPose2).repeatedly());
-    m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose2).repeatedly());
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.ConeMidPose).repeatedly());
+    m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose).repeatedly());
 
     // Intakes
     m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).andThen(new Grip(m_arm)));

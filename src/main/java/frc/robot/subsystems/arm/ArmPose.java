@@ -88,29 +88,29 @@ public class ArmPose {
     );
 
     //Cone Poses
-    public static final ArmPose ConeMidPose1 = addStaticPose(
-        "ConeMidPose1", 
+    public static final ArmPose ConeMidPosePrep = addStaticPose(
+        "ConeMidPosePrep", 
         -15, 
         0.85, 
         30, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose ConeMidPose2 = addStaticPose(
-        "ConeMidPose2", 
+    public static final ArmPose ConeMidPose = addStaticPose(
+        "ConeMidPose", 
         -25, 
         0.9, 
         35, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose ConeHighPose1 = addStaticPose(
-        "ConeHighPose1", 
+    public static final ArmPose ConeHighPosePrep = addStaticPose(
+        "ConeHighPosePrep", 
         5, 
         1.3, 
         10, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose ConeHighPose2 = addStaticPose(
-        "ConeHighPose2", 
+    public static final ArmPose ConeHighPose = addStaticPose(
+        "ConeHighPose", 
         -2, 
         1.3, 
         10, 

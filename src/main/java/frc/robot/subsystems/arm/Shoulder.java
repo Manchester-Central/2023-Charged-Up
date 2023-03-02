@@ -42,7 +42,7 @@ public class Shoulder {
     PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_targetDegrees = Double.NaN;
-    PIDController m_simPid = new PIDController(0, 0, 0);
+    PIDController m_simPid = new PIDController(0.025, 0, 0); //d in simulator was causing issues, so simPID will use it's own values
 
     private final double kSimExtenderFixedPosition = ExtenderConstants.MaximumPositionMeters;
 
@@ -83,8 +83,9 @@ public class Shoulder {
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
         }
-        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
+        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
+        Robot.logManager.addNumber("Shoulder/target", () -> m_targetDegrees);
     }
 
     public Rotation2d getRotation() {
@@ -140,7 +141,6 @@ public class Shoulder {
         setPID(pidUpdate, m_shoulderL_B);
         setPID(pidUpdate, m_shoulderR_A);
         setPID(pidUpdate, m_shoulderR_B);
-        m_simPid.setPID(pidUpdate.P, pidUpdate.I, pidUpdate.D);
     }
 
     public void setPID(PIDUpdate pidUpdate, CANSparkMax sparkMax) {

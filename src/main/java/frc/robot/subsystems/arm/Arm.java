@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
@@ -67,17 +69,39 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmTarget(ArmPose armPose) {
+    double [] targetState = {
+      armPose.shoulderAngle.getDegrees(), 
+      armPose.extenderPos, 
+      armPose.wristAngle.getDegrees(), 
+      0
+    };
+    SmartDashboard.putNumberArray("Arm/TargetState", targetState);
     double extensionMeters = m_extender.getPositionMeters();
+    double normalizedCurrentAngle = Shoulder.normalize(m_shoulder.getRotation());
+    double normalizedTargetAngle = Shoulder.normalize(armPose.shoulderAngle);
+    double angleDifference = Math.abs(normalizedCurrentAngle - normalizedTargetAngle);
+    double wristAngleDegrees = m_wrist.getRotation().getDegrees();
+
     m_shoulder.updateSafetyZones(armPose, extensionMeters, m_wrist.getRotation());
     m_extender.updateSafetyZones(armPose, m_shoulder.getRotation());
     m_wrist.updateSafetyZones(armPose, m_shoulder.getRotation());
-    m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
-    m_extender.ExtendToTarget(armPose.extenderPos);
-    if (armPose.wristCoordinate == CoordinateType.ArmRelative){
-      m_wrist.setTarget(armPose.wristAngle);
+
+    if(angleDifference < 3) {
+      m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
+      m_extender.ExtendToTarget(armPose.extenderPos);
+      if (armPose.wristCoordinate == CoordinateType.ArmRelative){
+        m_wrist.setTarget(armPose.wristAngle);
+      }
+      else {
+        //m_wrist.setTarget(armPose.wristAngle.minus(armPose.shoulderAngle));
+      }
+    }
+    else if (extensionMeters >= ExtenderConstants.ExtenderSafeLimit || wristAngleDegrees >= WristConstants.MaximumSafeAngleDegrees || wristAngleDegrees <= WristConstants.MinimumSafeAngleDegrees) {
+      m_extender.ExtendToTarget(ExtenderConstants.MinimumPositionMeters + 0.01);
+      m_wrist.setTarget(Rotation2d.fromDegrees(180));
     }
     else {
-      //m_wrist.setTarget(armPose.wristAngle.minus(armPose.shoulderAngle));
+      m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
     }
   }
 

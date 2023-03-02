@@ -17,6 +17,6 @@ public class SignalLEDs extends CommandBase {
 
     @Override
     public void execute() {
-        m_arduinoIO.queueLEDS(m_color.getRed(), m_color.getGreen(), m_color.getBlue());
+        // m_arduinoIO.queueLEDS(m_color.getRed(), m_color.getGreen(), m_color.getBlue());
     }
 }

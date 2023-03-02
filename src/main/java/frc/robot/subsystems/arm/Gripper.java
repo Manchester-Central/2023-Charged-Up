@@ -41,7 +41,6 @@ public class Gripper {
         m_sparkMax.setInverted(true);
         m_sparkMax.setSecondaryCurrentLimit(20);
         m_sparkMax.burnFlash();
-        Robot.logManager.addNumber("Gripper/appliedOutput", () -> m_sparkMax.getAppliedOutput());
     }
 
     public void setGripperMode(GripperMode gripperMode) {

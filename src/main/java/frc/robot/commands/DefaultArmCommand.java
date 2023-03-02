@@ -30,9 +30,9 @@ public class DefaultArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setGripperMode(GripperMode.hold);
-    Gripper.customPower = m_operator.getRightY();
-    m_arm.maintain();
+    // m_arm.setGripperMode(GripperMode.hold);
+    // Gripper.customPower = m_operator.getRightY();
+    m_arm.stop();
   }
 
   // Called once the command ends or is interrupted.

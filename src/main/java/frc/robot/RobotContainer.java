@@ -29,6 +29,7 @@ import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
+import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
@@ -119,11 +120,13 @@ public class RobotContainer {
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
-    m_operator.a().whileTrue(new Grip(m_arm));
-    m_operator.b().whileTrue(new UnGrip(m_arm));
-    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
-    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    // m_operator.a().whileTrue(new Grip(m_arm));
+    m_operator.b().whileTrue(new ShuffleBoardPose(m_arm));
+    //m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFlatPose));
+    m_operator.rightTrigger().whileTrue(new Grip(m_arm));
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.IntakeWithWristDownPose));
+    //m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    m_operator.rightBumper().whileTrue(new UnGrip(m_arm));
     m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
     m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
     m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));

@@ -110,15 +110,15 @@ public abstract class SwerveModule {
   }
 
   public void getModuleInfo(String name) {
-    SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
-    SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderPosition", m_velocity.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
-    SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
-    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteEncoder", getRawAbsoluteAngle());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
+    // SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderPosition", m_velocity.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
+    // SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
+    // SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
+    // SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteEncoder", getRawAbsoluteAngle());
   }
 
   public double encoderToDegrees(double counts) {

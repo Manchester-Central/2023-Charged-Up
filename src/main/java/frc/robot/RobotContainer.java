@@ -11,6 +11,8 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,6 +31,8 @@ import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
+import frc.robot.commands.Score;
+import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
@@ -63,6 +67,7 @@ public class RobotContainer {
 
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
+  private ArmPose m_nextPose = ArmPose.StowedPose;
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
 
@@ -76,6 +81,7 @@ public class RobotContainer {
   }
   public void delayedRobotInit(){
     m_swerveDrive.recalibrateModules();
+    m_arm.recalibrateSensors();
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -105,7 +111,11 @@ public class RobotContainer {
     // m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(90)));
     // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
-    m_driver.a().whileTrue(new SwerveTune(m_swerveDrive));
+    // Practice score commands - should move targets to operator
+    m_driver.rightTrigger().onTrue(new Score(m_arm, () -> m_nextPose));
+    m_driver.a().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.LowScorePose));
+    m_driver.b().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeMidPose));
+    m_driver.y().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeHighPose));
     // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
@@ -117,14 +127,33 @@ public class RobotContainer {
   }
 
   private void operaterControls(){
-    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
-    // m_operator.a().whileTrue(new Grip(m_arm));
-    // m_operator.b().whileTrue(new UnGrip(m_arm));
-    // m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
-    // m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
-    // m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
-    // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
-    // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
+
+    // Grip/Ungrip
+    m_operator.rightBumper().whileTrue(new UnGrip(m_arm));
+    m_operator.rightTrigger().whileTrue(new Grip(m_arm));
+
+    // Cubes
+    m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
+    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.CubeMidPose).repeatedly());
+    m_operator.y().whileTrue(new MoveArm(m_arm, ArmPose.CubeHighPose).repeatedly());
+
+    // Cones
+    m_operator.povDown().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.ConeMidPose2).repeatedly());
+    m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose2).repeatedly());
+
+    // Intakes
+    m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).andThen(new Grip(m_arm)));
+    m_operator.b().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).andThen(new Grip(m_arm)));
+
+    // Pickups
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).andThen(new Grip(m_arm)));
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).andThen(new Grip(m_arm)));
+
+    
+    // test
+    m_operator.start().whileTrue(new ShuffleBoardPose(m_arm).repeatedly());
   }
 
   private void dashboardCommands() {

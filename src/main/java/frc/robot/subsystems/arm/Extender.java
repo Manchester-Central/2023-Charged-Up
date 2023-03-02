@@ -35,19 +35,14 @@ public class Extender {
         m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
         m_linearPot = m_SparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
-        double absPos = getPositionMeters();
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
-        m_SparkMax.getEncoder().setPosition(absPos);
+        recalibrateSensors();
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
         m_SparkMax.burnFlash();
-        Robot.logManager.addNumber("Extender/ExtensionMeters", () -> getPositionMeters());
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_SparkMax.getEncoder().getPosition());
-        Robot.logManager.addNumber("Extender/appliedOutput", () -> m_SparkMax.getAppliedOutput());
-        SmartDashboard.putNumber("Extender/maxOutput", ExtenderConstants.MaxPIDOutput);
-        SmartDashboard.putNumber("Extender/rampRate", ExtenderConstants.RampUpRate);
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
@@ -82,11 +77,6 @@ public class Extender {
         m_SparkMax.getPIDController().setI(pidUpdate.I);        
         m_SparkMax.getPIDController().setD(pidUpdate.D);
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
-        var maxOutput = SmartDashboard.getNumber("Extender/maxOutput", ExtenderConstants.MaxPIDOutput);
-        var rampRate = SmartDashboard.getNumber("Extender/rampRate", ExtenderConstants.RampUpRate);
-        m_SparkMax.getPIDController().setOutputRange(-maxOutput, maxOutput);
-        m_SparkMax.setOpenLoopRampRate(rampRate);
-        m_SparkMax.setClosedLoopRampRate(rampRate);
     }
 
     public boolean atTarget(){
@@ -113,6 +103,10 @@ public class Extender {
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
         m_targetMeters = m_simPos;
+    }
+
+    public void recalibrateSensors() {
+        m_SparkMax.getEncoder().setPosition(getPositionMeters());
     }
 }
 

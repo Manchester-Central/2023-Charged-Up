@@ -7,14 +7,19 @@ package frc.robot.subsystems.arm;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.GripperConstants;
 // i got the new forgis on the g
 /** Add your docs here. */
 public class Gripper {
+    public static double customPower = 0;
     public enum GripperMode{
         grip(0.5),
         unGrip(-0.5),
-        stop(0);
+        stop(0),
+        hold(0.03),
+        custom((double)Double.NaN);
 
         private double m_power;
         GripperMode(double power){
@@ -22,6 +27,9 @@ public class Gripper {
         }
 
         public double getPower(){
+            if(Double.isNaN(m_power)) {
+                return customPower;
+            }
             return m_power;
         }
     }
@@ -31,6 +39,7 @@ public class Gripper {
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
+        m_sparkMax.setSecondaryCurrentLimit(20);
         m_sparkMax.burnFlash();
     }
 

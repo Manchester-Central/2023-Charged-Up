@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -39,28 +40,24 @@ public class Wrist {
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_SparkMax.restoreFactoryDefaults();
         m_SparkMax.setInverted(true);
+        m_SparkMax.setIdleMode(IdleMode.kBrake);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
         m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
-        m_pidTuner = new PIDTuner("WristPID", true, 0.004, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.01, 0, 0.02, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
         m_SparkMax.burnFlash();
-        Robot.logManager.addNumber("Wrist/Rotation", () -> getRotation().getDegrees());
-        Robot.logManager.addNumber("Wrist/appliedOutput", () -> m_SparkMax.getAppliedOutput());
-        Robot.logManager.addNumber("Wrist/targetDegrees", () -> m_targetDegrees);
-        SmartDashboard.putNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
-        SmartDashboard.putNumber("Wrist/rampRate", WristConstants.RampUpRate);
   
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
         encoder.setPositionConversionFactor(WristConstants.SparkMaxEncoderConversionFactor);
-        encoder.setPosition(absoluteAngle.getDegrees());
+        recalibrateSensors();
         Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
     }
 
@@ -87,7 +84,6 @@ public class Wrist {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }
-        SmartDashboard.putNumber("Wrist/rawAngle", m_AbsoluteEncoder.getPosition());
         var rawValue = m_AbsoluteEncoder.getPosition();
         var belowWrapAround = rawValue > 400;
         var shiftedValue = rawValue;
@@ -102,11 +98,6 @@ public class Wrist {
         m_SparkMax.getPIDController().setI(pidUpdate.I);        
         m_SparkMax.getPIDController().setD(pidUpdate.D);
         m_SparkMax.getPIDController().setFF(pidUpdate.F);
-        var maxOutput = SmartDashboard.getNumber("Wrist/maxOutput", WristConstants.MaxPIDOutput);
-        var rampRate = SmartDashboard.getNumber("Wrist/rampRate", WristConstants.RampUpRate);
-        m_SparkMax.getPIDController().setOutputRange(-maxOutput, maxOutput);
-        m_SparkMax.setOpenLoopRampRate(rampRate);
-        m_SparkMax.setClosedLoopRampRate(rampRate);
     }
 
     public boolean atTarget(){
@@ -133,5 +124,9 @@ public class Wrist {
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
         m_targetDegrees = m_simAngle;
+    }
+
+    public void recalibrateSensors() {
+        m_SparkMax.getEncoder().setPosition(getRotation().getDegrees());
     }
 }

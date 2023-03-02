@@ -45,7 +45,7 @@ public class Wrist {
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
         m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
-        m_pidTuner = new PIDTuner("WristPID", true, 0.004, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.01, 0, 0.02, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_SparkMax, getRotation());
         m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
@@ -62,7 +62,7 @@ public class Wrist {
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
         encoder.setPositionConversionFactor(WristConstants.SparkMaxEncoderConversionFactor);
-        encoder.setPosition(absoluteAngle.getDegrees());
+        recalibrateSensors();
         Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
     }
 
@@ -135,5 +135,9 @@ public class Wrist {
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
         m_targetDegrees = m_simAngle;
+    }
+
+    public void recalibrateSensors() {
+        m_SparkMax.getEncoder().setPosition(getRotation().getDegrees());
     }
 }

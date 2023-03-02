@@ -76,6 +76,7 @@ public class RobotContainer {
   }
   public void delayedRobotInit(){
     m_swerveDrive.recalibrateModules();
+    m_arm.recalibrateSensors();
   }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -117,7 +118,7 @@ public class RobotContainer {
   }
 
   private void operaterControls(){
-    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
+    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
     m_operator.a().whileTrue(new Grip(m_arm));
     m_operator.b().whileTrue(new UnGrip(m_arm));
     m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));

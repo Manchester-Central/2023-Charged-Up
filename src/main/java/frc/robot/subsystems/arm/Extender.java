@@ -35,9 +35,8 @@ public class Extender {
         m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
         m_linearPot = m_SparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
-        double absPos = getPositionMeters();
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
-        m_SparkMax.getEncoder().setPosition(absPos);
+        recalibrateSensors();
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         m_SparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_SparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
@@ -113,6 +112,10 @@ public class Extender {
         //TODO After testing, should remain at current position instead.
         m_SparkMax.stopMotor();
         m_targetMeters = m_simPos;
+    }
+
+    public void recalibrateSensors() {
+        m_SparkMax.getEncoder().setPosition(getPositionMeters());
     }
 }
 

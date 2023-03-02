@@ -214,4 +214,11 @@ public class Shoulder {
         m_shoulderR_B.stopMotor();
         m_targetDegrees = Double.NaN;
     }
+
+    public void recalibrateSensors() {
+        m_shoulderL_A.getEncoder().setPosition(getRotation().getDegrees());
+        m_shoulderL_B.getEncoder().setPosition(getRotation().getDegrees());
+        m_shoulderR_A.getEncoder().setPosition(getRotation().getDegrees());
+        m_shoulderR_B.getEncoder().setPosition(getRotation().getDegrees());
+    }
 }

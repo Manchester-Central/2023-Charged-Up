@@ -82,9 +82,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void maintain() {
-    //m_shoulder.stop();
+    // m_shoulder.stop();
     m_extender.stop();
-    m_wrist.stop();
+    // m_wrist.stop();
   }
 
   public boolean reachedTarget() {
@@ -108,6 +108,12 @@ public class Arm extends SubsystemBase {
     m_extender.stop();
     m_wrist.stop();
     m_gripper.setGripperMode(GripperMode.stop);
+  }
+
+  public void recalibrateSensors() {
+    m_shoulder.recalibrateSensors();
+    m_extender.recalibrateSensors();
+    m_wrist.recalibrateSensors();
   }
 }
 

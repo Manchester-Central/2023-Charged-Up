@@ -112,7 +112,7 @@ public class RobotContainer {
     // m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees(270)));
 
     // Practice score commands - should move targets to operator
-    m_driver.rightTrigger().onTrue(new Score(m_arm, () -> m_nextPose));
+    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPose));
     m_driver.a().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.LowScorePose));
     m_driver.b().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeMidPose));
     m_driver.y().onTrue(new InstantCommand(() -> m_nextPose = ArmPose.CubeHighPose));

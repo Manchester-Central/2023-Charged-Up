@@ -17,10 +17,10 @@ import frc.robot.subsystems.arm.ArmPose;
 public class Score extends SequentialCommandGroup {
   /** Creates a new Score. */
   public Score(Arm arm, Supplier<ArmPose> armPoseSupplier) {
-    Command stow = new MoveArm(arm, ArmPose.StowedPose);
+    //Command stow = new MoveArm(arm, ArmPose.StowedPose);
     Command goToScorePosition = new MoveArm(arm, armPoseSupplier);
     Command release = new UnGrip(arm).withTimeout(1);
-    addCommands(stow, goToScorePosition, release);
+    addCommands(goToScorePosition, release);
   }
 
   public Score(Arm arm, ArmPose pose) {

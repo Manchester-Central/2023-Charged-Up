@@ -120,16 +120,32 @@ public class RobotContainer {
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
-    // m_operator.a().whileTrue(new Grip(m_arm));
-    m_operator.b().whileTrue(new ShuffleBoardPose(m_arm));
-    //m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFlatPose));
-    m_operator.rightTrigger().whileTrue(new Grip(m_arm));
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.IntakeWithWristDownPose));
-    //m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+
+    // Grip/Ungrip
     m_operator.rightBumper().whileTrue(new UnGrip(m_arm));
-    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
-    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
-    m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
+    m_operator.rightTrigger().whileTrue(new Grip(m_arm));
+
+    // Cubes
+    m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
+    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.CubeMidPose).repeatedly());
+    m_operator.y().whileTrue(new MoveArm(m_arm, ArmPose.CubeHighPose).repeatedly());
+
+    // Cones
+    m_operator.povDown().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.ConeMidPose2).repeatedly());
+    m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose2).repeatedly());
+
+    // Intakes
+    m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).repeatedly());
+    m_operator.b().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
+
+    // Pickups
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
+
+    
+    // test
+    m_operator.start().whileTrue(new ShuffleBoardPose(m_arm).repeatedly());
   }
 
   private void dashboardCommands() {

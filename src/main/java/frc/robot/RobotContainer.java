@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -153,7 +154,9 @@ public class RobotContainer {
     //   m_nextPrepPose = ArmPose.ConeHighPosePrep;
     //   m_nextPose = ArmPose.ConeHighPose;
     // }));
-    // m_driver.x().whileTrue(new SwerveXMode(m_swerveDrive));
+    m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
+    m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
+    
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
     
     // m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));

@@ -136,12 +136,12 @@ public class RobotContainer {
     m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose2).repeatedly());
 
     // Intakes
-    m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).repeatedly());
-    m_operator.b().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
+    m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).andThen(new Grip(m_arm)));
+    m_operator.b().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).andThen(new Grip(m_arm)));
 
     // Pickups
-    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
-    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).andThen(new Grip(m_arm)));
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).andThen(new Grip(m_arm)));
 
     
     // test

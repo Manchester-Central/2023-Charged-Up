@@ -18,18 +18,19 @@ public class ArduinoIO extends SubsystemBase {
     private Object PeripheralDataMutex = new Object();
 
     public ArduinoIO() {
-        SerialPort[] ports = SerialPort.getCommPorts();
-        for(int i = 0; i < ports.length; i++) {
-            SmartDashboard.putString("Serial Port" + Integer.toString(i), ports[i].getDescriptivePortName());
-        }
+        m_arduino = SerialPort.getCommPort("/dev/ttyS0");
+        SmartDashboard.putString("Arduino test", m_arduino.getDescriptivePortName());
+        m_arduino.openPort();
     }
 
     @Override
     public void periodic() {
-       // m_arduino.openPort();  
-            /*if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
-                readArduinoOutput();
+       byte[] in = {0};
+            SmartDashboard.putNumber("num Bytes", m_arduino.writeBytes(new byte[] {(byte) 50}, 1));
+            /*if(m_arduino.bytesAvailable() >= 1) {
+                m_arduino.readBytes(in ,1);
             }*/
+            SmartDashboard.putNumber("ReadData", (double) in[0]);
     }
 
     public PeripheralData getPeripheralDataValues() {

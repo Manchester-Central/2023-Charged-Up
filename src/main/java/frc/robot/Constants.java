@@ -107,7 +107,7 @@ public final class Constants {
       public static final double MaximumAngleDegrees = 25; 
       public static final double MinDangerAngle = -110; //TODO confirm values
       public static final double MaxDangerAngle = -70; //TODO confirm values 
-      public static final double RampUpRate = 0.15; //TODO confirm values
+      public static final double RampUpRate = 0.2; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double Gearing = 24576/180.0; //TODO confirm values
       public static final double MinimumFeedForwardVoltage = 0.45; // +0.02, -0.03 when measured on the robot in duty cycle (-1.0, 1.0)

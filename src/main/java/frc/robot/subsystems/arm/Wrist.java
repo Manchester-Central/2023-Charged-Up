@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
@@ -39,6 +40,7 @@ public class Wrist {
         m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_SparkMax.restoreFactoryDefaults();
         m_SparkMax.setInverted(true);
+        m_SparkMax.setIdleMode(IdleMode.kBrake);
         m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);

@@ -120,9 +120,9 @@ public final class Constants {
       public static final double LinearPotConversionFactor = 0.4286;
       public static final double LinearPotOffsetMeters = 0.68; 
       public static final double SparkMaxEncoderConversionFactor = 0.0069; 
-      public static final double MinimumPositionMeters = 0.78; 
-      public static final double MaximumPositionMeters = 1.32; 
-      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.04; //TODO confirm values
+      public static final double MinimumPositionMeters = 0.78 + 0.02; 
+      public static final double MaximumPositionMeters = 1.32 - 0.02; 
+      public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.02; //TODO confirm values
       public static final double RampUpRate = 0.012; //TODO confirm values
       public static final double ToleranceMeters = 0.02; //TODO confirm values
       public static final double MaxPIDOutput = 1.0; //TODO confirm values
@@ -135,7 +135,7 @@ public final class Constants {
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
       public static final double AbsoluteAngleZeroOffset = 213;
       public static final double SparkMaxEncoderConversionFactor = 7.93;
-      public static final double RampUpRate = 0.5; //TODO confirm values
+      public static final double RampUpRate = 0.2; //TODO confirm values
       public static final double ToleranceDegrees = 0.5; //TODO confirm values
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;

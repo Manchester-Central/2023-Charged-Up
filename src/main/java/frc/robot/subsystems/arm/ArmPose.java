@@ -59,11 +59,11 @@ public class ArmPose {
     public static final ArmPose ConeHighPose = addStaticPose("ConeHighPose", 15, ExtenderConstants.MinimumPositionMeters + 1.32, -5, CoordinateType.ArmRelative);
 
     //Test Poses
-    public static final ArmPose TopRightTestPose = addStaticPose("TopRight", 45, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
-    public static final ArmPose TopLeftTestPose = addStaticPose("TopLeft", -225, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
-    public static final ArmPose BottomRightTestPose = addStaticPose("BottomRight", -45, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
-    public static final ArmPose BottomLeftTestPose = addStaticPose("BottomLeft", -135, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
-    public static final ArmPose StraightPose = addStaticPose("Straight", 0, ExtenderConstants.MaximumPositionMeters, 0, CoordinateType.ArmRelative);
+    public static final ArmPose TopRightTestPose = addStaticPose("TopRight", 0, ExtenderConstants.MaximumPositionMeters, 180, CoordinateType.ArmRelative);
+    public static final ArmPose TopLeftTestPose = addStaticPose("TopLeft", -180, ExtenderConstants.MaximumPositionMeters, 180, CoordinateType.ArmRelative);
+    public static final ArmPose BottomRightTestPose = addStaticPose("BottomRight", -45, ExtenderConstants.MinimumPositionMeters, 180, CoordinateType.ArmRelative);
+    public static final ArmPose BottomLeftTestPose = addStaticPose("BottomLeft", -135, ExtenderConstants.MinimumPositionMeters, 180, CoordinateType.ArmRelative);
+    public static final ArmPose StraightPose = addStaticPose("Straight", 0, ExtenderConstants.MaximumPositionMeters, 180, CoordinateType.ArmRelative);
 
 
 

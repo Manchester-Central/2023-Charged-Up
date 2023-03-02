@@ -118,13 +118,14 @@ public class RobotContainer {
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
-    // m_operator.a().whileTrue(new Grip(m_arm));
-    // m_operator.b().whileTrue(new UnGrip(m_arm));
-    // m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
-    // m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
-    // m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
-    // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
-    // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+    m_operator.a().whileTrue(new Grip(m_arm));
+    m_operator.b().whileTrue(new UnGrip(m_arm));
+    m_operator.rightTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopRightTestPose));
+    m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.TopLeftTestPose));
+    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomRightTestPose));
+    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.BottomLeftTestPose));
+    m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.StraightPose));
+    m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
   }
 
   private void dashboardCommands() {

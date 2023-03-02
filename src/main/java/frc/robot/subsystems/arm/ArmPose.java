@@ -54,7 +54,7 @@ public class ArmPose {
         60, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose IntakeBake = addStaticPose(
+    public static final ArmPose IntakeBack = addStaticPose(
         "IntakeBake", 
         -120, 
         1.1, 

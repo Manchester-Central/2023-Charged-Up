@@ -12,38 +12,24 @@ import frc.robot.Constants;
 // TODO clean up code and prioritize readability.
 
 public class ArduinoIO extends SubsystemBase {
-    private final int NUM_BYTES_TO_RECEIVE = 14; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
+    private final int NUM_BYTES_TO_RECEIVE = 2; // We know beforehand how many bytes we should receive each read cycle. Check color sensor documentation.
     private SerialPort m_arduino;
-    private PeripheralData m_PeripheralDataValues = new PeripheralData(0, 0, 0, 0, 0);
-    private int proximityData = 0;
+    private PeripheralData m_PeripheralDataValues = new PeripheralData(0, 0, 0);
     private Object PeripheralDataMutex = new Object();
-    private Object infaredMutex = new Object();
-    
+
     public ArduinoIO() {
-        SerialPort[] availablePorts;
-        availablePorts = SerialPort.getCommPorts();
-        for(int i = 0; i < availablePorts.length; i++) {
-            System.out.println(availablePorts[i].getDescriptivePortName());
-        }
-        try {
-        m_arduino = availablePorts[0];
-        } catch(Exception exception) {
-            exception.printStackTrace();
+        SerialPort[] ports = SerialPort.getCommPorts();
+        for(int i = 0; i < ports.length; i++) {
+            SmartDashboard.putString("Serial Port" + Integer.toString(i), ports[i].getDescriptivePortName());
         }
     }
 
     @Override
     public void periodic() {
-        if(m_arduino == null) return;
-        m_arduino.openPort();
-            if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
+       // m_arduino.openPort();  
+            /*if(m_arduino.bytesAvailable() >= NUM_BYTES_TO_RECEIVE) {
                 readArduinoOutput();
-            }
-            SmartDashboard.putNumber("Red", (double) m_PeripheralDataValues.R); 
-            SmartDashboard.putNumber("Green", (double) m_PeripheralDataValues.G); 
-            SmartDashboard.putNumber("Blue", (double) m_PeripheralDataValues.B); 
-            SmartDashboard.putNumber("Infared", m_PeripheralDataValues.IR);
-            SmartDashboard.putNumber("Proximity Sensor", m_PeripheralDataValues.proximity);
+            }*/
     }
 
     public PeripheralData getPeripheralDataValues() {
@@ -52,50 +38,27 @@ public class ArduinoIO extends SubsystemBase {
         }
     }
 
-    /**
-  Index values:
-  [0-1]: Proximity sensor.
-  [2-4]: Infared.
-  [5-7]: Green sensor data.
-  [8-10]: Blue sensor data.
-  [11-13]: Red sensor data.
-*/
-
     private void readArduinoOutput() {
         byte[] incomingBytes = new byte[NUM_BYTES_TO_RECEIVE];
         m_arduino.readBytes(incomingBytes, NUM_BYTES_TO_RECEIVE);
-        int proximityData = incomingBytes[0]&0xff; // TODO test these values when we have the robot.
-        int infared = (incomingBytes[2]&0xff)|((incomingBytes[3]&0xff)<<8); // TODO test this value when we have the robot.
-        int green = (incomingBytes[5]&0xff)|((incomingBytes[6]&0xff)<<8);
-        int blue = (incomingBytes[8]&0xff)|((incomingBytes[9]&0xff)<<8);
-        int red = (incomingBytes[11]&0xff)|(((incomingBytes[12]&0xff)<<8));
         synchronized(PeripheralDataMutex) {
-            m_PeripheralDataValues = new PeripheralData(red, green, blue, infared, proximityData);
+            m_PeripheralDataValues = new PeripheralData(incomingBytes[0], incomingBytes[1], incomingBytes[2]);
         }
     }
 
     public class PeripheralData {
-        private int R = 0;
-        private int G = 0;
-        private int B = 0;
+        private int hue;
         private int IR = 0;
         private int proximity;
-        public PeripheralData(int iR, int iG, int iB, int iIR, int iProx) {
-            R = iR;
-            G = iG;
-            B = iB;
+        public PeripheralData(int iHue, int iIR, int iProx) {
+            hue = iHue;
             IR = iIR;
             proximity = iProx;
         }
-       
     }
 
     // This function will be available to all subsystems and commands. However, it can only be utilized by one at a time.
-    public synchronized void queueLEDS(int red, int green, int blue, LED target) {
-        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue, (byte) ((target==LED.CURRENT_GAME_PIECE_INDICATOR) ? 0:1)}, 4); // if the desired LED is CURRENT_GAME_PIECE_INDICATOR,  send 0. If not, send 1.
-    }
-
-    public enum LED {
-        CURRENT_GAME_PIECE_INDICATOR, DESIRED_GAME_PIECE_INDICATOR
+    public synchronized void queueLEDS(int red, int green, int blue) {
+        m_arduino.writeBytes(new byte[] {(byte) red, (byte) green, (byte) blue}, 3); // if the desired LED is CURRENT_GAME_PIECE_INDICATOR,  send 0. If not, send 1.
     }
 }

@@ -45,6 +45,9 @@ public abstract class SwerveModule {
     m_velocity.configVelocityMeasurementWindow(32);
     m_angle.setInverted(TalonFXInvertType.Clockwise);
 
+    m_velocity.configClosedloopRamp(1);
+    m_angle.configClosedloopRamp(0.25);
+
   }
 
   public abstract double getAbsoluteAngle();

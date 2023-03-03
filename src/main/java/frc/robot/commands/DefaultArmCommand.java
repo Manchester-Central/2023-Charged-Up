@@ -33,8 +33,7 @@ public class DefaultArmCommand extends CommandBase {
   public void execute() {
     m_arm.setGripperMode(GripperMode.hold);
     // Gripper.customPower = m_tester.getRightY();
-    m_arm.maintain(); // TODO: default command should stow the arm
-    // m_arm.setArmTarget(ArmPose.StowedPose);
+    m_arm.setArmTarget(ArmPose.StowedPose);
   }
 
   // Called once the command ends or is interrupted.

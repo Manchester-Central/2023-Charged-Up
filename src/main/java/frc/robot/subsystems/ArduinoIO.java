@@ -28,13 +28,6 @@ public class ArduinoIO extends SubsystemBase {
                 e.printStackTrace();
             }
         }
-        
-        try {
-            logFileWriter = new FileWriter(logFile);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
         }
     
 
@@ -43,8 +36,10 @@ public class ArduinoIO extends SubsystemBase {
        m_arduino.write(new byte[] {(byte) 255}, 1);
        String receivedString = m_arduino.readString();
        try {
+        logFileWriter = new FileWriter(logFile);
         logFileWriter.write(receivedString, 0, receivedString.length());
-    } catch (IOException e) {
+        logFileWriter.close();
+    } catch(Exception e) {
         e.printStackTrace();
     }
     }

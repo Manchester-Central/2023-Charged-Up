@@ -14,20 +14,17 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
-import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriverRelativeDrive;
-import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveExtender;
@@ -35,21 +32,15 @@ import frc.robot.commands.MoveShoulder;
 import frc.robot.commands.MoveWrist;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
-import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.Score;
-import frc.robot.commands.ShuffleBoardPose;
-import frc.robot.commands.SwerveTune;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
-import frc.robot.commands.test.TestExtender;
-import frc.robot.commands.test.TestShoulder;
 import frc.robot.commands.test.TestWrist;
 import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
-import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -94,9 +85,17 @@ public class RobotContainer {
     autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
+    autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     // Configure the trigger bindings
     configureBindings();
   }
+  private Command CreateDriveAndGrip(ParsedCommand pc){
+    Command driveCommand = DriveToTarget.createAutoCommand(pc, m_swerveDrive);
+    Command gripCommand = new Grip(m_arm);
+    //TODO update when we can detect that we have pick up the game piece
+    return new ParallelRaceGroup(driveCommand, gripCommand);
+  }
+
   public void delayedRobotInit(){
     m_swerveDrive.recalibrateModules();
     m_arm.recalibrateSensors();

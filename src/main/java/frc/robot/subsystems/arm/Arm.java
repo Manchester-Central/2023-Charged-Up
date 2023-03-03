@@ -131,7 +131,7 @@ public class Arm extends SubsystemBase {
     m_shoulder.stop();
     m_extender.stop();
     m_wrist.stop();
-    m_gripper.setGripperMode(GripperMode.stop);
+    //m_gripper.setGripperMode(GripperMode.stop);
   }
 
   public void recalibrateSensors() {

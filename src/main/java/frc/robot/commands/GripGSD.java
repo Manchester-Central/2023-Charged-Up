@@ -4,24 +4,21 @@
 
 package frc.robot.commands;
 
-import com.chaos131.gamepads.Gamepad;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmPose;
-import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.GripperMutex;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 
-public class DefaultArmCommand extends CommandBase {
-  
-  private Arm m_arm;
-  private Gamepad m_tester;
-
-  /** Creates a new DefaultArmCommand. */
-  public DefaultArmCommand(Arm arm, Gamepad tester) {
+public class GripGSD extends CommandBase {
+  GripperMode m_mode;
+  Arm m_arm;
+  /** Creates a new GripGSD. */
+  public GripGSD(Arm arm, GripperMutex gm, GripperMode mode) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_mode = mode;
     m_arm = arm;
-    m_tester = tester;
-    addRequirements(arm);
+    addRequirements(gm);
   }
 
   // Called when the command is initially scheduled.
@@ -31,9 +28,7 @@ public class DefaultArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_arm.setGripperMode(GripperMode.hold);
-    // Gripper.customPower = m_tester.getRightY();
-    m_arm.setArmTarget(ArmPose.StowedPose);
+    m_arm.setGripperMode(m_mode);
   }
 
   // Called once the command ends or is interrupted.

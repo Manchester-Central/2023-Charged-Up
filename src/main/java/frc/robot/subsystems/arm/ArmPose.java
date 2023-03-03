@@ -30,7 +30,7 @@ public class ArmPose {
         this(Rotation2d.fromDegrees(shoulderAngleDegrees), extenderPos, Rotation2d.fromDegrees(wristAngleDegrees), wristCoordinate);
     }
 
-    private static Map<String, ArmPose> ArmPoses = new HashMap<String, ArmPose>();
+    public static Map<String, ArmPose> ArmPoses = new HashMap<String, ArmPose>();
     private static ArmPose addStaticPose(String name, double shoulderAngleDegrees, double extenderPos, double wristAngleDegrees, CoordinateType wristCoordinate) {
         var pose = new ArmPose(shoulderAngleDegrees, extenderPos, wristAngleDegrees, wristCoordinate);
         ArmPoses.put(name, pose);

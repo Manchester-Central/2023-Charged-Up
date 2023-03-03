@@ -168,6 +168,10 @@ public class RobotContainer {
 
     // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
+    m_driver.a().whileTrue(new Grip(m_arm));
+    m_driver.b().whileTrue(new UnGrip(m_arm));
+    m_driver.x().whileTrue(new InstantCommand(() -> m_arm.setGripperMode(GripperMode.slowGrip), m_arm));
+    m_driver.y().whileTrue(new InstantCommand(() -> m_arm.setGripperMode(GripperMode.slowUngrip), m_arm));
   }
 
   private void operaterControls(){
@@ -186,48 +190,18 @@ public class RobotContainer {
       m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
       m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-          m_nextPrepPose = ArmPose.ConeHighPosePrep;
-          m_nextPose = ArmPose.ConeHighPose;
-        }));
-        
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.CubeHighPose;
-      }));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.ConeHighPosePrep));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new MoveArm(m_arm, ArmPose.CubeHighPose));
+      // m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.DoublePickPose));
+      // m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.SinglePickPose));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.IntakeFront));
       
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.DoublePickPose;
-      }));
-
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.ConeMidPosePrep;
-        m_nextPose = ArmPose.ConeMidPose;
-      }));
+      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.ConeMidPosePrep));
+      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new MoveArm(m_arm, ArmPose.CubeMidPose));
       
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.CubeMidPose;
-      }));
+      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.LowScorePose));
+      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new MoveArm(m_arm, ArmPose.LowScorePose));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.SinglePickPose;
-      }));
-
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.LowScorePose;
-      }));
-
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.LowScorePose;
-      }));
-
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.IntakeFront;
-      }));
-      
       m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
 
       m_operator.rightBumper().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.slowGrip)).andThen(new MoveArm(m_arm, m_nextIntakePose).repeatedly()));

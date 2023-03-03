@@ -84,7 +84,6 @@ public class RobotContainer {
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToScorePose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     autoBuilder.registerCommand("unGrip", (ParsedCommand pc) -> UnGrip.createAutoCommand(pc, m_arm));
@@ -135,7 +134,6 @@ public class RobotContainer {
 
     // // Practice score commands - should move targets to operator
     m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose));
-    m_driver.rightBumper().whileTrue(DriveToTarget.toClosestScoreTarget(m_swerveDrive).andThen(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose)));
     // m_driver.a().onTrue(new InstantCommand(() -> {
     //   m_nextPrepPose = ArmPose.StowedPose;
     //   m_nextPose = ArmPose.LowScorePose;

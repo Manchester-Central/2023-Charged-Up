@@ -16,12 +16,14 @@ import frc.robot.Constants.FieldConstants;
 public class Limelight extends SubsystemBase {
   NetworkTable m_limelightTable;
   Field2d m_field;
+  String m_tableName;
 
   /** Creates a new Limelight. */
-  public Limelight() {
-    m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  public Limelight(String tableName) {
+    m_tableName = tableName;
+    m_limelightTable = NetworkTableInstance.getDefault().getTable(m_tableName);
     m_field = new Field2d();
-    SmartDashboard.putData("CameraPosition", m_field);
+    SmartDashboard.putData(m_tableName + "/CameraPosition", m_field);
   }
 
   public Pose2d getPose() {
@@ -57,6 +59,7 @@ public class Limelight extends SubsystemBase {
     // This method will be called once per scheduler run
     // System.out.printf("TargetCheck %b \n", hasTarget());
     m_field.setRobotPose(getPose());
-    SmartDashboard.putNumber("limelight pipeline", getPipeline());
+    SmartDashboard.putNumber(m_tableName + "/pipeline", getPipeline());
+    
   }
 }

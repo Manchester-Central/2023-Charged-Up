@@ -62,7 +62,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private SwerveDrive m_swerveDrive = new SwerveDrive();
-  private Limelight m_Limelight = new Limelight();
+  private Limelight m_Limelight = new Limelight("limeLight");
+  private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Arm m_arm = new Arm();
   private ArduinoIO m_arduinoIO = new ArduinoIO();
   

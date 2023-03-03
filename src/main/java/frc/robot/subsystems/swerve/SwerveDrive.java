@@ -216,6 +216,11 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(swerveModuleState);
   }
 
+  public void moveFieldRelativeForPID(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    move(speeds);
+  }
+
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds;
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
@@ -272,7 +277,7 @@ public class SwerveDrive extends SubsystemBase {
     double x = m_XPid.calculate(pose.getX());
     double y = m_YPid.calculate(pose.getY());
     double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
-    moveFieldRelative(x, y, angle);
+    moveFieldRelativeForPID(x, y, angle);
   }
 
   public Rotation2d getGyroRotation() {
@@ -280,6 +285,10 @@ public class SwerveDrive extends SubsystemBase {
       return m_simrotation;
     }
     return m_gyro.getRotation2d().times(-1);
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
   public Rotation2d getOdometryRotation() {

@@ -130,7 +130,7 @@ public class RobotContainer {
       
 
     // // Practice score commands - should move targets to operator
-    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextScorePose));
+    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextScorePose, 1));
 
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
@@ -184,7 +184,7 @@ public class RobotContainer {
     m_operator.leftTrigger().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.unGrip), m_arm).repeatedly());
 
     // temp. Replace with LEDS when working 
-    m_operator.back().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextScorePose));
+    m_operator.back().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextScorePose, 1));
 
     // // Cones
     // m_operator.povDown().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());

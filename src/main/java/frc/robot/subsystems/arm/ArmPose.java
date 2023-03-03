@@ -55,7 +55,7 @@ public class ArmPose {
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeBack = addStaticPose(
-        "IntakeBake", 
+        "IntakeBack", 
         -120, 
         1.1, 
         305, 
@@ -82,7 +82,7 @@ public class ArmPose {
     public static final ArmPose CubeHighPose = addStaticPose(
         "CubeHighPose", 
         -15, 
-        1.0, 
+        0.95, 
         40, 
         CoordinateType.ArmRelative
     );
@@ -112,7 +112,7 @@ public class ArmPose {
     public static final ArmPose ConeHighPose = addStaticPose(
         "ConeHighPose", 
         -2, 
-        1.3, 
+        1.25, 
         10, 
         CoordinateType.ArmRelative
     );

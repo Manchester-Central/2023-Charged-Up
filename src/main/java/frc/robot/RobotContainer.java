@@ -134,7 +134,7 @@ public class RobotContainer {
       
 
     // // Practice score commands - should move targets to operator
-    m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose));
+    //m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose));
     m_driver.rightBumper().whileTrue(DriveToTarget.toClosestScoreTarget(m_swerveDrive).andThen(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose)));
     // m_driver.a().onTrue(new InstantCommand(() -> {
     //   m_nextPrepPose = ArmPose.StowedPose;
@@ -188,47 +188,25 @@ public class RobotContainer {
       m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
       m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-          m_nextPrepPose = ArmPose.ConeHighPosePrep;
-          m_nextPose = ArmPose.ConeHighPose;
-        }));
+//new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose)
+
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new Score(m_arm, () -> ArmPose.ConeHighPosePrep, () -> ArmPose.ConeHighPose));
         
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.CubeHighPose;
-      }));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new Score(m_arm, () -> ArmPose.StowedPose, () -> ArmPose.CubeHighPose));
       
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.DoublePickPose;
-      }));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new Score(m_arm, () -> ArmPose.DoublePickPose));
 
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.ConeMidPosePrep;
-        m_nextPose = ArmPose.ConeMidPose;
-      }));
+      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new Score(m_arm, () -> ArmPose.ConeMidPosePrep, () -> ArmPose.ConeMidPose));
       
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.CubeMidPose;
-      }));
+      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new Score(m_arm, () -> ArmPose.StowedPose, () -> ArmPose.CubeMidPose));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.SinglePickPose;
-      }));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new Score(m_arm, () -> ArmPose.SinglePickPose));
 
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.LowScorePose;
-      }));
+      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new Score(m_arm, () -> ArmPose.StowedPose, () -> ArmPose.LowScorePose));
 
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new InstantCommand(() -> {
-        m_nextPrepPose = ArmPose.StowedPose;
-        m_nextPose = ArmPose.LowScorePose;
-      }));
+      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new Score(m_arm, () -> ArmPose.StowedPose, () -> ArmPose.LowScorePose));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new InstantCommand(() -> {
-        m_nextIntakePose = ArmPose.IntakeFront;
-      }));
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new Score(m_arm, () -> ArmPose.IntakeFront));
       
       m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
 

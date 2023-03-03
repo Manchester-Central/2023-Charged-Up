@@ -74,7 +74,7 @@ public class ArmPose {
     //Cube Poses
     public static final ArmPose CubeMidPose = addStaticPose(
         "CubeMidPose", 
-        -50, 
+        -46, 
         0.8, 
         90, 
         CoordinateType.ArmRelative
@@ -111,7 +111,7 @@ public class ArmPose {
     );
     public static final ArmPose ConeHighPose = addStaticPose(
         "ConeHighPose", 
-        -2, 
+        0, 
         1.25, 
         10, 
         CoordinateType.ArmRelative

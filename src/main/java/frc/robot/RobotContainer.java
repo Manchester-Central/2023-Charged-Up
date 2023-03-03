@@ -91,7 +91,10 @@ public class RobotContainer {
     autoBuilder.registerCommand("driveToScorePose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
-    autoBuilder.registerCommand("unGrip", (ParsedCommand pc) -> UnGrip.createAutoCommand(pc, m_arm));
+    autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
+    autoBuilder.registerCommand("cubeMidPose", (ParsedCOmmand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
+    autoBuilder.registerCommand("stow", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
+    autoBuilder.registerCommand("unGrip", (ParsedCommand pc) -> new GripGSD(m_arm, m_gripperMutex, GripperMode.unGrip));
     // Configure the trigger bindings
     configureBindings();
   }

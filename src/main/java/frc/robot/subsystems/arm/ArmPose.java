@@ -74,14 +74,14 @@ public class ArmPose {
     //Cube Poses
     public static final ArmPose CubeMidPose = addStaticPose(
         "CubeMidPose", 
-        -46, 
+        -43, 
         0.8, 
         90, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose CubeHighPose = addStaticPose(
         "CubeHighPose", 
-        -15, 
+        -12, 
         0.95, 
         40, 
         CoordinateType.ArmRelative

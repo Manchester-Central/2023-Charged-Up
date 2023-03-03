@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["resetPosition?x=8&y=4", "driveToTarget?x=12&y=6&angle=90", "driveToTarget?x=0&y=1&angle=185"],
+    "value": ["resetPosition?x=8&y=4", "namedPose?pose=LowScorePose", ""],
     "properties": {
       "persistent": true
     }

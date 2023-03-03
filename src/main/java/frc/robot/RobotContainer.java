@@ -86,6 +86,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
+    autoBuilder.registerCommand("unGrip", (ParsedCommand pc) -> UnGrip.createAutoCommand(pc, m_arm));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -95,6 +96,8 @@ public class RobotContainer {
     //TODO update when we can detect that we have pick up the game piece
     return new ParallelRaceGroup(driveCommand, gripCommand);
   }
+
+  
 
   public void delayedRobotInit(){
     m_swerveDrive.recalibrateModules();

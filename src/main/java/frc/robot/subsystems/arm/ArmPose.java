@@ -49,14 +49,14 @@ public class ArmPose {
     //Intake Poses
     public static final ArmPose IntakeFront = addStaticPose(
         "IntakeFront", 
-        -65, 
+        -60, 
         1.1, 
         60, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeBack = addStaticPose(
         "IntakeBack", 
-        -120, 
+        -125, 
         1.1, 
         305, 
         CoordinateType.ArmRelative
@@ -120,7 +120,7 @@ public class ArmPose {
     // Pick stations
     public static final ArmPose DoublePickPose = addStaticPose(
         "DoublePickPose", 
-        -13, 
+        -7, 
         0.8, 
         10, 
         CoordinateType.ArmRelative

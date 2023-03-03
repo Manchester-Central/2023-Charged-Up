@@ -202,7 +202,7 @@ public class RobotContainer {
       m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
       Command highCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeHighPosePrep, ArmPose.ConeHighPose, m_operator.rightBumper()::getAsBoolean);
-      Command midCone = new MoveArmToglePosition(m_arm, ArmPose.ConeMidPosePrep, ArmPose.ConeMidPose, m_operator.rightBumper()::getAsBoolean);
+      Command midCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeMidPosePrep, ArmPose.ConeMidPose, m_operator.rightBumper()::getAsBoolean);
 
       m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
       m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.CubeHighPose));

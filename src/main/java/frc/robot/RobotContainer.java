@@ -27,6 +27,7 @@ import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
+import frc.robot.commands.MoveArmTogglePosition;
 import frc.robot.commands.MoveExtender;
 import frc.robot.commands.MoveShoulder;
 import frc.robot.commands.MoveWrist;
@@ -190,13 +191,16 @@ public class RobotContainer {
       m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
       m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.ConeHighPosePrep));
+      Command highCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeHighPosePrep, ArmPose.ConeHighPose, m_operator.rightBumper()::getAsBoolean);
+      Command midCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeMidPosePrep, ArmPose.ConeMidPose, m_operator.rightBumper()::getAsBoolean);
+
+      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(highCone);
       m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new MoveArm(m_arm, ArmPose.CubeHighPose));
       // m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.DoublePickPose));
       // m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.SinglePickPose));
       m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).onTrue(new MoveArm(m_arm, ArmPose.IntakeFront));
       
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.ConeMidPosePrep));
+      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(midCone);
       m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).onTrue(new MoveArm(m_arm, ArmPose.CubeMidPose));
       
       m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).onTrue(new MoveArm(m_arm, ArmPose.LowScorePose));

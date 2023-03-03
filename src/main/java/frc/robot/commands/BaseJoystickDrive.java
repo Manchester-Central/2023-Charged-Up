@@ -34,17 +34,29 @@ public abstract class BaseJoystickDrive extends CommandBase {
   }
 
   protected class JoystickLowPassFilter implements JoystickFilter {
-    double lastValue = 0;
+    double lastFilteredValue = 0;
+    final double FilteringConstant = 0.2;
     Supplier<Double> m_joystickSupplier;
 
     JoystickLowPassFilter(Supplier<Double> joystickSupplier) {
       m_joystickSupplier = joystickSupplier;
     }
 
+    /**
+     * Runs a low pass filter on the supplied joystick data
+     * From Dan:
+     * X = Y + (Y-Z) A
+     * Correct formula: X = Y + (Z-Y) A (Josh swapped Z and Y)
+     * X: new filtered value
+     * Y: old filtered value
+     * Z: new unfiltered value
+     * A: filtering Constant
+     */
     public double get() {
-      double newValue = (m_joystickSupplier.get() + lastValue) / 2;
-      lastValue = newValue;
-      return newValue;
+      double newValue = m_joystickSupplier.get();
+      double newFilteredValue = lastFilteredValue + ((newValue - lastFilteredValue) * FilteringConstant);
+      lastFilteredValue = newFilteredValue;
+      return newFilteredValue;
     }
   }
 

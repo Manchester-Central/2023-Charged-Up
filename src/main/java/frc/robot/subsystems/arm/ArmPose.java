@@ -90,7 +90,7 @@ public class ArmPose {
     //Cone Poses
     public static final ArmPose ConeMidPosePrep = addStaticPose(
         "ConeMidPosePrep", 
-        -15, 
+        -10, 
         0.85, 
         30, 
         CoordinateType.ArmRelative
@@ -104,7 +104,7 @@ public class ArmPose {
     );
     public static final ArmPose ConeHighPosePrep = addStaticPose(
         "ConeHighPosePrep", 
-        5, 
+        10, 
         1.3, 
         10, 
         CoordinateType.ArmRelative

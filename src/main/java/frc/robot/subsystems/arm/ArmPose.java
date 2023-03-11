@@ -30,7 +30,7 @@ public class ArmPose {
         this(Rotation2d.fromDegrees(shoulderAngleDegrees), extenderPos, Rotation2d.fromDegrees(wristAngleDegrees), wristCoordinate);
     }
 
-    private static Map<String, ArmPose> ArmPoses = new HashMap<String, ArmPose>();
+    public static Map<String, ArmPose> ArmPoses = new HashMap<String, ArmPose>();
     private static ArmPose addStaticPose(String name, double shoulderAngleDegrees, double extenderPos, double wristAngleDegrees, CoordinateType wristCoordinate) {
         var pose = new ArmPose(shoulderAngleDegrees, extenderPos, wristAngleDegrees, wristCoordinate);
         ArmPoses.put(name, pose);
@@ -49,14 +49,14 @@ public class ArmPose {
     //Intake Poses
     public static final ArmPose IntakeFront = addStaticPose(
         "IntakeFront", 
-        -65, 
+        -60, 
         1.1, 
         60, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeBack = addStaticPose(
-        "IntakeBake", 
-        -120, 
+        "IntakeBack", 
+        -125, 
         1.1, 
         305, 
         CoordinateType.ArmRelative
@@ -74,15 +74,15 @@ public class ArmPose {
     //Cube Poses
     public static final ArmPose CubeMidPose = addStaticPose(
         "CubeMidPose", 
-        -50, 
+        -43, 
         0.8, 
         90, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose CubeHighPose = addStaticPose(
         "CubeHighPose", 
-        -15, 
-        1.0, 
+        -12, 
+        0.95, 
         40, 
         CoordinateType.ArmRelative
     );
@@ -90,28 +90,28 @@ public class ArmPose {
     //Cone Poses
     public static final ArmPose ConeMidPosePrep = addStaticPose(
         "ConeMidPosePrep", 
-        -15, 
+        -10, 
         0.85, 
         30, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose ConeMidPose = addStaticPose(
         "ConeMidPose", 
-        -25, 
+        -30, 
         0.9, 
         35, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose ConeHighPosePrep = addStaticPose(
         "ConeHighPosePrep", 
-        5, 
+        10, 
         1.3, 
         10, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose ConeHighPose = addStaticPose(
         "ConeHighPose", 
-        -2, 
+        -5, 
         1.3, 
         10, 
         CoordinateType.ArmRelative
@@ -120,7 +120,7 @@ public class ArmPose {
     // Pick stations
     public static final ArmPose DoublePickPose = addStaticPose(
         "DoublePickPose", 
-        -13, 
+        -7, 
         0.8, 
         10, 
         CoordinateType.ArmRelative

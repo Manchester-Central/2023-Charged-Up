@@ -31,9 +31,8 @@ public class DefaultArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setGripperMode(GripperMode.hold);
+    //m_arm.setGripperMode(GripperMode.hold);
     // Gripper.customPower = m_tester.getRightY();
-    // m_arm.maintain(); // TODO: default command should stow the arm
     m_arm.setArmTarget(ArmPose.StowedPose);
   }
 

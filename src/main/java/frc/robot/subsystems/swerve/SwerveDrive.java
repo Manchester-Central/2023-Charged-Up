@@ -138,12 +138,12 @@ public class SwerveDrive extends SubsystemBase {
     m_YPid = new PIDController(1, 0, 0);
     m_AnglePid = new PIDController(8.5, 0.001, 0);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
-    m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
-    m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
+    m_XPidTuner = new PIDTuner("X PID Tuner", false, m_XPid);
+    m_YPidTuner = new PIDTuner("Y PID Tuner", false, m_YPid);
     m_XPid.setTolerance(Constants.DriveToTargetTolerance);
     m_YPid.setTolerance(Constants.DriveToTargetTolerance);
     m_AnglePid.setTolerance(Constants.AnglePIDTolerance);
-    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
+    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", false, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
@@ -152,11 +152,11 @@ public class SwerveDrive extends SubsystemBase {
     double velocityD = 0;
     double velocityF = 0.054;
     // `this::updateVelocityPIDConstants` is basically shorthand for `(PIDUpdate update) -> updateVelocityPIDConstants(update)`
-    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity", true, velocityP, velocityI, velocityD, velocityF, this::updateVelocityPIDConstants);
+    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity", false, velocityP, velocityI, velocityD, velocityF, this::updateVelocityPIDConstants);
     double angleP = 0.2;
     double angleI = 0;
     double angleD = 0;
-    m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle", true, angleP, angleI, angleD, this::updateAnglePIDConstants);
+    m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle", false, angleP, angleI, angleD, this::updateAnglePIDConstants);
 
   }
 
@@ -216,6 +216,11 @@ public class SwerveDrive extends SubsystemBase {
     m_backRight.setTarget(swerveModuleState);
   }
 
+  public void moveFieldRelativeForPID(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
+    move(speeds);
+  }
+
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds;
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
@@ -272,7 +277,7 @@ public class SwerveDrive extends SubsystemBase {
     double x = m_XPid.calculate(pose.getX());
     double y = m_YPid.calculate(pose.getY());
     double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
-    moveFieldRelative(x, y, angle);
+    moveFieldRelativeForPID(x, y, angle);
   }
 
   public Rotation2d getGyroRotation() {
@@ -280,6 +285,10 @@ public class SwerveDrive extends SubsystemBase {
       return m_simrotation;
     }
     return m_gyro.getRotation2d().times(-1);
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
   public Rotation2d getOdometryRotation() {

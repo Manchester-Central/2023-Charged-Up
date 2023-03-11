@@ -32,7 +32,7 @@ public class Extender {
         m_SparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_SparkMax.setInverted(true);
         m_SparkMax.setIdleMode(IdleMode.kBrake);
-        m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ExtenderPID", false, 80, 0, 0, this::tunePID);
         m_linearPot = m_SparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
         m_SparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);

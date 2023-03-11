@@ -6,9 +6,13 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import com.chaos131.auto.ParsedCommand;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -34,6 +38,18 @@ public class MoveArm extends CommandBase {
     addRequirements(m_arm);
   }
 
+  public static Command createAutoCommand(ParsedCommand parsedCommand, Arm arm) {
+    String poseName = parsedCommand.getArgument("pose");
+    if (poseName == null) {
+      return new InstantCommand();
+    }
+    ArmPose armPose = ArmPose.ArmPoses.get(poseName);
+    if (armPose == null) {
+      return new InstantCommand();
+    }
+    return new MoveArm(arm, armPose);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -54,6 +70,6 @@ public class MoveArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.reachedTarget();
+    return false;// m_arm.reachedTarget();
   }
 }

@@ -35,3 +35,14 @@ Open the downloaded project into the WPILib VSCode:
 * To build type: `Control + Shift + P` and then select `WPILib: Build Robot Code`
 * To simulate type: `Control + Shift + P` and then select `WPILib: Simulate Robot Code`
 * To deploy to the robot type: `Control + Shift + P` and then select `WPILib: Deploy Robot Code`
+
+
+## Glass Robot Dimensions Setup
+* In Glass, add 'CAD field for Auto.png' as the background field.
+* Field dimensions
+    * Width/X = 16.522 m
+    * Length/Y = 8.016 m
+
+* Robot Dimensions
+    * Width = 0.851 m
+    * Length = 0.863 m

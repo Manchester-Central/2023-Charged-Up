@@ -17,9 +17,9 @@ import frc.robot.subsystems.swerve.ScorePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriveToTarget extends CommandBase {
-  private SwerveDrive m_swerveDrive;
-  private Supplier<Pose2d> m_poseSupplier;
-  private double m_translationTolerance;
+  protected SwerveDrive m_swerveDrive;
+  protected Supplier<Pose2d> m_poseSupplier;
+  protected double m_translationTolerance;
 
   /** Creates a new DriveToTarget. */
   public DriveToTarget(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
@@ -35,6 +35,12 @@ public class DriveToTarget extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerveDrive = swerveDrive;
     m_poseSupplier = () -> pose;
+    m_translationTolerance = translationTolerance;
+    addRequirements(m_swerveDrive);
+  }
+
+  public DriveToTarget(SwerveDrive swerveDrive, double translationTolerance) {
+    m_swerveDrive = swerveDrive;
     m_translationTolerance = translationTolerance;
     addRequirements(m_swerveDrive);
   }

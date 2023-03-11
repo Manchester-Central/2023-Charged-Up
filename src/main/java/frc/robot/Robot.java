@@ -83,23 +83,25 @@ public class Robot extends TimedRobot {
     logManager.update();
     CommandScheduler.getInstance().run();
     m_robotContainer.addSmartDashboard();
+    m_robotContainer.robotPeriodic();
     
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.m_arm.stop();
+    // m_robotContainer.m_arm.stop();
   }
 
   @Override
   public void disabledPeriodic() {
+
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.m_arm.stop();
+    // m_robotContainer.m_arm.stop();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -114,7 +116,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.m_arm.stop();
+    // m_robotContainer.m_arm.stop();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

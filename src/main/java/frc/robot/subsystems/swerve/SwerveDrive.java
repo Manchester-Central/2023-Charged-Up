@@ -224,9 +224,9 @@ public class SwerveDrive extends SubsystemBase {
   public void moveFieldRelative(double xMetersPerSecond, double yMetersPerSecond, double omegaRadianPerSecond){
     ChassisSpeeds speeds;
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
-    } else {
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation().minus(new Rotation2d(Math.PI)));
+    } else {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadianPerSecond, getOdometryRotation());
     }
     move(speeds);
   }
@@ -238,9 +238,9 @@ public class SwerveDrive extends SubsystemBase {
       omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians());
     }
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
-    } else {
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation().minus(new Rotation2d(Math.PI)));
+    } else {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation());
     }
     move(speeds);
   } 

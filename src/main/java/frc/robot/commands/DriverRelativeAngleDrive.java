@@ -7,20 +7,12 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
-public class DriverRelativeAngleDrive extends CommandBase {
-  protected SwerveDrive m_swerveDrive;
-  protected Gamepad m_driverController;
+public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   /** Creates a new DriverRelativeAngleDrive. */
   public DriverRelativeAngleDrive(SwerveDrive swerveDrive, Gamepad driverController) {
-    m_swerveDrive = swerveDrive;
-    m_driverController = driverController;
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerveDrive);
+    super(swerveDrive, driverController);
   }
 
   // Called when the command is initially scheduled.
@@ -32,8 +24,8 @@ public class DriverRelativeAngleDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = m_driverController.getLeftY();
-    double yMetersPerSecond = -m_driverController.getLeftX();
+    double xMetersPerSecond = m_slewedLeftY.get();
+    double yMetersPerSecond = -m_slewedLeftX.get();
     Rotation2d rightAngle = getTargetRotation();
     double rightMagnitude = getTargetMagnitude();
     m_swerveDrive.moveFieldRelativeAngle(xMetersPerSecond, yMetersPerSecond, rightAngle, rightMagnitude);

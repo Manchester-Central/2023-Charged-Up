@@ -80,7 +80,7 @@ public class Extender {
     }
 
     public boolean atTarget(){
-        return Math.abs(getPositionMeters() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
+        return Math.abs(m_SparkMax.getEncoder().getPosition() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
     }
 
     public void periodic() {

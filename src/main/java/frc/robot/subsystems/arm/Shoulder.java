@@ -161,7 +161,7 @@ public class Shoulder {
         if (Double.isNaN(m_targetDegrees)) {
             return false;
         }
-        return Math.abs(getRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
+        return Math.abs(m_shoulderL_A.getEncoder().getPosition() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
     }
 
     // We want to add an arbitrary feed forward that applies outside the PID control loop.

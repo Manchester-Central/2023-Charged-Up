@@ -24,6 +24,7 @@ public class Score extends CommandBase {
     m_gripper = gripper;
     m_armPose = armPose;
     m_releaseIndicatorBooleanSupplier = releaseIndicatorSupplier;
+    addRequirements(arm, gripper);
   }
 
   // Called when the command is initially scheduled.

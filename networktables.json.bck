@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["resetPosition?x=8&y=4", "namedPose?pose=LowScorePose", ""],
+    "value": ["Score?pose=CubeHighPose"],
     "properties": {
       "persistent": true
     }

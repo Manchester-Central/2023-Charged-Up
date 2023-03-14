@@ -6,7 +6,12 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 
+import com.chaos131.auto.ParsedCommand;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
@@ -18,13 +23,24 @@ public class Score extends CommandBase {
   Gripper m_gripper;
   ArmPose m_armPose;
   BooleanSupplier m_releaseIndicatorBooleanSupplier;
+  double m_releaseTime_MS;
 
   public Score(Arm arm, Gripper gripper, ArmPose armPose, BooleanSupplier releaseIndicatorSupplier) {
     m_Arm = arm;
     m_gripper = gripper;
     m_armPose = armPose;
     m_releaseIndicatorBooleanSupplier = releaseIndicatorSupplier;
+    m_releaseTime_MS = 0;
     addRequirements(arm, gripper);
+  }
+
+  public static Command createAutoCommand(ParsedCommand parsedCommand, Arm arm, Gripper gripper) {
+    String poseName = parsedCommand.getArgument("pose");
+    ArmPose pose = poseName == null ? null : ArmPose.ArmPoses.get(poseName);
+    if (pose == null) {
+      return new InstantCommand();
+    }
+    return new Score(arm, gripper, pose,arm::reachedTarget);
   }
 
   // Called when the command is initially scheduled.
@@ -39,6 +55,9 @@ public class Score extends CommandBase {
     m_Arm.setArmTarget(m_armPose);
     if (m_releaseIndicatorBooleanSupplier.getAsBoolean()){
       m_gripper.setGripperMode(GripperMode.unGrip);
+      if (m_releaseTime_MS == 0){
+        m_releaseTime_MS = Robot.getCurrentTimeMs();
+      }
     }
     else{
       m_gripper.setGripperMode(GripperMode.grip);
@@ -54,6 +73,9 @@ public class Score extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_releaseTime_MS != 0) {
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 300; 
+    }
     return false;
   }
 

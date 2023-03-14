@@ -94,8 +94,9 @@ public class RobotContainer {
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
-    autoBuilder.registerCommand("cubeMidPose", (ParsedCOmmand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
+    autoBuilder.registerCommand("cubeMidPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
     autoBuilder.registerCommand("stow", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
+    autoBuilder.registerCommand("score", (ParsedCommand pc) -> Score.createAutoCommand(pc, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -191,25 +192,25 @@ public class RobotContainer {
     m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
     m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-    Command highCone = new Score(m_arm, m_gripper, ArmPose.ConeHighPose, m_driver.rightTrigger()::getAsBoolean);
-    Command midCone = new Score(m_arm, m_gripper, ArmPose.ConeMidPose, m_driver.rightTrigger()::getAsBoolean);
-    Command highCube = new Score(m_arm, m_gripper, ArmPose.CubeHighPose, m_driver.rightTrigger()::getAsBoolean);
-    Command midCube = new Score(m_arm, m_gripper, ArmPose.CubeMidPose, m_driver.rightTrigger()::getAsBoolean);
-    Command lowPose = new Score(m_arm, m_gripper, ArmPose.LowScorePose, m_driver.rightTrigger()::getAsBoolean);
+    Command highCone = new Score(m_arm, m_gripper, ArmPose.ConeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command midCone = new Score(m_arm, m_gripper, ArmPose.ConeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command highCube = new Score(m_arm, m_gripper, ArmPose.CubeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command midCube = new Score(m_arm, m_gripper, ArmPose.CubeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command lowPose = new Score(m_arm, m_gripper, ArmPose.LowScorePose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
 
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(highCube);
-    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose));
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
 
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(midCone);
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(midCube);
-    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose));
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
 
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
-    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront));
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
 
-    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     
     // // test
     // m_operator.start().whileTrue(new ShuffleBoardPose(m_arm).repeatedly());

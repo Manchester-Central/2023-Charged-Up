@@ -5,14 +5,13 @@
 package frc.robot.subsystems.arm;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants.GripperConstants;
 // i got the new forgis on the g
 /** Add your docs here. */
-public class Gripper {
+public class Gripper extends SubsystemBase {
     public static double customPower = 0;
     public enum GripperMode{
         grip(0.5),

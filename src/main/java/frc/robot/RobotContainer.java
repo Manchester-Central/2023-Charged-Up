@@ -27,9 +27,7 @@ import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.Grip;
-import frc.robot.commands.GripGSD;
 import frc.robot.commands.MoveArm;
-import frc.robot.commands.MoveArmTogglePosition;
 import frc.robot.commands.MoveExtender;
 import frc.robot.commands.MoveShoulder;
 import frc.robot.commands.MoveWrist;
@@ -45,7 +43,6 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
-import frc.robot.subsystems.arm.GripperMutex;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
@@ -62,9 +59,10 @@ public class RobotContainer {
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
-  public final Arm m_arm = new Arm();
+  public final Gripper m_gripper = new Gripper();
+  public final Arm m_arm = new Arm(m_gripper);
   private ArduinoIO m_arduinoIO = new ArduinoIO();
-  private final GripperMutex m_gripperMutex = new GripperMutex();
+  
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final Gamepad m_driver = new Gamepad(OperatorConstants.kDriverControllerPort);
@@ -96,16 +94,16 @@ public class RobotContainer {
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
-    autoBuilder.registerCommand("cubeMidPose", (ParsedCOmmand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
+    autoBuilder.registerCommand("cubeMidPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
     autoBuilder.registerCommand("stow", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
-    autoBuilder.registerCommand("unGrip", (ParsedCommand pc) -> new GripGSD(m_arm, m_gripperMutex, GripperMode.unGrip));
+    autoBuilder.registerCommand("score", (ParsedCommand pc) -> Score.createAutoCommand(pc, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
   }
 
   private Command CreateDriveAndGrip(ParsedCommand pc){
     Command driveCommand = DriveToTarget.createAutoCommand(pc, m_swerveDrive);
-    Command gripCommand = new Grip(m_arm);
+    Command gripCommand = new Grip(m_gripper);
     // TODO update when we can detect that we have pick up the game piece
     return new ParallelRaceGroup(driveCommand, gripCommand);
   }
@@ -156,122 +154,63 @@ public class RobotContainer {
     operaterControls();
     dashboardCommands();
     testCommands();
-    //m_driver.a().whileTrue(new DriveToTarget(m_swerveDrive, 8, 4, Rotation2d.fromDegrees(90)));
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
   }
 
   private void driverControls() {
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    // m_swerveDrive.setDefaultCommand(new RobotRelativeDrive(m_swerveDrive, m_driver));
+    Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
+    m_swerveDrive.setDefaultCommand(driverRelativeDrive);
+    m_driver.start().onTrue(driverRelativeDrive);
+    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
     m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 180:0)));
     m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 360:180)));
     m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 270:90)));
     m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 90:270)));
       
-
-    // // Practice score commands - should move targets to operator
-    //m_driver.rightTrigger().whileTrue(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose));
-    //m_driver.rightBumper().whileTrue(DriveToTarget.toClosestScoreTarget(m_swerveDrive).andThen(new Score(m_arm, () -> m_nextPrepPose, () -> m_nextPose)));
-    // m_driver.a().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.StowedPose;
-    //   m_nextPose = ArmPose.LowScorePose;
-    // }));
-    // m_driver.b().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.StowedPose;
-    //   m_nextPose = ArmPose.CubeMidPose;
-    // }));
-    // m_driver.y().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.StowedPose;
-    //   m_nextPose = ArmPose.CubeHighPose;
-    // }));
-    // m_driver.povDown().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.StowedPose;
-    //   m_nextPose = ArmPose.LowScorePose;
-    // }));
-    // m_driver.povLeft().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.ConeMidPosePrep;
-    //   m_nextPose = ArmPose.ConeMidPose;
-    // }));
-    // m_driver.povUp().onTrue(new InstantCommand(() -> {
-    //   m_nextPrepPose = ArmPose.ConeHighPosePrep;
-    //   m_nextPose = ArmPose.ConeHighPose;
-    // }));
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
+    // NOTE: Driver Right Trigger is used in operaterControls()
+
     //m_driver.leftStick().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, ArmPose.IntakeBack).repeatedly()));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
-    
-    m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
-
+   
     // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
     //m_gripperMutex.setDefaultCommand(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.hold), m_gripperMutex ));
     //m_driver.rightBumper().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.grip) ));
     //m_driver.rightTrigger().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.unGrip) ));
-    
-    m_gripperMutex.setDefaultCommand(new GripGSD(m_arm, m_gripperMutex, GripperMode.hold));
-    m_driver.rightBumper().whileTrue(new GripGSD(m_arm, m_gripperMutex, GripperMode.grip));
-    m_driver.rightTrigger().whileTrue(new GripGSD(m_arm, m_gripperMutex, GripperMode.unGrip));
-
   }
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
+    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper);
+    m_gripper.setDefaultCommand(defaultGripCommand);
 
-    // // Grip/Ungrip
-    // m_operator.rightBumper().whileTrue(new UnGrip(m_arm));
-    // m_operator.rightTrigger().whileTrue(new Grip(m_arm));
+    // Pose selection
+    m_operator.y().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Cone));
+    m_operator.x().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Cube));
+    m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
+    m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-    // // Cubes
-    // m_operator.a().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
-    // m_operator.x().whileTrue(new MoveArm(m_arm, ArmPose.CubeMidPose).repeatedly());
-    // m_operator.y().whileTrue(new MoveArm(m_arm, ArmPose.CubeHighPose).repeatedly());
-      m_operator.y().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Cone));
-      m_operator.x().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Cube));
-      m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
-      m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
+    Command highCone = new Score(m_arm, m_gripper, ArmPose.ConeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command midCone = new Score(m_arm, m_gripper, ArmPose.ConeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command highCube = new Score(m_arm, m_gripper, ArmPose.CubeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command midCube = new Score(m_arm, m_gripper, ArmPose.CubeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command lowPose = new Score(m_arm, m_gripper, ArmPose.LowScorePose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
 
-      Command highCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeHighPosePrep, ArmPose.ConeHighPose, m_operator.rightBumper()::getAsBoolean);
-      Command midCone = new MoveArmTogglePosition(m_arm, ArmPose.ConeMidPosePrep, ArmPose.ConeMidPose, m_operator.rightBumper()::getAsBoolean);
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(highCube);
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
 
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.CubeHighPose));
-      m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose));
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(midCone);
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(midCube);
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
 
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(midCone);
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.CubeMidPose));
-      m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose));
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
 
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose));
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose));
-      m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront));
-
-      
-
-      m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose));
-
-      // m_operator.rightBumper().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.slowGrip)).andThen(new MoveArm(m_arm, m_nextIntakePose).repeatedly()));
-      // m_operator.rightTrigger().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, m_nextIntakePose).repeatedly()));
-
-      // m_operator.leftBumper().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.slowUngrip), m_arm).repeatedly());
-      // m_operator.leftTrigger().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.unGrip), m_arm).repeatedly());
-
-    // // Cones
-    // m_operator.povDown().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly());
-    // m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.ConeMidPose).repeatedly());
-    // m_operator.povUp().whileTrue(new MoveArm(m_arm, ArmPose.ConeHighPose).repeatedly());
-
-    // // Intakes
-    // m_operator.povLeft().whileTrue(new MoveArm(m_arm, ArmPose.IntakeBake).andThen(new Grip(m_arm)));
-    // m_operator.b().whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).andThen(new Grip(m_arm)));
-
-    // // Pickups
-    // m_operator.leftTrigger().whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).andThen(new Grip(m_arm)));
-    // m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).andThen(new Grip(m_arm)));
-
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     
     // // test
     // m_operator.start().whileTrue(new ShuffleBoardPose(m_arm).repeatedly());
@@ -287,8 +226,8 @@ public class RobotContainer {
     m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
     m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
     m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
-    m_tester.back().whileTrue(new Grip(m_arm));
-    m_tester.start().whileTrue(new UnGrip(m_arm));
+    m_tester.back().whileTrue(new Grip(m_gripper));
+    m_tester.start().whileTrue(new UnGrip(m_gripper));
     m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
     m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
     m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));

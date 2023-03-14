@@ -4,39 +4,79 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
-import javax.sql.CommonDataSource;
+import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.Gripper.GripperMode;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Score extends SequentialCommandGroup {
+public class Score extends CommandBase {
   /** Creates a new Score. */
-  public Score(Arm arm, Supplier<ArmPose> prepPoseSupplier, Supplier<ArmPose> targetPoseSupplier) {
-    if (prepPoseSupplier != null){
-      addCommands(new MoveArm(arm, prepPoseSupplier));
+  Arm m_Arm;
+  Gripper m_gripper;
+  ArmPose m_armPose;
+  BooleanSupplier m_releaseIndicatorBooleanSupplier;
+  double m_releaseTime_MS;
+
+  public Score(Arm arm, Gripper gripper, ArmPose armPose, BooleanSupplier releaseIndicatorSupplier) {
+    m_Arm = arm;
+    m_gripper = gripper;
+    m_armPose = armPose;
+    m_releaseIndicatorBooleanSupplier = releaseIndicatorSupplier;
+    m_releaseTime_MS = 0;
+    addRequirements(arm, gripper);
+  }
+
+  public static Command createAutoCommand(ParsedCommand parsedCommand, Arm arm, Gripper gripper) {
+    String poseName = parsedCommand.getArgument("pose");
+    ArmPose pose = poseName == null ? null : ArmPose.ArmPoses.get(poseName);
+    if (pose == null) {
+      return new InstantCommand();
     }
-    Command goToScorePosition = new MoveArm(arm, targetPoseSupplier);
-    Command release = new UnGrip(arm).withTimeout(1);
-    addCommands(goToScorePosition, release);
-    if (prepPoseSupplier != null){
-      addCommands(new MoveArm(arm, prepPoseSupplier));
+    return new Score(arm, gripper, pose,arm::reachedTarget);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    m_Arm.setArmTarget(m_armPose);
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    m_Arm.setArmTarget(m_armPose);
+    if (m_releaseIndicatorBooleanSupplier.getAsBoolean()){
+      m_gripper.setGripperMode(GripperMode.unGrip);
+      if (m_releaseTime_MS == 0){
+        m_releaseTime_MS = Robot.getCurrentTimeMs();
+      }
+    }
+    else{
+      m_gripper.setGripperMode(GripperMode.grip);
     }
   }
 
-
-
-  public Score(Arm arm, Supplier<ArmPose> targetPoseSupplier) {
-    this (arm, null, targetPoseSupplier);
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    m_gripper.setGripperMode(GripperMode.grip);
   }
 
-  public Score(Arm arm, ArmPose pose) {
-    this(arm, () -> pose);
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    if (m_releaseTime_MS != 0) {
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 300; 
+    }
+    return false;
   }
+
 }

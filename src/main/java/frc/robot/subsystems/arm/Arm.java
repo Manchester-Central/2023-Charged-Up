@@ -20,11 +20,11 @@ public class Arm extends SubsystemBase {
   Wrist m_wrist;
   Gripper m_gripper;
   /** Creates a new Arm. */
-  public Arm() {
+  public Arm(Gripper gripper) {
     m_shoulder = new Shoulder();
     m_extender = new Extender();
     m_wrist = new Wrist();
-    m_gripper = new Gripper();
+    m_gripper = gripper;
   }
 
   @Override
@@ -36,7 +36,6 @@ public class Arm extends SubsystemBase {
     m_shoulder.periodic(m_extender.getPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();
-    m_gripper.periodic();
 
     double [] ArmState = {
       m_shoulder.getRotation().getDegrees(), 
@@ -48,9 +47,6 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void setGripperMode(GripperMode mode) {
-    m_gripper.setGripperMode(mode);
-  }
 
   public void setShoulderTargetManual(Rotation2d angle) {
     double extensionMeters = m_extender.getPositionMeters();
@@ -131,7 +127,6 @@ public class Arm extends SubsystemBase {
     m_shoulder.stop();
     m_extender.stop();
     m_wrist.stop();
-    //m_gripper.setGripperMode(GripperMode.stop);
   }
 
   public void recalibrateSensors() {
@@ -141,4 +136,4 @@ public class Arm extends SubsystemBase {
   }
 }
 
-// “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23
+// “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23 

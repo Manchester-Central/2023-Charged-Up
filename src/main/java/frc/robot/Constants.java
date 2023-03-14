@@ -51,7 +51,7 @@ public final class Constants {
     public static final double AbsoluteAngleOffsetFrontLeft = 238.3 - 180;
     public static final double AbsoluteAngleOffsetFrontRight =  231.6 - 180;
     public static final double AbsoluteAngleOffsetBackLeft = 327.2 - 180;
-    public static final double AbsoluteAngleOffsetBackRight = 100.0 + 180;
+    public static final double AbsoluteAngleOffsetBackRight = 77.0 + 180;
   }
 
   public static class SwerveConstants2022 {

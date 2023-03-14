@@ -156,8 +156,10 @@ public class RobotContainer {
   }
 
   private void driverControls() {
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    // m_swerveDrive.setDefaultCommand(new RobotRelativeDrive(m_swerveDrive, m_driver));
+    Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
+    m_swerveDrive.setDefaultCommand(driverRelativeDrive);
+    m_driver.start().onTrue(driverRelativeDrive);
+    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
     m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Red) ? 180:0)));
     m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Red) ? 360:180)));
@@ -166,18 +168,16 @@ public class RobotContainer {
       
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
+    // NOTE: Driver Right Trigger is used in operaterControls()
+
     //m_driver.leftStick().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, ArmPose.IntakeBack).repeatedly()));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
-    
-    m_driver.start().onTrue(new DriverRelativeDrive(m_swerveDrive, m_driver));
-    m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
-
+   
     // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
     // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
     //m_gripperMutex.setDefaultCommand(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.hold), m_gripperMutex ));
     //m_driver.rightBumper().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.grip) ));
     //m_driver.rightTrigger().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.unGrip) ));
-
   }
 
   private void operaterControls(){

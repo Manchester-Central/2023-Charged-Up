@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 

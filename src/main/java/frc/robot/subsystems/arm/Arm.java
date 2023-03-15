@@ -33,6 +33,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
     SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
     SmartDashboard.putString("Arm/Grippermode", m_gripper.getGripperMode().name());
+    SmartDashboard.putBoolean("Arm/AtTarget", reachedTarget());
     m_shoulder.periodic(m_extender.getPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();

@@ -101,7 +101,7 @@ public class Wrist {
     }
 
     public boolean atTarget(){
-        return Math.abs(getRotation().getDegrees() - m_targetDegrees) < WristConstants.ToleranceDegrees;
+        return Math.abs(m_SparkMax.getEncoder().getPosition() - m_targetDegrees) < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {

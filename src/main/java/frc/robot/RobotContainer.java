@@ -44,6 +44,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
+import frc.robot.subsystems.swerve.ScorePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -217,8 +218,9 @@ public class RobotContainer {
   }
 
   private void dashboardCommands() {
-    // created a test command on Shuffleboard for each known pose (waits 2 seconds because the ChaosBoard needs to be in focus to run correctly)
-    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new WaitCommand(2).andThen(new MoveArm(m_arm, pose))));
+    // created a test command on Shuffleboard for each known pose
+    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
+    ScorePose.ScorePoses.forEach((String poseName, Pose2d pose) -> SmartDashboard.putData("Drive To Target/" + poseName, new DriveToTarget(m_swerveDrive, pose, Constants.DriveToTargetTolerance)));
   }
 
   private void testCommands() {

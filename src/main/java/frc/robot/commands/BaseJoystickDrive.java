@@ -14,14 +14,14 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 
 public abstract class BaseJoystickDrive extends CommandBase {
 
-  public static boolean UseSlewer = false;
+  public static boolean UseSlewer = true;
 
   protected interface JoystickFilter {
     double get();
   }
 
   protected class JoystickSlewer implements JoystickFilter {
-    SlewRateLimiter m_slewRateLimiter = new SlewRateLimiter(6); // Test for a good value. This is amount of input change in one second, so should allow 0 to full in 1/6 a second
+    SlewRateLimiter m_slewRateLimiter = new SlewRateLimiter(0.2); // Test for a good value. This is amount of input change in one second, so should allow 0 to full in 1/6 a second
     Supplier<Double> m_joystickSupplier;
     
     JoystickSlewer(Supplier<Double> joystickSupplier) {

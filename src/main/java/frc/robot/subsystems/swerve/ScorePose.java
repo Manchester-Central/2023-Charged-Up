@@ -13,22 +13,22 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
 public class ScorePose {
-    private static final double Row1YMeters = 5.0;
-    private static final double Row2YMeters = 4.45;
-    private static final double Row3YMeters = 3.95;
-    private static final double Row4YMeters = 3.45;
-    private static final double Row5YMeters = 2.95;
-    private static final double Row6YMeters = 2.45;
-    private static final double Row7YMeters = 1.95;
-    private static final double Row8YMeters = 1.45;
-    private static final double Row9YMeters = 0.98;
+    private static final double Row1YMeters = 7.503;
+    private static final double Row2YMeters = 6.932;
+    private static final double Row3YMeters = 6.386;
+    private static final double Row4YMeters = 5.827;
+    private static final double Row5YMeters = 5.268;
+    private static final double Row6YMeters = 4.709;
+    private static final double Row7YMeters = 4.151;
+    private static final double Row8YMeters = 3.592;
+    private static final double Row9YMeters = 3.033;
 
 
-    private static final double RedXMeters = 13.4;
-    private static final Rotation2d RedAngle = Rotation2d.fromDegrees(0);
+    private static final double RedXMeters = 1.855;
+    private static final Rotation2d RedAngle = Rotation2d.fromDegrees(180);
     
-    private static final double BlueXMeters = 2.5;
-    private static final Rotation2d BlueAngle = Rotation2d.fromDegrees(180);
+    private static final double BlueXMeters = 14.657;
+    private static final Rotation2d BlueAngle = Rotation2d.fromDegrees(0);
 
 
     public static Map<String, Pose2d> ScorePoses = new HashMap<String, Pose2d>();
@@ -39,26 +39,26 @@ public class ScorePose {
     }
 
     // Red Alliance
-    public static final Pose2d Red1Cone = addStaticPose("Red1Cone", RedXMeters, Row1YMeters, RedAngle);
-    public static final Pose2d Red2Cube = addStaticPose("Red2Cube", RedXMeters, Row2YMeters, RedAngle);
-    public static final Pose2d Red3Cone = addStaticPose("Red3Cone", RedXMeters, Row3YMeters, RedAngle);
-    public static final Pose2d Red4Cone = addStaticPose("Red4Cone", RedXMeters, Row4YMeters, RedAngle);
-    public static final Pose2d Red5Cube = addStaticPose("Red5Cube", RedXMeters, Row5YMeters, RedAngle);
-    public static final Pose2d Red6Cone = addStaticPose("Red6Cone", RedXMeters, Row6YMeters, RedAngle);
-    public static final Pose2d Red7Cone = addStaticPose("Red7Cone", RedXMeters, Row7YMeters, RedAngle);
-    public static final Pose2d Red8Cube = addStaticPose("Red8Cube", RedXMeters, Row8YMeters, RedAngle);
-    public static final Pose2d Red9Cone = addStaticPose("Red9Cone", RedXMeters, Row9YMeters, RedAngle);
+    public static final Pose2d Red1 = addStaticPose("Red1", RedXMeters, Row1YMeters, RedAngle);
+    public static final Pose2d Red2 = addStaticPose("Red2", RedXMeters, Row2YMeters, RedAngle);
+    public static final Pose2d Red3 = addStaticPose("Red3", RedXMeters, Row3YMeters, RedAngle);
+    public static final Pose2d Red4 = addStaticPose("Red4", RedXMeters, Row4YMeters, RedAngle);
+    public static final Pose2d Red5 = addStaticPose("Red5", RedXMeters, Row5YMeters, RedAngle);
+    public static final Pose2d Red6 = addStaticPose("Red6", RedXMeters, Row6YMeters, RedAngle);
+    public static final Pose2d Red7 = addStaticPose("Red7", RedXMeters, Row7YMeters, RedAngle);
+    public static final Pose2d Red8 = addStaticPose("Red8", RedXMeters, Row8YMeters, RedAngle);
+    public static final Pose2d Red9 = addStaticPose("Red9", RedXMeters, Row9YMeters, RedAngle);
 
     // Blue Alliance
-    public static final Pose2d Blue1Cone = addStaticPose("Blue1Cone", BlueXMeters, Row1YMeters, BlueAngle);
-    public static final Pose2d Blue2Cube = addStaticPose("Blue2Cube", BlueXMeters, Row2YMeters, BlueAngle);
-    public static final Pose2d Blue3Cone = addStaticPose("Blue3Cone", BlueXMeters, Row3YMeters, BlueAngle);
-    public static final Pose2d Blue4Cone = addStaticPose("Blue4Cone", BlueXMeters, Row4YMeters, BlueAngle);
-    public static final Pose2d Blue5Cube = addStaticPose("Blue5Cube", BlueXMeters, Row5YMeters, BlueAngle);
-    public static final Pose2d Blue6Cone = addStaticPose("Blue6Cone", BlueXMeters, Row6YMeters, BlueAngle);
-    public static final Pose2d Blue7Cone = addStaticPose("Blue7Cone", BlueXMeters, Row7YMeters, BlueAngle);
-    public static final Pose2d Blue8Cube = addStaticPose("Blue8Cube", BlueXMeters, Row8YMeters, BlueAngle);
-    public static final Pose2d Blue9Cone = addStaticPose("Blue9Cone", BlueXMeters, Row9YMeters, BlueAngle);
+    public static final Pose2d Blue1 = addStaticPose("Blue1", BlueXMeters, Row1YMeters, BlueAngle);
+    public static final Pose2d Blue2 = addStaticPose("Blue2", BlueXMeters, Row2YMeters, BlueAngle);
+    public static final Pose2d Blue3 = addStaticPose("Blue3", BlueXMeters, Row3YMeters, BlueAngle);
+    public static final Pose2d Blue4 = addStaticPose("Blue4", BlueXMeters, Row4YMeters, BlueAngle);
+    public static final Pose2d Blue5 = addStaticPose("Blue5", BlueXMeters, Row5YMeters, BlueAngle);
+    public static final Pose2d Blue6 = addStaticPose("Blue6", BlueXMeters, Row6YMeters, BlueAngle);
+    public static final Pose2d Blue7 = addStaticPose("Blue7", BlueXMeters, Row7YMeters, BlueAngle);
+    public static final Pose2d Blue8 = addStaticPose("Blue8", BlueXMeters, Row8YMeters, BlueAngle);
+    public static final Pose2d Blue9 = addStaticPose("Blue9", BlueXMeters, Row9YMeters, BlueAngle);
 
 
     public static Pose2d getClosestPose(Pose2d robotPose) {

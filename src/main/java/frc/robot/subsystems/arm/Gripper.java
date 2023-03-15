@@ -56,3 +56,5 @@ public class Gripper extends SubsystemBase {
         m_sparkMax.set(m_gripperMode.getPower());
     }
 }
+
+// Contains the functions for the gripper of the robot, allowing it for to grip and ungrip objects.

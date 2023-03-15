@@ -137,3 +137,5 @@ public class Arm extends SubsystemBase {
 }
 
 // “Kenny, Is your mom a color sensor?” - Joshua Allard 2/13/23 
+
+// All the code for the arm. Includes safety zones to avoid the arm damaging components to the robot and the set speeds for the parts of the arm.

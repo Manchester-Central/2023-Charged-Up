@@ -254,3 +254,5 @@ public class RobotContainer {
     SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
   }
 }
+
+//Contains all the core robot functions for the subsystems, autonomous commands, TeleOperator and control. 

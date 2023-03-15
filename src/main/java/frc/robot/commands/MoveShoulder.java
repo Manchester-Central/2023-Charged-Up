@@ -41,3 +41,5 @@ public class MoveShoulder extends CommandBase {
     return m_arm.reachedTarget();
   }
 }
+
+// Function that controls the movement of the robot arm's shoulder.

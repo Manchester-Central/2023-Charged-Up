@@ -45,3 +45,5 @@ public class SwerveModule2023 extends SwerveModule {
         return SwerveConstants.WheelCircumference;
     }
 }
+
+// Contains the code for a swerve module for use in swerve drive. The code written is for all four swerve modules used on the robot, utilizes absolute encoders and angle offsets for the positions of the robot.

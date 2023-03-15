@@ -212,3 +212,5 @@ public class Shoulder {
         m_shoulderR_B.getEncoder().setPosition(getRotation().getDegrees());
     }
 }
+
+// Contains the functions for the robot's shoulder, allowing it to pivot up and down. The pivot of the shoulder is based on radians.

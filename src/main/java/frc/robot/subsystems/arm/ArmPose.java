@@ -176,3 +176,5 @@ public class ArmPose {
         ArmPoses.forEach(lambdaFunction);
     }
 }
+
+// Lists all the positions for the arm to go to, including the angles of the different components of the arm measured in degrees and the position of the extender listed in meters.

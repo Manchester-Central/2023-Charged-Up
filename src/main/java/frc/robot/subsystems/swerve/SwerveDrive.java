@@ -377,3 +377,5 @@ public class SwerveDrive extends SubsystemBase {
   }
 }
 // “I love polyester.” -Kenny
+
+// Code for the robot's swerve drive, or chassis. The swerve is made up of four swerve modules, all able to go in to multiple directions, 360 degrees. The motors for the modules are controlled by PID controllers.

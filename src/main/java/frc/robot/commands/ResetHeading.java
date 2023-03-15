@@ -39,3 +39,5 @@ public class ResetHeading extends CommandBase {
     return true;
   }
 }
+
+//Resets the heading of the robot whenever a button on the controller is pressed and calls the command.

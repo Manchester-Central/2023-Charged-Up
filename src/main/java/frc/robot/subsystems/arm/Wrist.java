@@ -130,3 +130,5 @@ public class Wrist {
         m_SparkMax.getEncoder().setPosition(getRotation().getDegrees());
     }
 }
+
+// Code of the arm's wrist. Utilizes SparkMAX motor controllers to controll the wrist's positions. 

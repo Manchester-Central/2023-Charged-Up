@@ -50,7 +50,8 @@ public class Wrist {
         initializeSparkMaxEncoder(m_sparkMax, getRotation());
         m_sparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
         m_sparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
-        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
   
     }
@@ -102,7 +103,7 @@ public class Wrist {
     }
 
     public boolean atTarget(){
-        return Math.abs(m_SparkMax.getEncoder().getPosition() - m_targetDegrees) < WristConstants.ToleranceDegrees;
+        return Math.abs(m_sparkMax.getEncoder().getPosition() - m_targetDegrees) < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {

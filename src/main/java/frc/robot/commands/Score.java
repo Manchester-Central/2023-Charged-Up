@@ -46,6 +46,7 @@ public class Score extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_releaseTime_MS = 0;
     m_Arm.setArmTarget(m_armPose);
   }
 
@@ -74,7 +75,7 @@ public class Score extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_releaseTime_MS != 0) {
-      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 300; 
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 500; 
     }
     return false;
   }

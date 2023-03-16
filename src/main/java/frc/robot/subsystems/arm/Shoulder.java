@@ -80,7 +80,8 @@ public class Shoulder {
             canSparkMax.setOpenLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.setClosedLoopRampRate(ShoulderConstants.RampUpRate);
             canSparkMax.getPIDController().setOutputRange(-ShoulderConstants.MaxPIDOutput, ShoulderConstants.MaxPIDOutput);
-            canSparkMax.setSmartCurrentLimit(15, 20, 8000);
+            //canSparkMax.setSmartCurrentLimit(15, 20, 8000);
+            canSparkMax.setSmartCurrentLimit(0, 0, 0);
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
         }

@@ -29,7 +29,7 @@ public class Wrist {
         FieldRelative,
         ArmRelative
     }
-    private CANSparkMax m_SparkMax;
+    private CANSparkMax m_sparkMax;
     private SparkMaxAbsoluteEncoder m_AbsoluteEncoder;
     private PIDTuner m_pidTuner;
     private SafetyZoneHelper m_SafetyZoneHelper;
@@ -37,20 +37,21 @@ public class Wrist {
     private double m_targetDegrees = m_simAngle;
 
     public Wrist(){
-        m_SparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
-        m_SparkMax.restoreFactoryDefaults();
-        m_SparkMax.setInverted(true);
-        m_SparkMax.setIdleMode(IdleMode.kBrake);
-        m_AbsoluteEncoder = m_SparkMax.getAbsoluteEncoder(Type.kDutyCycle);
+        m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
+        m_sparkMax.restoreFactoryDefaults();
+        m_sparkMax.setInverted(true);
+        m_sparkMax.setIdleMode(IdleMode.kBrake);
+        m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
         m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
         m_pidTuner = new PIDTuner("WristPID", false, 0.01, 0, 0.02, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
-        initializeSparkMaxEncoder(m_SparkMax, getRotation());
-        m_SparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
-        m_SparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
-        m_SparkMax.burnFlash();
+        initializeSparkMaxEncoder(m_sparkMax, getRotation());
+        m_sparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
+        m_sparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
+        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        m_sparkMax.burnFlash();
   
     }
 
@@ -76,7 +77,7 @@ public class Wrist {
 
     public void setTarget(Rotation2d target) {
         double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees());
-        m_SparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
+        m_sparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_targetDegrees = targetDegrees;
     }
 
@@ -94,10 +95,10 @@ public class Wrist {
     }
 
     public void tunePID(PIDUpdate pidUpdate){
-        m_SparkMax.getPIDController().setP(pidUpdate.P);
-        m_SparkMax.getPIDController().setI(pidUpdate.I);        
-        m_SparkMax.getPIDController().setD(pidUpdate.D);
-        m_SparkMax.getPIDController().setFF(pidUpdate.F);
+        m_sparkMax.getPIDController().setP(pidUpdate.P);
+        m_sparkMax.getPIDController().setI(pidUpdate.I);        
+        m_sparkMax.getPIDController().setD(pidUpdate.D);
+        m_sparkMax.getPIDController().setFF(pidUpdate.F);
     }
 
     public boolean atTarget(){
@@ -117,16 +118,16 @@ public class Wrist {
     }
 
     public void setManual(double speed) {
-        m_SparkMax.set(speed);
+        m_sparkMax.set(speed);
     }
 
     public void stop(){
         //TODO After testing, should remain at current position instead.
-        m_SparkMax.stopMotor();
+        m_sparkMax.stopMotor();
         m_targetDegrees = m_simAngle;
     }
 
     public void recalibrateSensors() {
-        m_SparkMax.getEncoder().setPosition(getRotation().getDegrees());
+        m_sparkMax.getEncoder().setPosition(getRotation().getDegrees());
     }
 }

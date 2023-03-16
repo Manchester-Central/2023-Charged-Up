@@ -40,7 +40,7 @@ public class Gripper extends SubsystemBase {
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
-        m_sparkMax.setSecondaryCurrentLimit(20);
+        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.burnFlash();
     }
 

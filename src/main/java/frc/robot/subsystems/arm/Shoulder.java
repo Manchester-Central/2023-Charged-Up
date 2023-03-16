@@ -214,3 +214,4 @@ public class Shoulder {
 }
 
 // Contains the functions for the robot's shoulder, allowing it to pivot up and down. The pivot of the shoulder is based on radians.
+// Shoulder poses are able to be simulated in the Chaosboard simulator to allow for testing without having the robot physically present.

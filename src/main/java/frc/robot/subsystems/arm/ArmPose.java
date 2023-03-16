@@ -178,3 +178,4 @@ public class ArmPose {
 }
 
 // Lists all the positions for the arm to go to, including the angles of the different components of the arm measured in degrees and the position of the extender listed in meters.
+// Arm poses are able to be simulated in the Chaosboard simulator to allow for testing without having the robot physically present.

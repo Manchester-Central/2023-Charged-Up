@@ -65,3 +65,5 @@ public class ScorePose {
         return robotPose.nearest(new ArrayList<Pose2d>(ScorePoses.values()));
     }
 }
+
+// A list of all robot positions in front of the community center scoring area. All poses are tied to the color of the robot's alliance and the numbers indicate a cone or a cube node. 

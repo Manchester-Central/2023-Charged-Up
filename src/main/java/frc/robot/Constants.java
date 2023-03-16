@@ -151,3 +151,5 @@ public final class Constants {
     public static final String arduinoPort = "/dev/ttyS0"; // We need to determine what port the arduino will be connected to.
   }
 }
+
+// A compilatrion of constant values used by various subsystems. These values include constant speeds, angles, measurement dimensions, and conversion factors, used by subsystems such as the Swerve Drive and Arm subsystems.

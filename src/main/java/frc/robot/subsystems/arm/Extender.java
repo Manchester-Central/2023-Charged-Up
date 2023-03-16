@@ -41,7 +41,8 @@ public class Extender {
         m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
         m_sparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
-        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
     }
@@ -81,7 +82,7 @@ public class Extender {
     }
 
     public boolean atTarget(){
-        return Math.abs(m_SparkMax.getEncoder().getPosition() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
+        return Math.abs(m_sparkMax.getEncoder().getPosition() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
     }
 
     public void periodic() {

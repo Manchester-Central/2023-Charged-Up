@@ -10,10 +10,13 @@ import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.swerve.ScorePose;
+import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriveToTarget extends CommandBase {
@@ -44,19 +47,24 @@ public class DriveToTarget extends CommandBase {
     double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
     double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);
     double translationTolerance = AutoUtil.ParseDouble(parsedCommand.getArgument("translationTolerance"), Constants.DriveToTargetTolerance);
-    return new DriveToTarget(swerveDrive, new Pose2d(x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees)), translationTolerance);
+    var redPose = new Pose2d(x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees));
+    var poseForAlliance = DrivePose.toCurrentAlliancePose(redPose);
+    return new DriveToTarget(swerveDrive, poseForAlliance, translationTolerance);
   }
 
-  public static DriveToTarget createAutoCommandForScorePose(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+  public static Command createAutoCommandForScorePose(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
     String poseName = parsedCommand.getArgument("pose");
-    Pose2d pose = poseName == null ? null : ScorePose.ScorePoses.get(poseName);
-    return new DriveToTarget(swerveDrive, pose, Constants.DriveToTargetTolerance);
+    DrivePose pose = poseName == null ? null : DrivePose.DrivePoses.get(poseName);
+    if(pose == null) {
+      return new InstantCommand();
+    }
+    return new DriveToTarget(swerveDrive, pose.getCurrentAlliancePose(), Constants.DriveToTargetTolerance);
   }
 
   public static DriveToTarget toClosestScoreTarget(SwerveDrive swerveDrive) {
     return new DriveToTarget(swerveDrive, () -> {
       var robotPose = swerveDrive.getPose();
-      var closestPose = ScorePose.getClosestPose(robotPose);
+      var closestPose = DrivePose.getClosestPose(robotPose);
       if (closestPose.getTranslation().getDistance(robotPose.getTranslation()) > 1) {
         // If not close to a target, don't do anything
         return null;

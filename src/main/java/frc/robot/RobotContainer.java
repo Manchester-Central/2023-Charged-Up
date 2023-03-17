@@ -44,7 +44,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
-import frc.robot.subsystems.swerve.ScorePose;
+import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -91,7 +91,7 @@ public class RobotContainer {
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToScorePose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
+    autoBuilder.registerCommand("driveToPose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
@@ -220,7 +220,10 @@ public class RobotContainer {
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
-    ScorePose.ScorePoses.forEach((String poseName, Pose2d pose) -> SmartDashboard.putData("Drive To Target/" + poseName, new DriveToTarget(m_swerveDrive, pose, Constants.DriveToTargetTolerance)));
+    DrivePose.DrivePoses.forEach((String poseName, DrivePose pose) -> {
+      SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, Constants.DriveToTargetTolerance));
+      SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, Constants.DriveToTargetTolerance));
+    });
   }
 
   private void testCommands() {

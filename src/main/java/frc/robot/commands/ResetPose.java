@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.auto.AutoUtil;
+import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class ResetPose extends CommandBase {
@@ -24,6 +25,10 @@ public class ResetPose extends CommandBase {
   }
   
   public static ResetPose createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerve){
+    var poseName = parsedCommand.getArgument("pose");
+    if(poseName != null && DrivePose.DrivePoses.containsKey(poseName)) {
+      return new ResetPose(swerve, DrivePose.DrivePoses.get(poseName).getCurrentAlliancePose());
+    }
     double x_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("x"), 0.0);
     double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
     double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);

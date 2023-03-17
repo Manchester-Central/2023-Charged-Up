@@ -95,6 +95,13 @@ public class Wrist {
         return Rotation2d.fromDegrees(shiftedValue);
     }
 
+    public Rotation2d getEncoderRotation() {
+        if(Robot.isSimulation()) {
+            return Rotation2d.fromDegrees(m_simAngle);
+        }
+        return Rotation2d.fromDegrees(m_sparkMax.getEncoder().getPosition());
+    }
+
     public void tunePID(PIDUpdate pidUpdate){
         m_sparkMax.getPIDController().setP(pidUpdate.P);
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
@@ -103,7 +110,7 @@ public class Wrist {
     }
 
     public boolean atTarget(){
-        return Math.abs(m_sparkMax.getEncoder().getPosition() - m_targetDegrees) < WristConstants.ToleranceDegrees;
+        return Math.abs(getEncoderRotation().getDegrees() - m_targetDegrees) < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {

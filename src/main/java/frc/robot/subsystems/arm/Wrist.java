@@ -45,22 +45,26 @@ public class Wrist {
         new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, (newValue) -> {
             m_AbsoluteEncoder.setPositionConversionFactor(newValue);
             recalibrateSensors();
-            m_sparkMax.burnFlash();
+            // m_sparkMax.burnFlash();
         });
         m_AbsoluteEncoder.setInverted(false);
         new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
             m_AbsoluteEncoder.setZeroOffset(newOffset);
             recalibrateSensors();
-            m_sparkMax.burnFlash();
+            // m_sparkMax.burnFlash();
         });
-        m_pidTuner = new PIDTuner("WristPID", false, 0.01, 0, 0.02, this::tunePID);
+        m_pidTuner = new PIDTuner("WristPID", true, 0.02, 0, 1.0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_sparkMax, getRotation());
-        m_sparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
-        m_sparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
+        m_AbsoluteEncoder.setInverted(false);
+        new DashboardNumber("Wrist/RampUprate", WristConstants.RampUpRate, (newValue) -> {
+            m_sparkMax.setOpenLoopRampRate(newValue);
+            m_sparkMax.setClosedLoopRampRate(newValue);
+        });
         //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
+        Robot.logManager.addNumber("Wrist/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
@@ -109,6 +113,7 @@ public class Wrist {
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
         m_sparkMax.getPIDController().setD(pidUpdate.D);
         m_sparkMax.getPIDController().setFF(pidUpdate.F);
+        // m_sparkMax.burnFlash();
     }
 
     public boolean atTarget(){

@@ -90,7 +90,7 @@ public final class Constants {
       public static final int CanIdExtender = 14;
       public static final double LinearPotConversionFactor = 0.4286;
       public static final double LinearPotOffsetMeters = 0.68; 
-      public static final double SparkMaxEncoderConversionFactor = 0.00473; 
+      public static final double SparkMaxEncoderConversionFactor = 0.0044538; 
       public static final double MinimumPositionMeters = 0.78 + 0.02; 
       public static final double MaximumPositionMeters = 1.32 - 0.02; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.03; 
@@ -106,7 +106,7 @@ public final class Constants {
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
       public static final double AbsoluteAngleZeroOffset = 130.0;
       public static final double SparkMaxEncoderConversionFactor = 5.803;
-      public static final double RampUpRate = 0.3; 
+      public static final double RampUpRate = 0.1; 
       public static final double ToleranceDegrees = 2.0; 
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;

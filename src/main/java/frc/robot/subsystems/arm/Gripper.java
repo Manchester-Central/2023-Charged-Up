@@ -76,6 +76,6 @@ public class Gripper extends SubsystemBase {
     }
 
     public void periodic() {
-        m_sparkMax.set(m_gripperMode.getPower());
+        // m_sparkMax.set(m_gripperMode.getPower());
     }
 }

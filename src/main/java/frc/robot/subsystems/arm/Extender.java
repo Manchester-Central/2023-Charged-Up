@@ -33,7 +33,7 @@ public class Extender {
         m_sparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
-        m_pidTuner = new PIDTuner("ExtenderPID", false, 80, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
         m_linearPot = m_sparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
         new DashboardNumber("Extender/EncoderConversionFactor", ExtenderConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
@@ -66,7 +66,7 @@ public class Extender {
         double safeTargetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
 
         m_targetMeters = safeTargetPosition;
-        m_sparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
+        // m_sparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
         
     }
 
@@ -101,7 +101,7 @@ public class Extender {
     }
 
     public void setManual(double speed) {
-        m_sparkMax.set(speed);
+        // m_sparkMax.set(speed);
     }
     
     public void stop(){

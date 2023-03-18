@@ -184,3 +184,5 @@ public abstract class SwerveModule {
 
 }
 //“If you don’t agree to focus, you’re going to the business team.” -Josh 2/21/2023
+
+// A function that is used for all four swerve modules that make up the swerve drive. Encoding the distance, meters, and velocity per second, this will help make the wheels of the modules move. 

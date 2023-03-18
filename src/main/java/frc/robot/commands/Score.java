@@ -81,4 +81,4 @@ public class Score extends CommandBase {
 
 }
 
-// A command that controls how the robot scores a game piece.
+// A command that controls how the robot scores a game piece. Taking the arm and gripper functions and putting it in conjunction with the ArmPose

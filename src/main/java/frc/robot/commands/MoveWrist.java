@@ -42,4 +42,4 @@ public class MoveWrist extends CommandBase {
   }
 }
 
-// Function that controls the movement of the robot arm's wrist.
+// A command that rotates the wrist of the robot's arm in 

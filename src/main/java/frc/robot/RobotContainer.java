@@ -255,4 +255,4 @@ public class RobotContainer {
   }
 }
 
-//Contains all the core robot functions for the subsystems, autonomous commands, TeleOperator and control. 
+//Contains all the core robot functions for the subsystems, autonomous commands, and controller inputs for TeleOperator.

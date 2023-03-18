@@ -57,4 +57,4 @@ public class Gripper extends SubsystemBase {
     }
 }
 
-// Contains the functions for the gripper of the robot, allowing it for to grip and ungrip objects.
+// A command for the gripper of the robot, allowing it for to grip and ungrip objects. A 

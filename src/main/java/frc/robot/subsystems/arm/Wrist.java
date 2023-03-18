@@ -131,4 +131,4 @@ public class Wrist {
     }
 }
 
-// Code of the arm's wrist. Utilizes SparkMAX motor controllers to controll the wrist's positions. 
+// Code of the arm's wrist. Utilizes SparkMAX motor controllers to controll the wrist's positions, which are rotated in a 2D plane.

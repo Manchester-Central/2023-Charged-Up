@@ -48,10 +48,10 @@ public final class Constants {
     public static final int AnalogInputFrontRightAbsoluteEncoder = 0;
     public static final int AnalogInputBackLeftAbsoluteEncoder = 2;
     public static final int AnalogInputBackRightAbsoluteEncoder = 1;
-    public static final double AbsoluteAngleOffsetFrontLeft = 58.3;
-    public static final double AbsoluteAngleOffsetFrontRight =  51.6;
-    public static final double AbsoluteAngleOffsetBackLeft = 147.2;
-    public static final double AbsoluteAngleOffsetBackRight = 280.0;
+    public static final double AbsoluteAngleOffsetFrontLeft = 17.4;
+    public static final double AbsoluteAngleOffsetFrontRight =  191.9;
+    public static final double AbsoluteAngleOffsetBackLeft = 286.7;
+    public static final double AbsoluteAngleOffsetBackRight = 60.2;
     public static final double SlewRateLimit = 0.2;
   }
 
@@ -90,7 +90,7 @@ public final class Constants {
       public static final int CanIdExtender = 14;
       public static final double LinearPotConversionFactor = 0.4286;
       public static final double LinearPotOffsetMeters = 0.68; 
-      public static final double SparkMaxEncoderConversionFactor = 0.0069; 
+      public static final double SparkMaxEncoderConversionFactor = 0.00473; 
       public static final double MinimumPositionMeters = 0.78 + 0.02; 
       public static final double MaximumPositionMeters = 1.32 - 0.02; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.03; 
@@ -101,11 +101,11 @@ public final class Constants {
 
     public static class WristConstants{
       public static final int CanIdWrist = 15;
-      public static final double MinimumAngle = -10; 
-      public static final double MaximumAngle = 370; 
+      public static final double MinimumAngle = -30; 
+      public static final double MaximumAngle = 410; 
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
-      public static final double AbsoluteAngleZeroOffset = 213;
-      public static final double SparkMaxEncoderConversionFactor = 7.93;
+      public static final double AbsoluteAngleZeroOffset = 130.0;
+      public static final double SparkMaxEncoderConversionFactor = 5.803;
       public static final double RampUpRate = 0.3; 
       public static final double ToleranceDegrees = 2.0; 
       public static final double MinimumSafeAngleDegrees = 150;

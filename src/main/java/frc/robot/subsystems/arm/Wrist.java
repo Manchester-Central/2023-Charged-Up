@@ -39,14 +39,19 @@ public class Wrist {
     public Wrist(){
         m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_sparkMax.restoreFactoryDefaults();
-        m_sparkMax.setInverted(true);
+        m_sparkMax.setInverted(false);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
-        m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-        m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
-        m_AbsoluteEncoder.setInverted(true);
-        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
-            m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+        m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle); 
+        new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, (newValue) -> {
+            m_AbsoluteEncoder.setPositionConversionFactor(newValue);
             recalibrateSensors();
+            m_sparkMax.burnFlash();
+        });
+        m_AbsoluteEncoder.setInverted(false);
+        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
+            m_AbsoluteEncoder.setZeroOffset(newOffset);
+            recalibrateSensors();
+            m_sparkMax.burnFlash();
         });
         m_pidTuner = new PIDTuner("WristPID", false, 0.01, 0, 0.02, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
@@ -56,7 +61,6 @@ public class Wrist {
         //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
-  
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
@@ -92,7 +96,7 @@ public class Wrist {
             return Rotation2d.fromDegrees(m_simAngle);
         }
         var rawValue = m_AbsoluteEncoder.getPosition();
-        var belowWrapAround = rawValue > 400;
+        var belowWrapAround = rawValue > 420;
         var shiftedValue = rawValue;
         if(belowWrapAround) {
             shiftedValue = rawValue - 460;

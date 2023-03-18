@@ -41,3 +41,4 @@ public class MoveExtender extends CommandBase {
     return m_arm.reachedTarget();
   }
 }
+// A command that controls the movement of the robot arm's extender. By taking the angle of the shoulder, the command will tell the arm to extend to a target distance.

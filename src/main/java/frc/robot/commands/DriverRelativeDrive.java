@@ -48,4 +48,5 @@ public class DriverRelativeDrive extends CommandBase {
   }
 }
 
-
+// Changes the steering of the robot to be based on the Driver's relative direction.
+// A class that allows the robot to be controlled based on the Driver's view. 

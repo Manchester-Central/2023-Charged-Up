@@ -42,4 +42,4 @@ public class MoveShoulder extends CommandBase {
   }
 }
 
-// Function that controls the movement of the robot arm's shoulder.
+// A command that controls the movement of the robot arm's shoulder. By taking the angle of the shoulder, the command will tell the shoulder to go to the target angle.

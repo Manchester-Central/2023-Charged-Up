@@ -21,4 +21,4 @@ public class SignalLEDs extends CommandBase {
     }
 }
 
-// A command that controls the LEDs powered by the arduino. The LEDs will change color based on what game piece is being held.
+// A command that controls the LEDs powered by the arduino. The LEDs will change color based on what game piece is being held (e.g, yellow for a cone, purple for a cube).

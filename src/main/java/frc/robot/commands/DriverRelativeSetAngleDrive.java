@@ -32,5 +32,3 @@ public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
   }
 }
 
-
-// Changes the steering of the robot to be based on the Driver's relative direction.

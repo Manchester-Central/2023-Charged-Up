@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
+import frc.robot.util.DashboardNumber;
 
 /** Add your docs here. */
 public class Extender {
@@ -35,8 +36,10 @@ public class Extender {
         m_pidTuner = new PIDTuner("ExtenderPID", false, 80, 0, 0, this::tunePID);
         m_linearPot = m_sparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
-        m_sparkMax.getEncoder().setPositionConversionFactor(ExtenderConstants.SparkMaxEncoderConversionFactor);
-        recalibrateSensors();
+        new DashboardNumber("Extender/EncoderConversionFactor", ExtenderConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
+            m_sparkMax.getEncoder().setPositionConversionFactor(newConversionFactor);
+            recalibrateSensors();
+        });
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);

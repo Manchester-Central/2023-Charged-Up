@@ -61,8 +61,10 @@ public class Wrist {
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
-        encoder.setPositionConversionFactor(WristConstants.SparkMaxEncoderConversionFactor);
-        recalibrateSensors();
+        new DashboardNumber("Wrist/EncoderConversionFactor", WristConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
+            encoder.setPositionConversionFactor(newConversionFactor);
+            recalibrateSensors();
+        });
         Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
     }
 

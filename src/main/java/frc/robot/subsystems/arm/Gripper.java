@@ -26,6 +26,7 @@ public class Gripper extends SubsystemBase {
             new DashboardNumber("gripper/speed/" + this.name(), power, (newPower) -> {
                 m_power = newPower;
             });
+
         }
 
         public double getPower(){
@@ -34,12 +35,36 @@ public class Gripper extends SubsystemBase {
     }
     private CANSparkMax m_sparkMax;
     private GripperMode m_gripperMode = GripperMode.stop;
+    private int m_stallLimit = 15;
+    private int m_freeLimit = 20;
+    private int m_limitRPM = 8000;
     
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
-        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        int m_stallLimit = 15;
+        int m_freeLimit = 20;
+        int m_limitRPM = 8000;
+        new DashboardNumber("gripper/stallLimit", m_stallLimit, (newValue) -> {
+            int stallLimit = (int)((double) newValue);
+            updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("gripper/freeLimit", m_freeLimit, (newValue) -> {
+            int freeLimit = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("gripper/limitRPM", m_limitRPM, (newValue) -> {
+            int limitRPM = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
+        });
         m_sparkMax.burnFlash();
+    }
+
+    private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {
+        m_stallLimit = stallLimit;
+        m_freeLimit = freeLimit;
+        m_limitRPM = limitRPM;
+        m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
 
     public void setGripperMode(GripperMode gripperMode) {

@@ -28,9 +28,11 @@ public abstract class SwerveModule {
   private WPI_TalonFX m_angle;
   private WPI_TalonFX m_velocity;
   private double initialEncoder;
+  private String m_name;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(Translation2d translation, int canIdAngle, int canIdVelocity) {
+  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
+    m_name = name;
     m_translation = translation;
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
@@ -112,16 +114,20 @@ public abstract class SwerveModule {
     m_angle.config_kD(0, update.D);
   }
 
-  public void getModuleInfo(String name) {
-    SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
-    // SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderPosition", m_velocity.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
-    // SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
-    // SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
-    // SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteEncoder", getRawAbsoluteAngle());
+  protected String getDSKey(String field) {
+    return "Swerve Module " + m_name + "/" + field;
+  }
+
+  public void getModuleInfo() {
+    SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
+    // SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
+    // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
+    // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
+    // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);
+    // SmartDashboard.putNumber(getDSKey("VelocityEncoderVelocity"), m_velocity.getSelectedSensorVelocity());
+    SmartDashboard.putNumber(getDSKey("AbsoluteAngle"), getAbsoluteAngle());
+    // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
+    // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
   }
 
   public double encoderToDegrees(double counts) {

@@ -9,28 +9,26 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.util.DashboardNumber;
 // i got the new forgis on the g
 /** Add your docs here. */
 public class Gripper extends SubsystemBase {
-    public static double customPower = 0;
     public enum GripperMode{
-        grip(0.5),
+        grip(1.0),
         slowGrip(0.25),
-        unGrip(-0.5),
+        unGrip(-1.0),
         slowUngrip(-0.25),
         stop(0),
-        hold(0.03),
-        custom((double)Double.NaN);
+        hold(0.03);
 
         private double m_power;
         GripperMode(double power){
-            m_power = power;
+            new DashboardNumber("gripper/speed/" + this.name(), power, (newPower) -> {
+                m_power = newPower;
+            });
         }
 
         public double getPower(){
-            if(Double.isNaN(m_power)) {
-                return customPower;
-            }
             return m_power;
         }
     }

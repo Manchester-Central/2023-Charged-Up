@@ -11,6 +11,7 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.util.DashboardNumber;
 
 public abstract class BaseJoystickDrive extends CommandBase {
 
@@ -19,12 +20,13 @@ public abstract class BaseJoystickDrive extends CommandBase {
   }
 
   protected class JoystickSlewer implements JoystickFilter {
-    SlewRateLimiter m_slewRateLimiter = new SlewRateLimiter(0.2); // Test for a good value. This is amount of input
-                                                                  // change in one second, so should allow 0 to full in
-                                                                  // 1/6 a second
+    SlewRateLimiter m_slewRateLimiter;
     Supplier<Double> m_joystickSupplier;
 
     JoystickSlewer(Supplier<Double> joystickSupplier) {
+      new DashboardNumber("Driver/SlewRateLimit", 0.2, (newLimit) -> {
+        m_slewRateLimiter = new SlewRateLimiter(newLimit);
+      });
       m_joystickSupplier = joystickSupplier;
     }
 

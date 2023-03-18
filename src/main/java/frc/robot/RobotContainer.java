@@ -37,6 +37,8 @@ import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.Score;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
+import frc.robot.commands.auto.AutoComboCommands;
+import frc.robot.commands.auto.AutoTImerCommand;
 import frc.robot.commands.test.TestWrist;
 import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
@@ -92,6 +94,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
     autoBuilder.registerCommand("driveToPose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
+    autoBuilder.registerCommand("driveAndMoveArm", (ParsedCommand pc) -> AutoComboCommands.driveAndMoveArm(pc, m_swerveDrive, m_arm));
     autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
     autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
     autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
@@ -249,7 +252,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Always stow the arm before any auto
-    return new MoveArm(m_arm, ArmPose.StowedPose).andThen(autoBuilder.createAutoCommand());
+    return (new MoveArm(m_arm, ArmPose.StowedPose).andThen(autoBuilder.createAutoCommand())).deadlineWith(new AutoTImerCommand());
   }
 
   public void addSmartDashboard() {

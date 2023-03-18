@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["Score?pose=CubeHighPose"],
+    "value": [],
     "properties": {
       "persistent": true
     }

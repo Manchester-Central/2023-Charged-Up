@@ -117,7 +117,8 @@ public final class Constants {
     }
   } 
 
-  public static class CommConstants {
-    public static final String arduinoPort = "/dev/ttyS0"; // We need to determine what port the arduino will be connected to.
+  public static class LEDConstants {
+    public static final int TopLEDPort = 0;
+    public static final int GripperLEDPort = 1;
   }
 }

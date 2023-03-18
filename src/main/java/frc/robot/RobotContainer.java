@@ -39,7 +39,6 @@ import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
 import frc.robot.commands.test.TestWrist;
-import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;

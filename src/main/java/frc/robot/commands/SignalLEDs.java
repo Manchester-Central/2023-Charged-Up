@@ -20,3 +20,5 @@ public class SignalLEDs extends CommandBase {
         m_arduinoIO.queueLEDS(m_color.getRed(), m_color.getGreen(), m_color.getBlue());
     }
 }
+
+// A command that controls the LEDs powered by the arduino. The LEDs will change color based on what game piece is being held.

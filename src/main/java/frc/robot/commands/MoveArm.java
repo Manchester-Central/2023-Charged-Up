@@ -74,3 +74,5 @@ public class MoveArm extends CommandBase {
   }
 }
 
+// A command that moves the arm to one of the poses listed in ArmPose.java. The command will call upon one of the poses in the class and tell the arm and its components to move to those positions.
+

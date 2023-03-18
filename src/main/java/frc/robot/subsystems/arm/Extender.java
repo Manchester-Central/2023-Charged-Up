@@ -112,4 +112,4 @@ public class Extender {
 
 //“MMMMMMM, Mcextender.” -John, 2/20/2023
 
-// Contains the functions for the arm's extender (moving the arm back and forth).
+// Contains the functions for the arm's extender (moving the arm back and forth). It will extend the arm towards a target PID.

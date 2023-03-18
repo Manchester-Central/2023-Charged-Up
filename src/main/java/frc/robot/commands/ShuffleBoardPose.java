@@ -47,3 +47,5 @@ public class ShuffleBoardPose extends CommandBase {
     return false;
   }
 }
+
+// A command that records the poses of the arm on ShuffleBoard. This command has buttons for each pose, when clicked, the robot simulator on Chaosboard will have its arm move according to the command pressed.

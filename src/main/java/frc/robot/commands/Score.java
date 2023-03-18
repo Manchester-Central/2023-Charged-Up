@@ -80,3 +80,5 @@ public class Score extends CommandBase {
   }
 
 }
+
+// A command that controls how the robot scores a game piece.

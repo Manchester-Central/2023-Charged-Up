@@ -39,3 +39,6 @@ public class Grip extends CommandBase {
     return false;
   }
 }
+
+// A command that tells the gripper on the robot's arm to grip and hold an object. It uses auto commands and command bases to achieve this.
+

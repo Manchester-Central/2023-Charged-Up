@@ -13,12 +13,18 @@ import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 public class ShuffleBoardPose extends CommandBase {
   public Arm m_Arm;
+  private String m_shoulderKey;
+  private String m_extenderKey;
+  private String m_wristKey;
   /** Creates a new ShuffleBoardPose. */
-  public ShuffleBoardPose(Arm arm) {
+  public ShuffleBoardPose(Arm arm, String name ) {
     // Use addRequirements() here to declare subsystem dependencies.
-    SmartDashboard.putNumber("PoseTest/Shoulder", -90);
-    SmartDashboard.putNumber("PoseTest/Extend", ExtenderConstants.MinimumPositionMeters);
-    SmartDashboard.putNumber("PoseTest/Wrist", 180);
+    m_shoulderKey = "PoseTest/" + name + "/Shoulder";
+    m_extenderKey = "PoseTest/" + name + "/Extender";
+    m_wristKey = "PoseTest/" + name + "/Wrist";
+    SmartDashboard.putNumber(m_shoulderKey, -90);
+    SmartDashboard.putNumber(m_extenderKey, ExtenderConstants.MinimumPositionMeters);
+    SmartDashboard.putNumber(m_wristKey, 180);
     m_Arm = arm;
     addRequirements(m_Arm);
   }
@@ -30,9 +36,9 @@ public class ShuffleBoardPose extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double shoulderAngle = SmartDashboard.getNumber("PoseTest/Shoulder", -90);
-    double ExtenderLength = SmartDashboard.getNumber("PoseTest/Extend", ExtenderConstants.MinimumPositionMeters);
-    double WristAngle = SmartDashboard.getNumber("PoseTest/Wrist", 180);
+    double shoulderAngle = SmartDashboard.getNumber(m_shoulderKey, -90);
+    double ExtenderLength = SmartDashboard.getNumber(m_extenderKey, ExtenderConstants.MinimumPositionMeters);
+    double WristAngle = SmartDashboard.getNumber(m_wristKey, 180);
     ArmPose m_ArmPose = new ArmPose(shoulderAngle, ExtenderLength, WristAngle, CoordinateType.ArmRelative);
     m_Arm.setArmTarget(m_ArmPose);
   }

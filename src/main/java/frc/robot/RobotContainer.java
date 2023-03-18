@@ -35,6 +35,7 @@ import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.Score;
+import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
 import frc.robot.commands.test.TestWrist;
@@ -214,7 +215,8 @@ public class RobotContainer {
     m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     
     // // test
-    // m_operator.start().whileTrue(new ShuffleBoardPose(m_arm).repeatedly());
+    m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
+    m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
   }
 
   private void dashboardCommands() {

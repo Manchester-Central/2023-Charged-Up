@@ -63,7 +63,6 @@ public class RobotContainer {
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
-  private ArduinoIO m_arduinoIO = new ArduinoIO();
   
   
   // Replace with CommandPS4Controller or CommandJoystick if needed

@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
-
+import frc.robot.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,7 +44,10 @@ public class Wrist {
         m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle);
         m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
         m_AbsoluteEncoder.setInverted(true);
-        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
+            m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
+            recalibrateSensors();
+        });
         m_pidTuner = new PIDTuner("WristPID", false, 0.01, 0, 0.02, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_sparkMax, getRotation());

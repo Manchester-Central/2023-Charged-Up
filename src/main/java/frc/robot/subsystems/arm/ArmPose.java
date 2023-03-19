@@ -47,18 +47,25 @@ public class ArmPose {
     );
 
     //Intake Poses
-    public static final ArmPose IntakeFront = addStaticPose(
-        "IntakeFront", 
-        -60, 
-        1.1, 
-        60, 
+    public static final ArmPose IntakeConeVerticalBack = addStaticPose(
+        "IntakeConeVerticalBack", 
+        -125, 
+        ExtenderConstants.MinimumPositionMeters, 
+        336, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose IntakeBack = addStaticPose(
-        "IntakeBack", 
-        -125, 
-        1.1, 
-        305, 
+    public static final ArmPose IntakeConeTippedBack = addStaticPose(
+        "IntakeConeTippedBack", 
+        -126, 
+        1.040, 
+        329, 
+        CoordinateType.ArmRelative
+    );
+    public static final ArmPose IntakeCubeBack = addStaticPose(
+        "IntakeCubeBack", 
+        -121, 
+        0.803, 
+        343, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeConeVerticalFront = addStaticPose(

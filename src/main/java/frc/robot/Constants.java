@@ -91,7 +91,7 @@ public final class Constants {
       public static final double LinearPotConversionFactor = 0.4286;
       public static final double LinearPotOffsetMeters = 0.68; 
       public static final double SparkMaxEncoderConversionFactor = 0.0044538; 
-      public static final double MinimumPositionMeters = 0.78 + 0.02; 
+      public static final double MinimumPositionMeters = 0.78 + 0.005; 
       public static final double MaximumPositionMeters = 1.32 - 0.02; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.03; 
       public static final double RampUpRate = 0.012;

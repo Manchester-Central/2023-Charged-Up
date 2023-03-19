@@ -77,16 +77,16 @@ public class Wrist {
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle) {
-        double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
-        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
-        if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
-        || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
-            m_SafetyZoneHelper.resetToDefault();
-        } else if (getRotation().getDegrees() > WristConstants.MaximumSafeAngleDegrees) {
-            m_SafetyZoneHelper.excludeUp(WristConstants.MaximumSafeAngleDegrees - 5);
-        } else if (getRotation().getDegrees() < WristConstants.MinimumSafeAngleDegrees) {
-            m_SafetyZoneHelper.excludeDown(WristConstants.MinimumSafeAngleDegrees + 5);
-        }
+        // double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
+        // double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
+        // if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
+        // || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
+        //     m_SafetyZoneHelper.resetToDefault();
+        // } else if (getRotation().getDegrees() > WristConstants.MaximumSafeAngleDegrees) {
+        //     m_SafetyZoneHelper.excludeUp(WristConstants.MaximumSafeAngleDegrees - 5);
+        // } else if (getRotation().getDegrees() < WristConstants.MinimumSafeAngleDegrees) {
+        //     m_SafetyZoneHelper.excludeDown(WristConstants.MinimumSafeAngleDegrees + 5);
+        // }
     }
 
     public void setTarget(Rotation2d target) {

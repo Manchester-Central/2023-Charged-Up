@@ -98,7 +98,7 @@ public class Shoulder {
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
-        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit || wristAngle.getDegrees() >= WristConstants.MaximumSafeAngleDegrees || wristAngle.getDegrees() <= WristConstants.MinimumSafeAngleDegrees) {
+        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
             double normalizedCurrentAngle = normalize(getRotation());
             if (normalizedCurrentAngle < -90) {
                 m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);

@@ -40,9 +40,9 @@ public class ArmPose {
     //Stowed Pose
     public static final ArmPose StowedPose = addStaticPose(
         "Stowed", 
-        -90,
+        -95,
         ExtenderConstants.MinimumPositionMeters, 
-        180, 
+        190, 
         CoordinateType.ArmRelative
     );
 

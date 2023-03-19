@@ -116,10 +116,10 @@ public class Shoulder {
         double feedForwardVoltage = getArbitraryFeedForward(currentExtensionMeters);
         targetDegrees = m_SafetyZoneHelper.getSafeValue(targetDegrees);
         m_targetDegrees = targetDegrees;
-        // m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
-        // m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
-        // m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
-        // m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderL_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderL_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderR_A.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
+        m_shoulderR_B.getPIDController().setReference(targetDegrees, ControlType.kPosition, 0, feedForwardVoltage);
     }
 
     public static double normalize(double targetDegrees) {
@@ -192,10 +192,10 @@ public class Shoulder {
     }
 
     public void setManual(double speed) {
-        // m_shoulderL_A.set(speed);
-        // m_shoulderL_B.set(speed);
-        // m_shoulderR_A.set(speed);
-        // m_shoulderR_B.set(speed);
+        m_shoulderL_A.set(speed);
+        m_shoulderL_B.set(speed);
+        m_shoulderR_A.set(speed);
+        m_shoulderR_B.set(speed);
     }
 
     public void stop() {

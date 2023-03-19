@@ -112,30 +112,30 @@ public class RobotContainer {
 
   
   public void robotPeriodic(){
-    Pose2d LLLeftPose = m_limelightLeft.getPose();
-    Pose2d LLRightPose = m_limelightRight.getPose();
-    if (LLLeftPose != null && LLRightPose != null){
-      System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
-      double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
-      double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
-      if (leftDistance < rightDistance){
-        m_swerveDrive.resetPose(LLLeftPose);
-      }
-      else{
-        m_swerveDrive.resetPose(LLRightPose);
-      }
+    // Pose2d LLLeftPose = m_limelightLeft.getPose();
+    // Pose2d LLRightPose = m_limelightRight.getPose();
+    // if (LLLeftPose != null && LLRightPose != null){
+    //   // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
+    //   double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
+    //   double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
+    //   if (leftDistance < rightDistance){
+    //     m_swerveDrive.resetPose(LLLeftPose);
+    //   }
+    //   else{
+    //     m_swerveDrive.resetPose(LLRightPose);
+    //   }
       
-    }
-    else if (LLRightPose != null){
-      System.out.println(LLRightPose.toString()); 
+    // }
+    // else if (LLRightPose != null){
+    //   // System.out.println(LLRightPose.toString()); 
 
-      m_swerveDrive.resetPose(LLRightPose);
-    }
-    else if (LLLeftPose != null){
-      System.out.println(LLLeftPose.toString()); 
+    //   m_swerveDrive.resetPose(LLRightPose);
+    // }
+    // else if (LLLeftPose != null){
+    //   // System.out.println(LLLeftPose.toString()); 
 
-      m_swerveDrive.resetPose(LLLeftPose);
-    }
+    //   m_swerveDrive.resetPose(LLLeftPose);
+    // }
   }
 
   public void delayedRobotInit(){

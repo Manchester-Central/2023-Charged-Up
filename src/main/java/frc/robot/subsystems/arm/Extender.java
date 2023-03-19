@@ -41,13 +41,19 @@ public class Extender {
             recalibrateSensors();
         });
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
-        m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
-        m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        // m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
+        // m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        new DashboardNumber("Extender/RampUprate", ExtenderConstants.RampUpRate, (newValue) -> {
+            m_sparkMax.setOpenLoopRampRate(newValue);
+            m_sparkMax.setClosedLoopRampRate(newValue);
+        });
         m_sparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
         //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
+        Robot.logManager.addNumber("Extender/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
@@ -66,7 +72,7 @@ public class Extender {
         double safeTargetPosition = m_SafetyZoneHelper.getSafeValue(targetPositionMeters);
 
         m_targetMeters = safeTargetPosition;
-        // m_sparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
+        m_sparkMax.getPIDController().setReference(safeTargetPosition, ControlType.kPosition);
         
     }
 
@@ -101,7 +107,7 @@ public class Extender {
     }
 
     public void setManual(double speed) {
-        // m_sparkMax.set(speed);
+        m_sparkMax.set(speed);
     }
     
     public void stop(){

@@ -10,6 +10,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.util.DashboardNumber;
 
@@ -24,7 +25,7 @@ public abstract class BaseJoystickDrive extends CommandBase {
     Supplier<Double> m_joystickSupplier;
 
     JoystickSlewer(Supplier<Double> joystickSupplier) {
-      new DashboardNumber("Driver/SlewRateLimit", 10, (newLimit) -> {
+      new DashboardNumber("Driver/SlewRateLimit", SwerveConstants.SlewRateLimit, (newLimit) -> {
         m_slewRateLimiter = new SlewRateLimiter(newLimit);
       });
       m_joystickSupplier = joystickSupplier;

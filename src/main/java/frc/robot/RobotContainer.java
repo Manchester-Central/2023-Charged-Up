@@ -73,9 +73,6 @@ public class RobotContainer {
 
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
-  private ArmPose m_nextPrepPose = ArmPose.StowedPose;
-  private ArmPose m_nextPose = ArmPose.StowedPose;
-  private ArmPose m_nextIntakePose = ArmPose.IntakeFront;
   private enum ArmMode{ 
     Cube,
     Cone,
@@ -210,7 +207,7 @@ public class RobotContainer {
 
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
-    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalFront).repeatedly());
 
     m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     

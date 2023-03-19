@@ -52,7 +52,7 @@ public final class Constants {
     public static final double AbsoluteAngleOffsetFrontRight =  191.9 - 180;
     public static final double AbsoluteAngleOffsetBackLeft = 286.7 - 180;
     public static final double AbsoluteAngleOffsetBackRight = 60.2 + 180;
-    public static final double SlewRateLimit = 0.2;
+    public static final double SlewRateLimit = 10.0;
   }
 
   public static class FieldConstants {

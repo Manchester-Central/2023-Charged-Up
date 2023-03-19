@@ -69,9 +69,6 @@ public class RobotContainer {
 
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
-  private ArmPose m_nextPrepPose = ArmPose.StowedPose;
-  private ArmPose m_nextPose = ArmPose.StowedPose;
-  private ArmPose m_nextIntakePose = ArmPose.IntakeFront;
   private enum ArmMode{ 
     Cube,
     Cone,
@@ -108,30 +105,30 @@ public class RobotContainer {
 
   
   public void robotPeriodic(){
-    Pose2d LLLeftPose = m_limelightLeft.getPose();
-    Pose2d LLRightPose = m_limelightRight.getPose();
-    if (LLLeftPose != null && LLRightPose != null){
-      System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
-      double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
-      double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
-      if (leftDistance < rightDistance){
-        m_swerveDrive.resetPose(LLLeftPose);
-      }
-      else{
-        m_swerveDrive.resetPose(LLRightPose);
-      }
+    // Pose2d LLLeftPose = m_limelightLeft.getPose();
+    // Pose2d LLRightPose = m_limelightRight.getPose();
+    // if (LLLeftPose != null && LLRightPose != null){
+    //   // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
+    //   double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
+    //   double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
+    //   if (leftDistance < rightDistance){
+    //     m_swerveDrive.resetPose(LLLeftPose);
+    //   }
+    //   else{
+    //     m_swerveDrive.resetPose(LLRightPose);
+    //   }
       
-    }
-    else if (LLRightPose != null){
-      System.out.println(LLRightPose.toString()); 
+    // }
+    // else if (LLRightPose != null){
+    //   // System.out.println(LLRightPose.toString()); 
 
-      m_swerveDrive.resetPose(LLRightPose);
-    }
-    else if (LLLeftPose != null){
-      System.out.println(LLLeftPose.toString()); 
+    //   m_swerveDrive.resetPose(LLRightPose);
+    // }
+    // else if (LLLeftPose != null){
+    //   // System.out.println(LLLeftPose.toString()); 
 
-      m_swerveDrive.resetPose(LLLeftPose);
-    }
+    //   m_swerveDrive.resetPose(LLLeftPose);
+    // }
   }
 
   public void delayedRobotInit(){
@@ -181,7 +178,7 @@ public class RobotContainer {
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
-    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper);
+    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.stop),m_gripper);
     m_gripper.setDefaultCommand(defaultGripCommand);
 
     // Pose selection
@@ -206,7 +203,7 @@ public class RobotContainer {
 
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
-    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeFront).repeatedly());
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalFront).repeatedly());
 
     m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     
@@ -222,19 +219,25 @@ public class RobotContainer {
   }
 
   private void testCommands() {
-    m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
-    m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
-    m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
-    m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
-    m_tester.back().whileTrue(new Grip(m_gripper));
-    m_tester.start().whileTrue(new UnGrip(m_gripper));
-    m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
-    m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
-    m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
-    m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
-    m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
-    m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
-    m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
+    // m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
+    // m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
+    // m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
+    // m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
+    // m_tester.back().whileTrue(new Grip(m_gripper));
+    // m_tester.start().whileTrue(new UnGrip(m_gripper));
+    // m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
+    // m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
+    // m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
+    // m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
+    // m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
+    // m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
+    // m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
+    m_tester.a().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper));
+    m_tester.b().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper));
+    m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
+    m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
+    m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
+
   }
 
   /**

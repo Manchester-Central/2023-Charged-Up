@@ -34,6 +34,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
     SmartDashboard.putString("Arm/Grippermode", m_gripper.getGripperMode().name());
     SmartDashboard.putBoolean("Arm/AtTarget", reachedTarget());
+    SmartDashboard.putNumber("Arm/ShoulderDegreesFromStowed", getShoulderDegreesFromStowed());
     m_shoulder.periodic(m_extender.getPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();
@@ -83,7 +84,7 @@ public class Arm extends SubsystemBase {
     m_extender.updateSafetyZones(armPose, m_shoulder.getRotation());
     m_wrist.updateSafetyZones(armPose, m_shoulder.getRotation());
 
-    if(angleDifference < 25) {
+    if(angleDifference < 5) {
       m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
       m_extender.ExtendToTarget(armPose.extenderPos);
       if (armPose.wristCoordinate == CoordinateType.ArmRelative){
@@ -134,6 +135,10 @@ public class Arm extends SubsystemBase {
     m_shoulder.recalibrateSensors();
     m_extender.recalibrateSensors();
     m_wrist.recalibrateSensors();
+  }
+
+  public double getShoulderDegreesFromStowed() {
+    return Math.abs(m_shoulder.getRotation().plus(Rotation2d.fromDegrees(90)).getDegrees()); 
   }
 }
 

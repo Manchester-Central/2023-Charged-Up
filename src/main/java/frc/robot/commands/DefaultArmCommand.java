@@ -34,6 +34,7 @@ public class DefaultArmCommand extends CommandBase {
     //m_arm.setGripperMode(GripperMode.hold);
     // Gripper.customPower = m_tester.getRightY();
     m_arm.setArmTarget(ArmPose.StowedPose);
+    // m_arm.maintain();
   }
 
   // Called once the command ends or is interrupted.

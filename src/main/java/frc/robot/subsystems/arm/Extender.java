@@ -33,7 +33,7 @@ public class Extender {
         m_sparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
-        m_pidTuner = new PIDTuner("ExtenderPID", false, 80, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
         m_linearPot = m_sparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
         new DashboardNumber("Extender/EncoderConversionFactor", ExtenderConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
@@ -41,13 +41,19 @@ public class Extender {
             recalibrateSensors();
         });
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
-        m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
-        m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        // m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
+        // m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
+        new DashboardNumber("Extender/RampUprate", ExtenderConstants.RampUpRate, (newValue) -> {
+            m_sparkMax.setOpenLoopRampRate(newValue);
+            m_sparkMax.setClosedLoopRampRate(newValue);
+        });
         m_sparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
         //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
+        Robot.logManager.addNumber("Extender/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){

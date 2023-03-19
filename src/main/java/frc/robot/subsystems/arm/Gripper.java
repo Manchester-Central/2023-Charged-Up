@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.util.DashboardNumber;
 // i got the new forgis on the g
@@ -19,7 +20,7 @@ public class Gripper extends SubsystemBase {
         unGrip(-1.0),
         slowUngrip(-0.25),
         stop(0),
-        hold(0.03);
+        hold(0.4);
 
         private double m_power;
         GripperMode(double power){
@@ -35,16 +36,13 @@ public class Gripper extends SubsystemBase {
     }
     private CANSparkMax m_sparkMax;
     private GripperMode m_gripperMode = GripperMode.stop;
-    private int m_stallLimit = 15;
-    private int m_freeLimit = 20;
-    private int m_limitRPM = 8000;
+    private int m_stallLimit = 20;
+    private int m_freeLimit = 35;
+    private int m_limitRPM = 250;
     
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
-        m_sparkMax.setInverted(true);
-        int m_stallLimit = 15;
-        int m_freeLimit = 20;
-        int m_limitRPM = 8000;
+        m_sparkMax.setInverted(false);
         new DashboardNumber("gripper/stallLimit", m_stallLimit, (newValue) -> {
             int stallLimit = (int)((double) newValue);
             updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
@@ -58,6 +56,10 @@ public class Gripper extends SubsystemBase {
             updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
         });
         m_sparkMax.burnFlash();
+
+        Robot.logManager.addNumber("Gripper/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Gripper/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Gripper/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
     }
 
     private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {

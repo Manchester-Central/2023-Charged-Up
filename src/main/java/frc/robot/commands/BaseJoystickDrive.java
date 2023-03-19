@@ -24,7 +24,7 @@ public abstract class BaseJoystickDrive extends CommandBase {
     Supplier<Double> m_joystickSupplier;
 
     JoystickSlewer(Supplier<Double> joystickSupplier) {
-      new DashboardNumber("Driver/SlewRateLimit", 0.2, (newLimit) -> {
+      new DashboardNumber("Driver/SlewRateLimit", 10, (newLimit) -> {
         m_slewRateLimiter = new SlewRateLimiter(newLimit);
       });
       m_joystickSupplier = joystickSupplier;

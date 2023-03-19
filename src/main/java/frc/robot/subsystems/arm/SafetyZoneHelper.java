@@ -64,4 +64,4 @@ public class SafetyZoneHelper {
         
 }
 
-// Code for safety zone assistance used by the robot's arm. Sets the maximum and minimum parameters for the robot to avoid crashing into the electronics on the base. 
+// Code for safety zone assistance used by the robot's arm. Sets the maximum and minimum parameters for the robot's arm in order to avoid it crashing into the electronics on the base. 

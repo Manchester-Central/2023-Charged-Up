@@ -57,4 +57,4 @@ public class Gripper extends SubsystemBase {
     }
 }
 
-// A command for the gripper of the robot, allowing it for to grip and ungrip objects. A 
+// The metaphorical hand for the robot, the UnGrip and Grip commands allow it to grab and ungrab game pieces. The gripper is given set power levels in order to 

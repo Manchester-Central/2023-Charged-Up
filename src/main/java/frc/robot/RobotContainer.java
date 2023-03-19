@@ -212,9 +212,17 @@ public class RobotContainer {
     m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
   }
 
+  private ArmPose armPoseTarget;
+
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
+    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("ArmTarget/" + poseName, new InstantCommand(() -> {
+      armPoseTarget = pose;
+      SmartDashboard.putNumber("PoseTest/povUp/Shoulder", pose.shoulderAngle.getDegrees());
+      SmartDashboard.putNumber("PoseTest/povUp/Extender", pose.extenderPos);
+      SmartDashboard.putNumber("PoseTest/povUp/Wrist", pose.wristAngle.getDegrees());
+    })));
     ScorePose.ScorePoses.forEach((String poseName, Pose2d pose) -> SmartDashboard.putData("Drive To Target/" + poseName, new DriveToTarget(m_swerveDrive, pose, Constants.DriveToTargetTolerance)));
   }
 

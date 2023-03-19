@@ -48,10 +48,10 @@ public final class Constants {
     public static final int AnalogInputFrontRightAbsoluteEncoder = 0;
     public static final int AnalogInputBackLeftAbsoluteEncoder = 2;
     public static final int AnalogInputBackRightAbsoluteEncoder = 1;
-    public static final double AbsoluteAngleOffsetFrontLeft = 17.4 + 180;
-    public static final double AbsoluteAngleOffsetFrontRight =  191.9 - 180;
-    public static final double AbsoluteAngleOffsetBackLeft = 286.7 - 180;
-    public static final double AbsoluteAngleOffsetBackRight = 60.2 + 180;
+    public static final double AbsoluteAngleOffsetFrontLeft = 198.2;
+    public static final double AbsoluteAngleOffsetFrontRight =  11.05;
+    public static final double AbsoluteAngleOffsetBackLeft = 130.1;
+    public static final double AbsoluteAngleOffsetBackRight = 240.8;
     public static final double SlewRateLimit = 10.0;
   }
 

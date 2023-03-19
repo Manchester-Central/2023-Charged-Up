@@ -89,6 +89,13 @@ public class ArmPose {
         33, 
         CoordinateType.ArmRelative
     );
+    public static final ArmPose IntakeSingleStation = addStaticPose(
+        "IntakeSingleStation", 
+        -101.2, 
+        ExtenderConstants.MinimumPositionMeters, 
+        215.5, 
+        CoordinateType.ArmRelative
+    );
 
     // Low pose
     public static final ArmPose LowScorePose = addStaticPose(

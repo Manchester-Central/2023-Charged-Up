@@ -43,6 +43,7 @@ public class Gripper extends SubsystemBase {
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(false);
+        m_sparkMax.setOpenLoopRampRate(0.05);
         new DashboardNumber("gripper/stallLimit", m_stallLimit, (newValue) -> {
             int stallLimit = (int)((double) newValue);
             updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);

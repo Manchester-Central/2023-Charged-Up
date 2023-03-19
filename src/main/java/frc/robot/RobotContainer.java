@@ -10,8 +10,6 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -39,7 +37,6 @@ import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
 import frc.robot.commands.test.TestWrist;
-import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -163,10 +160,10 @@ public class RobotContainer {
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 180:0)));
-    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 360:180)));
-    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 270:90)));
-    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, Rotation2d.fromDegrees((DriverStation.getAlliance() == Alliance.Blue) ? 90:270)));
+    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Up));
+    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Down));
+    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Left));
+    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Right));
       
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));

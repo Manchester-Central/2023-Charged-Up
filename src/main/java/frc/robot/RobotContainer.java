@@ -91,25 +91,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register auto commands
-    autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToPose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveAndMoveArm", (ParsedCommand pc) -> AutoComboCommands.driveAndMoveArm(pc, m_swerveDrive, m_arm));
-    autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
-    autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
-    autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
-    autoBuilder.registerCommand("cubeMidPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
-    autoBuilder.registerCommand("stow", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
-    autoBuilder.registerCommand("score", (ParsedCommand pc) -> Score.createAutoCommand(pc, m_arm, m_gripper));
+    autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("moveArm", (parsedCommand) -> MoveArm.createAutoCommand(parsedCommand, m_arm));
+    autoBuilder.registerCommand("driveAndMoveArm", (parsedCommand) -> AutoComboCommands.driveAndMoveArm(parsedCommand, m_swerveDrive, m_arm));
+    autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
+    autoBuilder.registerCommand("stow", (parsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
+    autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
-  }
-
-  private Command CreateDriveAndGrip(ParsedCommand pc){
-    Command driveCommand = DriveToTarget.createAutoCommand(pc, m_swerveDrive);
-    Command gripCommand = new Grip(m_gripper);
-    // TODO update when we can detect that we have pick up the game piece
-    return new ParallelRaceGroup(driveCommand, gripCommand);
   }
 
   

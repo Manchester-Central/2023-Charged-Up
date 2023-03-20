@@ -9,8 +9,6 @@ import java.util.function.Supplier;
 import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -42,23 +40,13 @@ public class DriveToTarget extends CommandBase {
     addRequirements(m_swerveDrive);
   }
 
-  public static DriveToTarget createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
-    double x_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("x"), 0.0);
-    double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
-    double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);
-    double translationTolerance = AutoUtil.ParseDouble(parsedCommand.getArgument("translationTolerance"), Constants.DriveToTargetTolerance);
-    var redPose = new Pose2d(x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees));
-    var poseForAlliance = DrivePose.toCurrentAlliancePose(redPose);
-    return new DriveToTarget(swerveDrive, poseForAlliance, translationTolerance);
-  }
-
-  public static Command createAutoCommandForScorePose(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
-    String poseName = parsedCommand.getArgument("pose");
-    DrivePose pose = poseName == null ? null : DrivePose.DrivePoses.get(poseName);
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+    double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
+    Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
     if(pose == null) {
       return new InstantCommand();
     }
-    return new DriveToTarget(swerveDrive, pose.getCurrentAlliancePose(), Constants.DriveToTargetTolerance);
+    return new DriveToTarget(swerveDrive, pose, translationTolerance);
   }
 
   public static DriveToTarget toClosestScoreTarget(SwerveDrive swerveDrive) {

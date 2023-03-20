@@ -36,13 +36,15 @@ import frc.robot.commands.Score;
 import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
+import frc.robot.commands.auto.AutoComboCommands;
+import frc.robot.commands.auto.AutoTImerCommand;
 import frc.robot.commands.test.TestWrist;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
-import frc.robot.subsystems.swerve.ScorePose;
+import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -83,24 +85,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Register auto commands
-    autoBuilder.registerCommand("resetPosition", (ParsedCommand pc) -> ResetPose.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToTarget", (ParsedCommand pc) -> DriveToTarget.createAutoCommand(pc, m_swerveDrive));
-    autoBuilder.registerCommand("driveToScorePose", (ParsedCommand pc) -> DriveToTarget.createAutoCommandForScorePose(pc, m_swerveDrive));
-    autoBuilder.registerCommand("namedPose", (ParsedCommand pc) -> MoveArm.createAutoCommand(pc, m_arm));
-    autoBuilder.registerCommand("driveAndGrip", this::CreateDriveAndGrip);
-    autoBuilder.registerCommand("cubeHighPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeHighPose));
-    autoBuilder.registerCommand("cubeMidPose", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.CubeMidPose));
-    autoBuilder.registerCommand("stow", (ParsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
-    autoBuilder.registerCommand("score", (ParsedCommand pc) -> Score.createAutoCommand(pc, m_arm, m_gripper));
+    autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("moveArm", (parsedCommand) -> MoveArm.createAutoCommand(parsedCommand, m_arm));
+    autoBuilder.registerCommand("driveAndMoveArm", (parsedCommand) -> AutoComboCommands.driveAndMoveArm(parsedCommand, m_swerveDrive, m_arm));
+    autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
+    autoBuilder.registerCommand("stow", (parsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
+    autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
-  }
-
-  private Command CreateDriveAndGrip(ParsedCommand pc){
-    Command driveCommand = DriveToTarget.createAutoCommand(pc, m_swerveDrive);
-    Command gripCommand = new Grip(m_gripper);
-    // TODO update when we can detect that we have pick up the game piece
-    return new ParallelRaceGroup(driveCommand, gripCommand);
   }
 
   
@@ -217,13 +210,16 @@ public class RobotContainer {
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
+    DrivePose.DrivePoses.forEach((String poseName, DrivePose pose) -> {
+      SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, Constants.DriveToTargetTolerance));
+      SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, Constants.DriveToTargetTolerance));
+    });
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("ArmTarget/" + poseName, new InstantCommand(() -> {
       armPoseTarget = pose;
       SmartDashboard.putNumber("PoseTest/povUp/Shoulder", pose.shoulderAngle.getDegrees());
       SmartDashboard.putNumber("PoseTest/povUp/Extender", pose.extenderPos);
       SmartDashboard.putNumber("PoseTest/povUp/Wrist", pose.wristAngle.getDegrees());
     })));
-    ScorePose.ScorePoses.forEach((String poseName, Pose2d pose) -> SmartDashboard.putData("Drive To Target/" + poseName, new DriveToTarget(m_swerveDrive, pose, Constants.DriveToTargetTolerance)));
   }
 
   private void testCommands() {
@@ -255,7 +251,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Always stow the arm before any auto
-    return new MoveArm(m_arm, ArmPose.StowedPose).andThen(autoBuilder.createAutoCommand());
+    return (new MoveArm(m_arm, ArmPose.StowedPose).andThen(autoBuilder.createAutoCommand())).deadlineWith(new AutoTImerCommand());
   }
 
   public void addSmartDashboard() {

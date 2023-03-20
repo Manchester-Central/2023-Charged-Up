@@ -97,6 +97,13 @@ public class Shoulder {
         return Rotation2d.fromDegrees((m_AbsoluteEncoder.getAbsolutePosition() * ShoulderConstants.AbsoluteAngleConversionFactor) + ShoulderConstants.AbsoluteAngleZeroOffset);
     }
 
+    public Rotation2d getEncoderRotation() {
+        if(Robot.isSimulation()) {
+            return Rotation2d.fromRadians(m_armSim.getAngleRads());
+        }
+        return Rotation2d.fromDegrees(m_shoulderL_A.getEncoder().getPosition());
+    }
+
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
         if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
             double normalizedCurrentAngle = normalize(getRotation());
@@ -163,7 +170,7 @@ public class Shoulder {
         if (Double.isNaN(m_targetDegrees)) {
             return false;
         }
-        return Math.abs(m_shoulderL_A.getEncoder().getPosition() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
+        return Math.abs(getEncoderRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
     }
 
     // We want to add an arbitrary feed forward that applies outside the PID control loop.

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
+import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
@@ -35,12 +36,11 @@ public class Score extends CommandBase {
   }
 
   public static Command createAutoCommand(ParsedCommand parsedCommand, Arm arm, Gripper gripper) {
-    String poseName = parsedCommand.getArgument("pose");
-    ArmPose pose = poseName == null ? null : ArmPose.ArmPoses.get(poseName);
-    if (pose == null) {
+    ArmPose armPose = AutoUtil.getArmPose(parsedCommand);
+    if (armPose == null) {
       return new InstantCommand();
     }
-    return new Score(arm, gripper, pose,arm::reachedTarget);
+    return new Score(arm, gripper, armPose, arm::reachedTarget);
   }
 
   // Called when the command is initially scheduled.

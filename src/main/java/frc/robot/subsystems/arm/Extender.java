@@ -83,6 +83,13 @@ public class Extender {
         return m_linearPot.getPosition() + ExtenderConstants.LinearPotOffsetMeters;
     }
 
+    public double getEncoderPositionMeters(){
+        if (Robot.isSimulation()) {
+            return m_simPos;
+        }
+        return m_sparkMax.getEncoder().getPosition();
+    }
+
     public void tunePID(PIDUpdate pidUpdate){
         m_sparkMax.getPIDController().setP(pidUpdate.P);
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
@@ -91,7 +98,7 @@ public class Extender {
     }
 
     public boolean atTarget(){
-        return Math.abs(m_sparkMax.getEncoder().getPosition() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
+        return Math.abs(getEncoderPositionMeters() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
     }
 
     public void periodic() {

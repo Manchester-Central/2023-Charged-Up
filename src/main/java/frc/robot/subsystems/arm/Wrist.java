@@ -65,6 +65,8 @@ public class Wrist {
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Wrist/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Wrist/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
@@ -74,6 +76,7 @@ public class Wrist {
             recalibrateSensors();
         });
         Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
+        
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle) {

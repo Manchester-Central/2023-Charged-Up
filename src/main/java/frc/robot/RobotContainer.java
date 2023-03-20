@@ -72,9 +72,17 @@ public class RobotContainer {
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
   private enum ArmMode{ 
-    Cube,
-    Cone,
-    Intake;
+    Cube("#8a2be2"),
+    Cone("#f9e909"),
+    Intake("#134122");
+    String m_colorString;
+    ArmMode(String colorString){
+      m_colorString = colorString;
+    }
+
+    public String getColor(){
+      return m_colorString;
+    }
    }
 
   private ArmMode m_currentArmMode = ArmMode.Intake;
@@ -122,6 +130,11 @@ public class RobotContainer {
 
     //   m_swerveDrive.resetPose(LLLeftPose);
     // }
+
+    SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
+    SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
+
+
   }
 
   public void delayedRobotInit(){

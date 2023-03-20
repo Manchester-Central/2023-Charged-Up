@@ -31,7 +31,7 @@ public final class Constants {
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 4.6; //4.6 
-    public static final double MaxRobotRotation_radps = 3; //5
+    public static final double MaxRobotRotation_radps = 5; //5
     public static final int CanIdFrontLeftAngle = 1;
     public static final int CanIdFrontLeftVelocity = 2;
     public static final int CanIdFrontRightAngle = 4;
@@ -48,39 +48,11 @@ public final class Constants {
     public static final int AnalogInputFrontRightAbsoluteEncoder = 0;
     public static final int AnalogInputBackLeftAbsoluteEncoder = 2;
     public static final int AnalogInputBackRightAbsoluteEncoder = 1;
-    public static final double AbsoluteAngleOffsetFrontLeft = 238.3 - 180;
-    public static final double AbsoluteAngleOffsetFrontRight =  231.6 - 180;
-    public static final double AbsoluteAngleOffsetBackLeft = 327.2 - 180;
-    public static final double AbsoluteAngleOffsetBackRight = 100.0 + 180;
-  }
-
-  public static class SwerveConstants2022 {
-    public static final double RobotWidth_in = 21.25;
-    public static final double RobotLength_in = 22.25;
-    public static final double RobotWidth_m = RobotWidth_in / 39.3701;
-    public static final double RobotLength_m = RobotLength_in / 39.3701;
-    public static final double MaxRobotSpeed_mps = 5;
-    public static final double MaxRobotRotation_radps = 2;
-    public static final int CanIdFrontLeftAngle = 5;
-    public static final int CanIdFrontLeftVelocity = 6;
-    public static final int CanIdFrontLeftAbsoluteEncoder = 22;
-    public static final int CanIdFrontRightAngle = 4;
-    public static final int CanIdFrontRightVelocity = 8;
-    public static final int CanIdFrontRightAbsoluteEncoder = 21;
-    public static final int CanIdBackLeftAngle = 7;
-    public static final int CanIdBackLeftVelocity = 3;
-    public static final int CanIdBackLeftAbsoluteEncoder = 23;
-    public static final int CanIdBackRightAngle = 1;
-    public static final int CanIdBackRightVelocity = 2;
-    public static final int CanIdBackRightAbsoluteEncoder = 20;
-    public static final double AngleEncoderRatio = 144.0 / 14.0;
-    public static final double VelocityEncoderRatio = 7.8;
-    public static final double WheelDiameter = 0.092;
-    public static final double WheelCircumference = WheelDiameter * Math.PI;
-    public static final double AbsoluteAngleOffsetFrontLeft = 250;
-    public static final double AbsoluteAngleOffsetFrontRight = 177;
-    public static final double AbsoluteAngleOffsetBackLeft = 237;
-    public static final double AbsoluteAngleOffsetBackRight = 341;
+    public static final double AbsoluteAngleOffsetFrontLeft = 198.2;
+    public static final double AbsoluteAngleOffsetFrontRight =  11.05;
+    public static final double AbsoluteAngleOffsetBackLeft = 130.1;
+    public static final double AbsoluteAngleOffsetBackRight = 240.8;
+    public static final double SlewRateLimit = 10.0;
   }
 
   public static class FieldConstants {
@@ -89,7 +61,6 @@ public final class Constants {
   }
 
   public static final double UpdateFrequency_Hz = 50;
-  public static final boolean Is2022Robot = false;
   public static final double DriveToTargetTolerance = 0.03;
   public static final double AnglePIDTolerance = 3.0;
 
@@ -119,8 +90,8 @@ public final class Constants {
       public static final int CanIdExtender = 14;
       public static final double LinearPotConversionFactor = 0.4286;
       public static final double LinearPotOffsetMeters = 0.68; 
-      public static final double SparkMaxEncoderConversionFactor = 0.0069; 
-      public static final double MinimumPositionMeters = 0.78 + 0.02; 
+      public static final double SparkMaxEncoderConversionFactor = 0.0044538; 
+      public static final double MinimumPositionMeters = 0.78 + 0.005; 
       public static final double MaximumPositionMeters = 1.32 - 0.02; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.03; 
       public static final double RampUpRate = 0.012;
@@ -130,12 +101,12 @@ public final class Constants {
 
     public static class WristConstants{
       public static final int CanIdWrist = 15;
-      public static final double MinimumAngle = -10; 
-      public static final double MaximumAngle = 370; 
+      public static final double MinimumAngle = -30; 
+      public static final double MaximumAngle = 410; 
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
-      public static final double AbsoluteAngleZeroOffset = 213;
-      public static final double SparkMaxEncoderConversionFactor = 7.93;
-      public static final double RampUpRate = 0.3; 
+      public static final double AbsoluteAngleZeroOffset = 130.0;
+      public static final double SparkMaxEncoderConversionFactor = 5.803;
+      public static final double RampUpRate = 0.1; 
       public static final double ToleranceDegrees = 2.0; 
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;

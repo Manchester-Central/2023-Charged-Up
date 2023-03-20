@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
-
+import frc.robot.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -39,41 +39,54 @@ public class Wrist {
     public Wrist(){
         m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_sparkMax.restoreFactoryDefaults();
-        m_sparkMax.setInverted(true);
+        m_sparkMax.setInverted(false);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
-        m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-        m_AbsoluteEncoder.setPositionConversionFactor(WristConstants.AbsoluteAngleConversionFactor); 
-        m_AbsoluteEncoder.setInverted(true);
-        m_AbsoluteEncoder.setZeroOffset(WristConstants.AbsoluteAngleZeroOffset);
-        m_pidTuner = new PIDTuner("WristPID", false, 0.01, 0, 0.02, this::tunePID);
+        m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle); 
+        new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, (newValue) -> {
+            m_AbsoluteEncoder.setPositionConversionFactor(newValue);
+            recalibrateSensors();
+            // m_sparkMax.burnFlash();
+        });
+        m_AbsoluteEncoder.setInverted(false);
+        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
+            m_AbsoluteEncoder.setZeroOffset(newOffset);
+            recalibrateSensors();
+            // m_sparkMax.burnFlash();
+        });
+        m_pidTuner = new PIDTuner("WristPID", true, 0.02, 0, 1.0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_sparkMax, getRotation());
-        m_sparkMax.setOpenLoopRampRate(WristConstants.RampUpRate);
-        m_sparkMax.setClosedLoopRampRate(WristConstants.RampUpRate);
+        m_AbsoluteEncoder.setInverted(false);
+        new DashboardNumber("Wrist/RampUprate", WristConstants.RampUpRate, (newValue) -> {
+            m_sparkMax.setOpenLoopRampRate(newValue);
+            m_sparkMax.setClosedLoopRampRate(newValue);
+        });
         //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
         m_sparkMax.setSmartCurrentLimit(0, 0, 0);
         m_sparkMax.burnFlash();
-  
+        Robot.logManager.addNumber("Wrist/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
-        encoder.setPositionConversionFactor(WristConstants.SparkMaxEncoderConversionFactor);
-        recalibrateSensors();
+        new DashboardNumber("Wrist/EncoderConversionFactor", WristConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
+            encoder.setPositionConversionFactor(newConversionFactor);
+            recalibrateSensors();
+        });
         Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle) {
-        double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
-        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
-        if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
-        || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
-            m_SafetyZoneHelper.resetToDefault();
-        } else if (getRotation().getDegrees() > WristConstants.MaximumSafeAngleDegrees) {
-            m_SafetyZoneHelper.excludeUp(WristConstants.MaximumSafeAngleDegrees - 5);
-        } else if (getRotation().getDegrees() < WristConstants.MinimumSafeAngleDegrees) {
-            m_SafetyZoneHelper.excludeDown(WristConstants.MinimumSafeAngleDegrees + 5);
-        }
+        // double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
+        // double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
+        // if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
+        // || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
+        //     m_SafetyZoneHelper.resetToDefault();
+        // } else if (getRotation().getDegrees() > WristConstants.MaximumSafeAngleDegrees) {
+        //     m_SafetyZoneHelper.excludeUp(WristConstants.MaximumSafeAngleDegrees - 5);
+        // } else if (getRotation().getDegrees() < WristConstants.MinimumSafeAngleDegrees) {
+        //     m_SafetyZoneHelper.excludeDown(WristConstants.MinimumSafeAngleDegrees + 5);
+        // }
     }
 
     public void setTarget(Rotation2d target) {
@@ -87,7 +100,7 @@ public class Wrist {
             return Rotation2d.fromDegrees(m_simAngle);
         }
         var rawValue = m_AbsoluteEncoder.getPosition();
-        var belowWrapAround = rawValue > 400;
+        var belowWrapAround = rawValue > 420;
         var shiftedValue = rawValue;
         if(belowWrapAround) {
             shiftedValue = rawValue - 460;
@@ -107,6 +120,7 @@ public class Wrist {
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
         m_sparkMax.getPIDController().setD(pidUpdate.D);
         m_sparkMax.getPIDController().setFF(pidUpdate.F);
+        // m_sparkMax.burnFlash();
     }
 
     public boolean atTarget(){

@@ -8,40 +8,66 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.util.DashboardNumber;
 // i got the new forgis on the g
 /** Add your docs here. */
 public class Gripper extends SubsystemBase {
-    public static double customPower = 0;
     public enum GripperMode{
-        grip(0.5),
+        grip(1.0),
         slowGrip(0.25),
-        unGrip(-0.5),
+        unGrip(-1.0),
         slowUngrip(-0.25),
         stop(0),
-        hold(0.03),
-        custom((double)Double.NaN);
+        hold(0.4);
 
         private double m_power;
         GripperMode(double power){
-            m_power = power;
+            new DashboardNumber("gripper/speed/" + this.name(), power, (newPower) -> {
+                m_power = newPower;
+            });
+
         }
 
         public double getPower(){
-            if(Double.isNaN(m_power)) {
-                return customPower;
-            }
             return m_power;
         }
     }
     private CANSparkMax m_sparkMax;
     private GripperMode m_gripperMode = GripperMode.stop;
+    private int m_stallLimit = 20;
+    private int m_freeLimit = 35;
+    private int m_limitRPM = 250;
     
     public Gripper() {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
-        m_sparkMax.setInverted(true);
-        m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
+        m_sparkMax.setInverted(false);
+        m_sparkMax.setOpenLoopRampRate(0.05);
+        new DashboardNumber("gripper/stallLimit", m_stallLimit, (newValue) -> {
+            int stallLimit = (int)((double) newValue);
+            updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("gripper/freeLimit", m_freeLimit, (newValue) -> {
+            int freeLimit = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("gripper/limitRPM", m_limitRPM, (newValue) -> {
+            int limitRPM = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
+        });
         m_sparkMax.burnFlash();
+
+        Robot.logManager.addNumber("Gripper/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Gripper/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Gripper/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+    }
+
+    private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {
+        m_stallLimit = stallLimit;
+        m_freeLimit = freeLimit;
+        m_limitRPM = limitRPM;
+        m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
 
     public void setGripperMode(GripperMode gripperMode) {

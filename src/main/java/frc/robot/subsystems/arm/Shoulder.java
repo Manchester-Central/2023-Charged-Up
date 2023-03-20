@@ -85,7 +85,7 @@ public class Shoulder {
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
         }
-        m_pidTuner = new PIDTuner("ShoulderPID", false, 0.025, 0, 1.6, this::tunePID);
+        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
         Robot.logManager.addNumber("Shoulder/target", () -> m_targetDegrees);
     }
@@ -105,7 +105,7 @@ public class Shoulder {
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
-        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit || wristAngle.getDegrees() >= WristConstants.MaximumSafeAngleDegrees || wristAngle.getDegrees() <= WristConstants.MinimumSafeAngleDegrees) {
+        if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
             double normalizedCurrentAngle = normalize(getRotation());
             if (normalizedCurrentAngle < -90) {
                 m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);

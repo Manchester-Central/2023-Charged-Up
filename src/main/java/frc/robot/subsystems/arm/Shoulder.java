@@ -84,6 +84,8 @@ public class Shoulder {
             canSparkMax.setSmartCurrentLimit(0, 0, 0);
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
+            Robot.logManager.addNumber("Shoulder/SparkMax" + canSparkMax.getDeviceId() + "/MotorTemperature_C", () -> canSparkMax.getMotorTemperature());
+
         }
         m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);

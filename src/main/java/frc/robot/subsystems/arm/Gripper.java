@@ -20,7 +20,7 @@ public class Gripper extends SubsystemBase {
         unGrip(-1.0),
         slowUngrip(-0.25),
         stop(0),
-        hold(0.4);
+        hold(0.2);
 
         private double m_power;
         GripperMode(double power){
@@ -36,8 +36,8 @@ public class Gripper extends SubsystemBase {
     }
     private CANSparkMax m_sparkMax;
     private GripperMode m_gripperMode = GripperMode.stop;
-    private int m_stallLimit = 20;
-    private int m_freeLimit = 35;
+    private int m_stallLimit = 15;
+    private int m_freeLimit = 25;
     private int m_limitRPM = 250;
     
     public Gripper() {
@@ -61,6 +61,11 @@ public class Gripper extends SubsystemBase {
         Robot.logManager.addNumber("Gripper/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Gripper/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
         Robot.logManager.addNumber("Gripper/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addBoolean("Gripper/HasPiece", () -> hasPiece());
+    }
+
+    private boolean hasPiece(){
+        return m_sparkMax.getOutputCurrent() > m_stallLimit - 5;
     }
 
     private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {

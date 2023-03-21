@@ -53,6 +53,8 @@ public class Extender {
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
         Robot.logManager.addNumber("Extender/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Extender/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+
 
     }
 

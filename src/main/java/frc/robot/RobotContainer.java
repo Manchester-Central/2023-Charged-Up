@@ -72,9 +72,17 @@ public class RobotContainer {
   private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
 
   private enum ArmMode{ 
-    Cube,
-    Cone,
-    Intake;
+    Cube("#8a2be2"),
+    Cone("#f9e909"),
+    Intake("#134122");
+    String m_colorString;
+    ArmMode(String colorString){
+      m_colorString = colorString;
+    }
+
+    public String getColor(){
+      return m_colorString;
+    }
    }
 
   private ArmMode m_currentArmMode = ArmMode.Intake;
@@ -122,6 +130,11 @@ public class RobotContainer {
 
     //   m_swerveDrive.resetPose(LLLeftPose);
     // }
+
+    SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
+    SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
+
+
   }
 
   public void delayedRobotInit(){
@@ -171,7 +184,7 @@ public class RobotContainer {
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
-    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.stop),m_gripper);
+    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper);
     m_gripper.setDefaultCommand(defaultGripCommand);
 
     // Pose selection
@@ -188,15 +201,15 @@ public class RobotContainer {
 
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(highCube);
-    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalBack).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(midCone);
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(midCube);
-    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeCubeBack).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
-    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalFront).repeatedly());
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeTippedBack).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     

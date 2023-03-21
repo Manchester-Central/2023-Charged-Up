@@ -61,6 +61,11 @@ public class Gripper extends SubsystemBase {
         Robot.logManager.addNumber("Gripper/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Gripper/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
         Robot.logManager.addNumber("Gripper/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addBoolean("Gripper/HasPiece", () -> hasPiece());
+    }
+
+    private boolean hasPiece(){
+        return m_sparkMax.getOutputCurrent() > m_stallLimit - 0.5;
     }
 
     private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {

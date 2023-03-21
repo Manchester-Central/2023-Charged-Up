@@ -201,15 +201,15 @@ public class RobotContainer {
 
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(highCube);
-    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly());
+    m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.DoublePickPose).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(midCone);
     m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(midCube);
-    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly());
+    m_operator.povLeft().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.SinglePickPose).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
-    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalFront).repeatedly());
+    m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Intake).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeVerticalFront).repeatedly().alongWith(new Grip(m_gripper)));
 
     m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.StowedPose).repeatedly());
     

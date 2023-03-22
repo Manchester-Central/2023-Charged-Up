@@ -108,14 +108,14 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(1, 0, 0);
     m_YPid = new PIDController(1, 0, 0);
-    m_AnglePid = new PIDController(8.5, 0.001, 0);
+    m_AnglePid = new PIDController(0.8, 0.01, 0.08);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
-    m_XPidTuner = new PIDTuner("X PID Tuner", false, m_XPid);
-    m_YPidTuner = new PIDTuner("Y PID Tuner", false, m_YPid);
+    m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
+    m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
     m_XPid.setTolerance(Constants.DriveToTargetTolerance);
     m_YPid.setTolerance(Constants.DriveToTargetTolerance);
     m_AnglePid.setTolerance(Constants.AnglePIDTolerance);
-    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", false, m_AnglePid);
+    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
     Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
@@ -207,7 +207,7 @@ public class SwerveDrive extends SubsystemBase {
     double omega = 0;
     ChassisSpeeds speeds;
     if (Math.abs(magnitude) >= 0.2) {
-      omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians());
+      omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians()) * magnitude;
     }
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation().minus(new Rotation2d(Math.PI)));

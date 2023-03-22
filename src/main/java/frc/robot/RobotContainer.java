@@ -144,6 +144,7 @@ public class RobotContainer {
     Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
     var slowModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.4, ()-> SwerveDrive.SpeedModifier = 1);
+    var creepModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.2, ()-> SwerveDrive.SpeedModifier = 1);
 
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
@@ -156,11 +157,11 @@ public class RobotContainer {
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(slowModeCommand);
 
-    m_driver.rightBumper().whileTrue(slowModeCommand);
+    m_driver.rightBumper().whileTrue(creepModeCommand);
     m_driver.rightTrigger().whileTrue(new RunCommand(() -> m_gripper.setGripperMode(GripperMode.unGrip), m_gripper));
 
     m_driver.leftStick().whileTrue(slowModeCommand);
-    m_driver.rightStick().whileTrue(slowModeCommand);
+    m_driver.rightStick().whileTrue(creepModeCommand);
 
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Towards, 1.0));
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Right, 1.0));

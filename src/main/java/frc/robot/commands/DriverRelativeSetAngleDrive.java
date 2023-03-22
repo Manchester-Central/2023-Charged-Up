@@ -8,16 +8,17 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.util.DriveDirection;
 
 public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
   /** Creates a new DriverRelativeSetAngleDrive. */
   double m_magnitude;
-  Rotation2d m_angle;
+  DriveDirection m_direction;
 
-  public DriverRelativeSetAngleDrive(SwerveDrive swervedrive, Gamepad driverController, Rotation2d angle, double magnitude) {
+  public DriverRelativeSetAngleDrive(SwerveDrive swervedrive, Gamepad driverController, DriveDirection direction, double magnitude) {
     super(swervedrive, driverController);
     m_magnitude = magnitude;
-    m_angle = angle;
+    m_direction = direction;
   }
 
   @Override
@@ -27,6 +28,6 @@ public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
 
   @Override
   protected Rotation2d getTargetRotation() {
-    return m_angle;
+    return m_direction.getAllianceAngle();
   }
 }

@@ -23,7 +23,7 @@ import frc.robot.util.DashboardNumber;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  public static final LogManager logManager = new LogManager(true);
+  public static final LogManager logManager = new LogManager(false);
 
   private RobotContainer m_robotContainer;
 

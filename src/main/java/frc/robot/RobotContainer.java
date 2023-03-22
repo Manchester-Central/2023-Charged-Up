@@ -10,6 +10,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriveToTargetWithLimelights;
@@ -101,6 +103,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("xMode", (parsedCommand) -> new SwerveXMode(m_swerveDrive));
     autoBuilder.registerCommand("driveWithLimelights", (parsedCommand) -> DriveToTargetWithLimelights.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("autoBalance", (parsedCommand) -> new AutoBalanceDrive(m_swerveDrive));
     autoBuilder.registerCommand("moveArm", (parsedCommand) -> MoveArm.createAutoCommand(parsedCommand, m_arm));
     autoBuilder.registerCommand("driveAndMoveArm", (parsedCommand) -> AutoComboCommands.driveAndMoveArm(parsedCommand, m_swerveDrive, m_arm));
     autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
@@ -114,6 +117,7 @@ public class RobotContainer {
   public void robotPeriodic(){
     SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
     SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
+    AutoBalanceDrive.PIDTuner.tune();
   }
 
   public void delayedRobotInit(){
@@ -144,8 +148,8 @@ public class RobotContainer {
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Up));
-    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Down));
+    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Away));
+    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Towards));
     m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Left));
     m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Right));
       
@@ -158,10 +162,10 @@ public class RobotContainer {
     m_driver.leftStick().whileTrue(slowModeCommand);
     m_driver.rightStick().whileTrue(slowModeCommand);
 
-    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Down, 1.0));
+    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Towards, 1.0));
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Right, 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Left, 1.0));
-    m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Up, 1.0));
+    m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Away, 1.0));
   }
 
   private void operaterControls(){
@@ -236,6 +240,11 @@ public class RobotContainer {
     m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
     m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
     m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
+    m_tester.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
+    m_tester.rightBumper().whileTrue(
+      new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
+      .andThen(new SwerveXMode(m_swerveDrive))
+    );
 
   }
 

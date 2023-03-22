@@ -300,6 +300,7 @@ public class SwerveDrive extends SubsystemBase {
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
     SmartDashboard.putNumber("gyro_angle", getGyroRotation().getDegrees());
+    SmartDashboard.putNumber("gyro_pitch", GetPitch().getDegrees());
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
@@ -373,6 +374,10 @@ public class SwerveDrive extends SubsystemBase {
 
       resetPose(LLLeftPose);
     }
+  }
+
+  public Rotation2d GetPitch() {
+    return Rotation2d.fromDegrees(m_gyro.getPitch());
   }
 }
 // “I love polyester.” -Kenny

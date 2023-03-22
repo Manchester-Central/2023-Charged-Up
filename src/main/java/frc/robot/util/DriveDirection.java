@@ -9,9 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public enum DriveDirection {
-    Up(0, 180),
-    Down(180, 0),
+    /** Away from the driver */
+    Away(0, 180),
+    /** Towards the driver */
+    Towards(180, 0),
+    /** To the driver's left */
     Left(90, 270),
+    /** To the driver's right */
     Right(270, 90);
 
     private Rotation2d m_redAngle;

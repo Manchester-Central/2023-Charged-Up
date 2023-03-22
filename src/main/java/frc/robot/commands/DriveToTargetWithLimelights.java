@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,8 +17,8 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class DriveToTargetWithLimelights extends DriveToTarget {
 
     /** Creates a new DriveToTarget. */
-  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance) {
-    super(swerveDrive, pose, translationTolerance);
+  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
+    super(swerveDrive, poseSupplier, translationTolerance);
   }
 
   public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
@@ -25,7 +27,7 @@ public class DriveToTargetWithLimelights extends DriveToTarget {
     if(pose == null) {
       return new InstantCommand();
     }
-    return new DriveToTargetWithLimelights(swerveDrive, pose, translationTolerance);
+    return new DriveToTargetWithLimelights(swerveDrive, () -> pose, translationTolerance);
   }
 
   // Called when the command is initially scheduled.

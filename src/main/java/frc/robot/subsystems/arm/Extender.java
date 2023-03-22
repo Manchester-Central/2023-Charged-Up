@@ -29,6 +29,9 @@ public class Extender {
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simPos = ExtenderConstants.MinimumPositionMeters;
     private double m_targetMeters = m_simPos;
+    private int m_stallLimit = 15;
+    private int m_freeLimit = 25;
+    private int m_limitRPM = 250;
     public Extender(){
         m_sparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
@@ -48,12 +51,23 @@ public class Extender {
             m_sparkMax.setClosedLoopRampRate(newValue);
         });
         m_sparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
-        //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
-        m_sparkMax.setSmartCurrentLimit(0, 0, 0);
+        new DashboardNumber("extender/stallLimit", m_stallLimit, (newValue) -> {
+            int stallLimit = (int)((double) newValue);
+            updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("extender/freeLimit", m_freeLimit, (newValue) -> {
+            int freeLimit = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("extender/limitRPM", m_limitRPM, (newValue) -> {
+            int limitRPM = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
+        });
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
         Robot.logManager.addNumber("Extender/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Extender/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addNumber("Extender/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
 
 
     }
@@ -67,6 +81,13 @@ public class Extender {
         } else{
             m_SafetyZoneHelper.excludeUp(ExtenderConstants.MinimumPositionMeters);
         }
+    }
+
+    private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {
+        m_stallLimit = stallLimit;
+        m_freeLimit = freeLimit;
+        m_limitRPM = limitRPM;
+        m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
 
     public void ExtendToTarget(double targetPositionMeters) {

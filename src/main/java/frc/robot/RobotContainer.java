@@ -171,6 +171,7 @@ public class RobotContainer {
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
     // NOTE: Driver Right Trigger is used in operaterControls()
+    m_driver.rightTrigger().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
 
     //m_driver.leftStick().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, ArmPose.IntakeBack).repeatedly()));
     // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
@@ -193,11 +194,11 @@ public class RobotContainer {
     m_operator.a().onTrue(new InstantCommand(()-> m_currentArmMode = ArmMode.Intake));
     m_operator.b().toggleOnTrue(new RunCommand(()-> m_arm.stop(), m_arm));
 
-    Command highCone = new Score(m_arm, m_gripper, ArmPose.ConeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
-    Command midCone = new Score(m_arm, m_gripper, ArmPose.ConeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
-    Command highCube = new Score(m_arm, m_gripper, ArmPose.CubeHighPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
-    Command midCube = new Score(m_arm, m_gripper, ArmPose.CubeMidPose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
-    Command lowPose = new Score(m_arm, m_gripper, ArmPose.LowScorePose, m_driver.rightTrigger()::getAsBoolean).repeatedly();
+    Command highCone = new MoveArm(m_arm, ArmPose.ConeHighPose).repeatedly();
+    Command midCone = new MoveArm(m_arm, ArmPose.ConeMidPose).repeatedly();
+    Command highCube = new MoveArm(m_arm, ArmPose.CubeHighPose).repeatedly();
+    Command midCube = new MoveArm(m_arm, ArmPose.CubeMidPose).repeatedly();
+    Command lowPose = new MoveArm(m_arm, ArmPose.LowScorePose).repeatedly();
 
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(highCone);
     m_operator.povUp().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(highCube);

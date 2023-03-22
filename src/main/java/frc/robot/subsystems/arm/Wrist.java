@@ -35,6 +35,9 @@ public class Wrist {
     private SafetyZoneHelper m_SafetyZoneHelper;
     private double m_simAngle = 0;
     private double m_targetDegrees = m_simAngle;
+    private int m_stallLimit = 15;
+    private int m_freeLimit = 45;
+    private int m_limitRPM = 250;
 
     public Wrist(){
         m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
@@ -61,11 +64,22 @@ public class Wrist {
             m_sparkMax.setOpenLoopRampRate(newValue);
             m_sparkMax.setClosedLoopRampRate(newValue);
         });
-        //m_sparkMax.setSmartCurrentLimit(15, 20, 8000);
-        m_sparkMax.setSmartCurrentLimit(0, 0, 0);
+        new DashboardNumber("wrist/stallLimit", m_stallLimit, (newValue) -> {
+            int stallLimit = (int)((double) newValue);
+            updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("wrist/freeLimit", m_freeLimit, (newValue) -> {
+            int freeLimit = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
+        });
+        new DashboardNumber("wrist/limitRPM", m_limitRPM, (newValue) -> {
+            int limitRPM = (int)((double) newValue);
+            updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
+        });
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Wrist/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Wrist/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addNumber("Wrist/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
 
     }
 
@@ -96,6 +110,13 @@ public class Wrist {
         double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees());
         m_sparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_targetDegrees = targetDegrees;
+    }
+
+    private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {
+        m_stallLimit = stallLimit;
+        m_freeLimit = freeLimit;
+        m_limitRPM = limitRPM;
+        m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
 
     public Rotation2d getRotation() {

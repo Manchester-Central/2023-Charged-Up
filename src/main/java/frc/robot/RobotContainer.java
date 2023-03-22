@@ -10,6 +10,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,9 +22,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
+import frc.robot.commands.DriveToTargetWithLimelights;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveExtender;
@@ -46,6 +50,7 @@ import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.util.DriveDirection;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,9 +61,9 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
+  private SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -94,7 +99,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));
     autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("xMode", (parsedCommand) -> new SwerveXMode(m_swerveDrive));
+    autoBuilder.registerCommand("driveWithLimelights", (parsedCommand) -> DriveToTargetWithLimelights.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("autoBalance", (parsedCommand) -> new AutoBalanceDrive(m_swerveDrive));
     autoBuilder.registerCommand("moveArm", (parsedCommand) -> MoveArm.createAutoCommand(parsedCommand, m_arm));
     autoBuilder.registerCommand("driveAndMoveArm", (parsedCommand) -> AutoComboCommands.driveAndMoveArm(parsedCommand, m_swerveDrive, m_arm));
     autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
@@ -106,35 +115,9 @@ public class RobotContainer {
 
   
   public void robotPeriodic(){
-    // Pose2d LLLeftPose = m_limelightLeft.getPose();
-    // Pose2d LLRightPose = m_limelightRight.getPose();
-    // if (LLLeftPose != null && LLRightPose != null){
-    //   // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
-    //   double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
-    //   double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
-    //   if (leftDistance < rightDistance){
-    //     m_swerveDrive.resetPose(LLLeftPose);
-    //   }
-    //   else{
-    //     m_swerveDrive.resetPose(LLRightPose);
-    //   }
-      
-    // }
-    // else if (LLRightPose != null){
-    //   // System.out.println(LLRightPose.toString()); 
-
-    //   m_swerveDrive.resetPose(LLRightPose);
-    // }
-    // else if (LLLeftPose != null){
-    //   // System.out.println(LLLeftPose.toString()); 
-
-    //   m_swerveDrive.resetPose(LLLeftPose);
-    // }
-
     SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
     SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
-
-
+    AutoBalanceDrive.PIDTuner.tune();
   }
 
   public void delayedRobotInit(){
@@ -160,32 +143,34 @@ public class RobotContainer {
   private void driverControls() {
     Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
+    var slowModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.4, ()-> SwerveDrive.SpeedModifier = 1);
+
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
 
-    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Up));
-    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Down));
-    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Left));
-    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, ResetHeading.Direction.Right));
+    m_driver.povUp().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Away));
+    m_driver.povDown().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Towards));
+    m_driver.povLeft().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Left));
+    m_driver.povRight().onTrue(new ResetHeading(m_swerveDrive, DriveDirection.Right));
       
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
-    m_driver.leftTrigger().whileTrue(new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.5, ()-> SwerveDrive.SpeedModifier = 1));
-    // NOTE: Driver Right Trigger is used in operaterControls()
-    m_driver.rightTrigger().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
+    m_driver.leftTrigger().whileTrue(slowModeCommand);
 
-    //m_driver.leftStick().whileTrue(new InstantCommand(()->m_arm.setGripperMode(GripperMode.grip)).andThen(new MoveArm(m_arm, ArmPose.IntakeBack).repeatedly()));
-    // m_driver.y().onTrue(new DriverRelativeAngleDrive(m_swerveDrive, m_driver));
-   
-    // m_driver.leftBumper().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(90), 1.0));
-    // m_driver.leftTrigger().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, Rotation2d.fromDegrees(-90), 1.0));
-    //m_gripperMutex.setDefaultCommand(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.hold), m_gripperMutex ));
-    //m_driver.rightBumper().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.grip) ));
-    //m_driver.rightTrigger().whileTrue(new InstantCommand( () -> m_arm.setGripperMode(GripperMode.unGrip) ));
+    m_driver.rightBumper().whileTrue(slowModeCommand);
+    m_driver.rightTrigger().whileTrue(new RunCommand(() -> m_gripper.setGripperMode(GripperMode.unGrip), m_gripper));
+
+    m_driver.leftStick().whileTrue(slowModeCommand);
+    m_driver.rightStick().whileTrue(slowModeCommand);
+
+    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Towards, 1.0));
+    m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Right, 1.0));
+    m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Left, 1.0));
+    m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Away, 1.0));
   }
 
   private void operaterControls(){
     m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
-    Command defaultGripCommand = new InstantCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper);
+    Command defaultGripCommand = new InstantCommand(() -> m_gripper.setGripperMode(GripperMode.hold), m_gripper);
     m_gripper.setDefaultCommand(defaultGripCommand);
 
     // Pose selection
@@ -255,6 +240,11 @@ public class RobotContainer {
     m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
     m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
     m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
+    m_tester.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
+    m_tester.rightBumper().whileTrue(
+      new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
+      .andThen(new SwerveXMode(m_swerveDrive))
+    );
 
   }
 

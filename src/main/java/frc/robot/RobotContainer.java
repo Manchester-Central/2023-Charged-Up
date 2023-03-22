@@ -178,6 +178,9 @@ public class RobotContainer {
     m_driver.rightBumper().whileTrue(slowModeCommand);
     m_driver.rightTrigger().whileTrue(new RunCommand(() -> m_gripper.setGripperMode(GripperMode.grip), m_gripper));
 
+    m_driver.leftStick().whileTrue(slowModeCommand);
+    m_driver.rightStick().whileTrue(slowModeCommand);
+
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Down, 1.0));
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Right, 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Left, 1.0));

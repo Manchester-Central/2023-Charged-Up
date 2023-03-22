@@ -29,6 +29,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.logging.LogManager;
+import frc.robot.subsystems.Limelight;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -54,9 +55,15 @@ public class SwerveDrive extends SubsystemBase {
   private PIDTuner m_moduleVelocityPIDTuner;
   private PIDTuner m_moduleAnglePIDTuner;
   private double m_driveToTargetTolerance = Constants.DriveToTargetTolerance;
+  
+  private Limelight m_limelightLeft;
+  private Limelight m_limelightRight;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive() {
+  public SwerveDrive(Limelight limelightLeft, Limelight limelightRight) {
+    m_limelightLeft = limelightLeft;
+    m_limelightRight = limelightRight;
+
     Translation2d frontLeftTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
     Translation2d frontRightTranslation = new Translation2d(SwerveConstants.RobotLength_m / 2,-SwerveConstants.RobotWidth_m / 2);
     Translation2d backLeftTranslation = new Translation2d(-SwerveConstants.RobotLength_m / 2, SwerveConstants.RobotWidth_m / 2);
@@ -339,6 +346,33 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setDriveTranslationTolerance(double tolerance) {
     m_driveToTargetTolerance = tolerance;
+  }
+
+  public void updatePoseFromLimelights() {
+    Pose2d LLLeftPose = m_limelightLeft.getPose();
+    Pose2d LLRightPose = m_limelightRight.getPose();
+    if (LLLeftPose != null && LLRightPose != null){
+      // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
+      double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
+      double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
+      if (leftDistance < rightDistance){
+        resetPose(LLLeftPose);
+      }
+      else{
+        resetPose(LLRightPose);
+      }
+      
+    }
+    else if (LLRightPose != null){
+      // System.out.println(LLRightPose.toString()); 
+
+      resetPose(LLRightPose);
+    }
+    else if (LLLeftPose != null){
+      // System.out.println(LLLeftPose.toString()); 
+
+      resetPose(LLLeftPose);
+    }
   }
 }
 // “I love polyester.” -Kenny

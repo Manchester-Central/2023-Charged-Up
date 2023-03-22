@@ -18,7 +18,7 @@ import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriveToTarget extends CommandBase {
-  private SwerveDrive m_swerveDrive;
+  protected SwerveDrive m_swerveDrive;
   private Supplier<Pose2d> m_poseSupplier;
   private double m_translationTolerance;
 

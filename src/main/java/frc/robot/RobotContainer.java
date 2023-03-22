@@ -23,6 +23,7 @@ import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
+import frc.robot.commands.DriveToTargetWithLimelights;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.Grip;
@@ -58,9 +59,9 @@ import frc.robot.util.DriveDirection;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private SwerveDrive m_swerveDrive = new SwerveDrive();
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
+  private SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -96,7 +97,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));
     autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("xMode", (parsedCommand) -> new SwerveXMode(m_swerveDrive));
+    autoBuilder.registerCommand("driveWithLimelights", (parsedCommand) -> DriveToTargetWithLimelights.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("moveArm", (parsedCommand) -> MoveArm.createAutoCommand(parsedCommand, m_arm));
     autoBuilder.registerCommand("driveAndMoveArm", (parsedCommand) -> AutoComboCommands.driveAndMoveArm(parsedCommand, m_swerveDrive, m_arm));
     autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
@@ -108,35 +112,8 @@ public class RobotContainer {
 
   
   public void robotPeriodic(){
-    // Pose2d LLLeftPose = m_limelightLeft.getPose();
-    // Pose2d LLRightPose = m_limelightRight.getPose();
-    // if (LLLeftPose != null && LLRightPose != null){
-    //   // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
-    //   double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
-    //   double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
-    //   if (leftDistance < rightDistance){
-    //     m_swerveDrive.resetPose(LLLeftPose);
-    //   }
-    //   else{
-    //     m_swerveDrive.resetPose(LLRightPose);
-    //   }
-      
-    // }
-    // else if (LLRightPose != null){
-    //   // System.out.println(LLRightPose.toString()); 
-
-    //   m_swerveDrive.resetPose(LLRightPose);
-    // }
-    // else if (LLLeftPose != null){
-    //   // System.out.println(LLLeftPose.toString()); 
-
-    //   m_swerveDrive.resetPose(LLLeftPose);
-    // }
-
     SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
     SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
-
-
   }
 
   public void delayedRobotInit(){

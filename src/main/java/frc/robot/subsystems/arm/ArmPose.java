@@ -89,13 +89,52 @@ public class ArmPose {
         33, 
         CoordinateType.ArmRelative
     );
-    public static final ArmPose IntakeSingleStation = addStaticPose(
-        "IntakeSingleStation", 
+    public static final ArmPose IntakeSingleStationCube = addStaticPose(
+        "IntakeSingleStationCube", 
         -101.2, 
         ExtenderConstants.MinimumPositionMeters, 
         215.5, 
         CoordinateType.ArmRelative
     );
+    public static final ArmPose IntakeSingleStationCone = addStaticPose(
+        "IntakeSingleStationCone", 
+        -101.2, 
+        ExtenderConstants.MinimumPositionMeters, 
+        220.0, 
+        CoordinateType.ArmRelative
+    );
+
+    public static final ArmPose IntakeDoubleStationFrontCone = addStaticPose(
+        "IntakeDoubleStationFrontCone", 
+        -2.43,
+        0.823, 
+        350.01, 
+        CoordinateType.ArmRelative
+    ); 
+
+    public static final ArmPose IntakeDoubleStationFrontCube = addStaticPose(
+        "IntakeDoubleStationFrontCube", 
+        8.82,
+        0.818, 
+        317.51, 
+        CoordinateType.ArmRelative
+    ); 
+
+    public static final ArmPose IntakeDoubleStationBackCone = addStaticPose(
+        "IntakeDoubleStationBackCone", 
+        -186.13,
+        0.82, 
+        33.8, 
+        CoordinateType.ArmRelative
+    ); 
+
+    public static final ArmPose IntakeDoubleStationBackCube = addStaticPose(
+        "IntakeDoubleStationBackCube", 
+        168.30,
+        0.874, 
+        45, 
+        CoordinateType.ArmRelative
+    ); 
 
     // Low pose
     public static final ArmPose LowScorePose = addStaticPose(
@@ -105,6 +144,14 @@ public class ArmPose {
         105, 
         CoordinateType.ArmRelative
     );
+
+    public static final ArmPose LowScorePoseBack = addStaticPose(
+        "LowScorePoseBack", 
+        -99, 
+        ExtenderConstants.MinimumPositionMeters, 
+        255, 
+        CoordinateType.ArmRelative
+    ); // TODO find correct values
 
     //Cube Poses
     public static final ArmPose CubeMidPose = addStaticPose(
@@ -140,20 +187,6 @@ public class ArmPose {
     );
 
     // Pick stations
-    public static final ArmPose DoublePickPose = addStaticPose(
-        "DoublePickPose", 
-        -7, 
-        0.8, 
-        10, 
-        CoordinateType.ArmRelative
-    );
-    public static final ArmPose SinglePickPose = addStaticPose(
-        "SinglePickPose", 
-        -50, 
-        0.8, 
-        90, 
-        CoordinateType.ArmRelative
-    );
 
     //Test Poses
     public static final ArmPose TopRightTestPose = addStaticPose(

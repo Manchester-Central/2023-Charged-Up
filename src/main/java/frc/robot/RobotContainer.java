@@ -194,17 +194,19 @@ public class RobotContainer {
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(lowPose);
     m_operator.povDown().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(lowPose);
     
-    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePoseBack));
+    m_operator.povRight().whileTrue(new MoveArm(m_arm, ArmPose.LowScorePoseBack).repeatedly());
 
     // Intake Controls
-    m_operator.leftBumper().whileTrue(new MoveArm(m_arm, ArmPose.IntakeDoubleStation));
+    m_operator.leftBumper().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(new MoveArm(m_arm, ArmPose.IntakeDoubleStationBackCone).repeatedly().alongWith(new Grip(m_gripper)));
+    m_operator.leftBumper().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.IntakeDoubleStationBackCube).repeatedly().alongWith(new Grip(m_gripper)));
     m_operator.leftTrigger().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(
       new MoveArm(m_arm, ArmPose.IntakeConeVerticalBack).repeatedly()
       .alongWith(new Grip(m_gripper)));
     m_operator.leftTrigger().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.IntakeCubeBack).repeatedly().alongWith(new Grip(m_gripper)));
 
     
-    m_operator.rightBumper().whileTrue(new MoveArm(m_arm, ArmPose.IntakeSingleStation));
+    m_operator.rightBumper().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(new MoveArm(m_arm, ArmPose.IntakeSingleStationCone).repeatedly().alongWith(new Grip(m_gripper)));
+    m_operator.rightBumper().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.IntakeSingleStationCube).repeatedly().alongWith(new Grip(m_gripper)));
     m_operator.rightTrigger().and(()-> m_currentArmMode == ArmMode.Cone).whileTrue(new MoveArm(m_arm, ArmPose.IntakeConeTippedBack).repeatedly().alongWith(new Grip(m_gripper)));
     m_operator.rightTrigger().and(()-> m_currentArmMode == ArmMode.Cube).whileTrue(new MoveArm(m_arm, ArmPose.IntakeCubeBack).repeatedly().alongWith(new Grip(m_gripper)));
     

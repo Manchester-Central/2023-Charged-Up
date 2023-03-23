@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class DashboardNumber {
-    public static boolean Enabled = false;
+    public static boolean Enabled = true;
     private static Set<String> ChangedValues = new HashSet<>();
     private static List<DashboardNumber> AllUpdaters = new ArrayList<>();
 

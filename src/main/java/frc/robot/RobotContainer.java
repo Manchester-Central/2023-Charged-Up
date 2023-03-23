@@ -144,6 +144,7 @@ public class RobotContainer {
     Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
     var slowModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.4, ()-> SwerveDrive.SpeedModifier = 1);
+    var creepModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.2, ()-> SwerveDrive.SpeedModifier = 1);
 
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));
@@ -156,11 +157,11 @@ public class RobotContainer {
     m_driver.leftBumper().whileTrue(new SwerveXMode(m_swerveDrive));
     m_driver.leftTrigger().whileTrue(slowModeCommand);
 
-    m_driver.rightBumper().whileTrue(slowModeCommand);
+    m_driver.rightBumper().whileTrue(creepModeCommand);
     m_driver.rightTrigger().whileTrue(new RunCommand(() -> m_gripper.setGripperMode(GripperMode.unGrip), m_gripper));
 
     m_driver.leftStick().whileTrue(slowModeCommand);
-    m_driver.rightStick().whileTrue(slowModeCommand);
+    m_driver.rightStick().whileTrue(creepModeCommand);
 
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Towards, 1.0));
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_swerveDrive, m_driver, DriveDirection.Right, 1.0));
@@ -246,16 +247,21 @@ public class RobotContainer {
     // m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
     // m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
     // m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
-    m_tester.a().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper));
-    m_tester.b().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper));
-    m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
-    m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
-    m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
-    m_tester.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
-    m_tester.rightBumper().whileTrue(
-      new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
-      .andThen(new SwerveXMode(m_swerveDrive))
-    );
+    // m_tester.a().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper));
+    // m_tester.b().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper));
+    // m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
+    // m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
+    // m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
+    // m_tester.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
+    // m_tester.rightBumper().whileTrue(
+    //   new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
+    //   .andThen(new SwerveXMode(m_swerveDrive))
+    // );
+    m_tester.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
+    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
+    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
+    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(-1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
+    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
 
   }
 

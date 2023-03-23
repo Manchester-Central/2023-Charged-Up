@@ -214,7 +214,7 @@ public class RobotContainer {
   }
 
   private Command scorePrep(ArmPose pose) {
-    return new MoveArm(m_arm, ArmPose.LowScorePoseBack).repeatedly();
+    return new MoveArm(m_arm, pose).repeatedly();
   }
 
   private Command intake(ArmPose pose) {

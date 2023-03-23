@@ -18,6 +18,7 @@ public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    super.initialize();
     m_swerveDrive.resetPids();
   }
 

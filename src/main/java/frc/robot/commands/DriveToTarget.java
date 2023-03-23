@@ -33,11 +33,7 @@ public class DriveToTarget extends CommandBase {
 
     /** Creates a new DriveToTarget. */
   public DriveToTarget(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_swerveDrive = swerveDrive;
-    m_poseSupplier = () -> pose;
-    m_translationTolerance = translationTolerance;
-    addRequirements(m_swerveDrive);
+    this(swerveDrive, () -> pose, translationTolerance);
   }
 
   public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
@@ -64,6 +60,7 @@ public class DriveToTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_swerveDrive.driveToPositionInit();
     m_swerveDrive.resetPids();
     Pose2d pose = m_poseSupplier.get();
     if (pose == null) {

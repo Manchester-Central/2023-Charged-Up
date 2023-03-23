@@ -106,8 +106,8 @@ public class SwerveDrive extends SubsystemBase {
     resetPose(new Pose2d(8, 4, Rotation2d.fromDegrees(0)));
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
-    m_XPid = new PIDController(1, 0, 0);
-    m_YPid = new PIDController(1, 0, 0);
+    m_XPid = new PIDController(0.6, 0.05, 0.1);
+    m_YPid = new PIDController(0.6, 0.05, 0.1);
     m_AnglePid = new PIDController(0.8, 0.01, 0.08);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
     m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
@@ -130,6 +130,20 @@ public class SwerveDrive extends SubsystemBase {
     double angleD = 0;
     m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle", false, angleP, angleI, angleD, this::updateAnglePIDConstants);
 
+  }
+
+  public void driverModeInit() {
+    m_frontLeft.driverModeInit();
+    m_frontRight.driverModeInit();
+    m_backLeft.driverModeInit();
+    m_backRight.driverModeInit();
+  }
+
+  public void driveToPositionInit() {
+    m_frontLeft.driveToPositionInit();
+    m_frontRight.driveToPositionInit();
+    m_backLeft.driveToPositionInit();
+    m_backRight.driveToPositionInit();
   }
 
   private SwerveModulePosition[] getModulePositions() {
@@ -160,9 +174,13 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {
+    SmartDashboard.putNumber("Swerve/x_input", chassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Swerve/y_input", chassisSpeeds.vyMetersPerSecond);
     chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
     chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
     chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps * SpeedModifier;
+    SmartDashboard.putNumber("Swerve/x_output", chassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Swerve/y_output", chassisSpeeds.vyMetersPerSecond);
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
       stop();
       return;

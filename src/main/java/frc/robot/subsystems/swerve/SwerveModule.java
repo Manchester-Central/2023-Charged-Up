@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.DashboardNumber;
 
 public abstract class SwerveModule {
   private Translation2d m_translation;
@@ -29,6 +30,9 @@ public abstract class SwerveModule {
   private WPI_TalonFX m_velocity;
   private double initialEncoder;
   private String m_name;
+
+  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
   public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
@@ -47,9 +51,17 @@ public abstract class SwerveModule {
     m_velocity.configVelocityMeasurementWindow(32);
     m_angle.setInverted(TalonFXInvertType.Clockwise);
 
-    m_velocity.configClosedloopRamp(1);
-    m_angle.configClosedloopRamp(0.25);
+    m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
+    m_angle.configClosedloopRamp(0);
 
+  }
+
+  public void driverModeInit() {
+    m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
+  }
+
+  public void driveToPositionInit() {
+    m_velocity.configClosedloopRamp(VelocityRampRateAuto.get());
   }
 
   public abstract double getAbsoluteAngle();

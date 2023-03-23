@@ -56,6 +56,11 @@ public abstract class BaseJoystickDrive extends CommandBase {
     addRequirements(swerveDrive);
   }
 
+  @Override
+  public void initialize() {
+    m_swerveDrive.driverModeInit();
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

@@ -216,21 +216,13 @@ public class RobotContainer {
     m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
   }
 
-  private ArmPose armPoseTarget;
-
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose
     ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
     DrivePose.DrivePoses.forEach((String poseName, DrivePose pose) -> {
-      SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, Constants.DriveToTargetTolerance));
-      SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, Constants.DriveToTargetTolerance));
+      SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
+      SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
     });
-    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("ArmTarget/" + poseName, new InstantCommand(() -> {
-      armPoseTarget = pose;
-      SmartDashboard.putNumber("PoseTest/povUp/Shoulder", pose.shoulderAngle.getDegrees());
-      SmartDashboard.putNumber("PoseTest/povUp/Extender", pose.extenderPos);
-      SmartDashboard.putNumber("PoseTest/povUp/Wrist", pose.wristAngle.getDegrees());
-    })));
   }
 
   private void testCommands() {
@@ -258,10 +250,10 @@ public class RobotContainer {
     //   .andThen(new SwerveXMode(m_swerveDrive))
     // );
     m_tester.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
-    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
-    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
-    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(-1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
-    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance).repeatedly());
+    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
+    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
+    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(-1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
+    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
 
   }
 

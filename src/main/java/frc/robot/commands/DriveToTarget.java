@@ -4,46 +4,79 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import com.chaos131.auto.ParsedCommand;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.swerve.DrivePose;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriveToTarget extends CommandBase {
-  private SwerveDrive m_swerveDrive;
-  private double m_x;
-  private double m_y;
-  private Rotation2d m_angle;
+  protected SwerveDrive m_swerveDrive;
+  private Supplier<Pose2d> m_poseSupplier;
+  private double m_translationTolerance;
 
   /** Creates a new DriveToTarget. */
-  public DriveToTarget(SwerveDrive swerveDrive, double x, double y, Rotation2d angle) {
+  public DriveToTarget(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerveDrive = swerveDrive;
-    m_x = x;
-    m_y = y;
-    m_angle = angle;
+    m_poseSupplier = poseSupplier;
+    m_translationTolerance = translationTolerance;
     addRequirements(m_swerveDrive);
   }
 
-  public static DriveToTarget createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
-    double x_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("x"), 0.0);
-    double y_meters = AutoUtil.ParseDouble(parsedCommand.getArgument("y"), 0.0);
-    double angle_degrees = AutoUtil.ParseDouble(parsedCommand.getArgument("angle"), 0.0);
-    return new DriveToTarget(swerveDrive, x_meters, y_meters, Rotation2d.fromDegrees(angle_degrees));
+    /** Creates a new DriveToTarget. */
+  public DriveToTarget(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance) {
+    this(swerveDrive, () -> pose, translationTolerance);
+  }
+
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+    double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
+    Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
+    if(pose == null) {
+      return new InstantCommand();
+    }
+    return new DriveToTarget(swerveDrive, pose, translationTolerance);
+  }
+
+  public static DriveToTarget toClosestScoreTarget(SwerveDrive swerveDrive) {
+    return new DriveToTarget(swerveDrive, () -> {
+      var robotPose = swerveDrive.getPose();
+      var closestPose = DrivePose.getClosestPose(robotPose);
+      if (closestPose.getTranslation().getDistance(robotPose.getTranslation()) > 1) {
+        // If not close to a target, don't do anything
+        return null;
+      }
+      return closestPose;
+    }, Constants.DriveToTargetTolerance);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_swerveDrive.driveToPositionInit();
     m_swerveDrive.resetPids();
-    m_swerveDrive.setTarget(m_x, m_y, m_angle);
+    Pose2d pose = m_poseSupplier.get();
+    if (pose == null) {
+      return;
+    }
+    m_swerveDrive.setTarget(pose.getX(), pose.getY(), pose.getRotation());
+    m_swerveDrive.setDriveTranslationTolerance(m_translationTolerance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Pose2d pose = m_poseSupplier.get();
+    if (pose == null) {
+      return;
+    }
     m_swerveDrive.moveToTarget();
   }
 

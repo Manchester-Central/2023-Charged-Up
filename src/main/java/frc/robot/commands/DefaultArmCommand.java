@@ -4,16 +4,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import com.chaos131.gamepads.Gamepad;
 
-public class SwerveXMode extends CommandBase {
-  SwerveDrive m_swerveDrive;
-  /** Creates a new SwerveXMode. */
-  public SwerveXMode(SwerveDrive swerveDrive) {
-    m_swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
-    // Use addRequirements() here to declare subsystem dependencies.
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.Gripper.GripperMode;
+
+public class DefaultArmCommand extends CommandBase {
+  
+  private Arm m_arm;
+  private Gamepad m_tester;
+
+  /** Creates a new DefaultArmCommand. */
+  public DefaultArmCommand(Arm arm, Gamepad tester) {
+    m_arm = arm;
+    m_tester = tester;
+    addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
@@ -23,8 +31,10 @@ public class SwerveXMode extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.swerveXMode();
-
+    //m_arm.setGripperMode(GripperMode.hold);
+    // Gripper.customPower = m_tester.getRightY();
+    m_arm.setArmTarget(ArmPose.StowedPose);
+    // m_arm.maintain();
   }
 
   // Called once the command ends or is interrupted.

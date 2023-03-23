@@ -2,13 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import com.chaos131.pid.PIDUpdate;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
@@ -19,22 +20,30 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.util.DashboardNumber;
 
 public abstract class SwerveModule {
   private Translation2d m_translation;
   private double m_simdistance;
   private SwerveModuleState m_targetState;
-  private TalonFX m_angle;
-  private TalonFX m_velocity;
+  private WPI_TalonFX m_angle;
+  private WPI_TalonFX m_velocity;
   private double initialEncoder;
+  private String m_name;
+
+  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(Translation2d translation, int canIdAngle, int canIdVelocity) {
+  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
+    m_name = name;
     m_translation = translation;
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-    m_angle = new TalonFX(canIdAngle);
-    m_velocity = new TalonFX(canIdVelocity);
+    m_angle = new WPI_TalonFX(canIdAngle);
+    m_velocity = new WPI_TalonFX(canIdVelocity);
+    m_angle.configFactoryDefault();
+    m_velocity.configFactoryDefault();
     m_angle.configAllowableClosedloopError(0, degreesToEncoder(0.5));
     m_velocity.setNeutralMode(NeutralMode.Coast);
     m_angle.setNeutralMode(NeutralMode.Brake);
@@ -42,12 +51,24 @@ public abstract class SwerveModule {
     m_velocity.configVelocityMeasurementWindow(32);
     m_angle.setInverted(TalonFXInvertType.Clockwise);
 
+    m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
+    m_angle.configClosedloopRamp(0);
+
+  }
+
+  public void driverModeInit() {
+    m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
+  }
+
+  public void driveToPositionInit() {
+    m_velocity.configClosedloopRamp(VelocityRampRateAuto.get());
   }
 
   public abstract double getAbsoluteAngle();
   public abstract double getAngleEncoderRatio();
   public abstract double getVelocityEncoderRatio();
   public abstract double getWheelCircumference();
+  public abstract double getRawAbsoluteAngle();
 
   public void setTarget(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
@@ -96,6 +117,7 @@ public abstract class SwerveModule {
     m_velocity.config_kP(0, update.P);
     m_velocity.config_kI(0, update.I);
     m_velocity.config_kD(0, update.D);
+    m_velocity.config_kF(0, update.F);
   }
 
   public void UpdateAnglePIDConstants(PIDUpdate update) {
@@ -104,16 +126,20 @@ public abstract class SwerveModule {
     m_angle.config_kD(0, update.D);
   }
 
-  public void getModuleInfo(String name) {
-    SmartDashboard.putNumber("Swerve Module " + name + "/Angle", getModuleState().angle.getDegrees());
-    SmartDashboard.putNumber("Swerve Module " + name + "/Speed", getModuleState().speedMetersPerSecond);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderPosition", m_velocity.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AngleEncoder", m_angle.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Swerve Module " + name + "/Position", getPosition().distanceMeters);
-    SmartDashboard.putNumber("Swerve Module " + name + "/VelocityEncoderVelocity", m_velocity.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Swerve Module " + name + "/AbsoluteAngle", getAbsoluteAngle());
-    SmartDashboard.putNumber("Swerve Module " + name + "/InitialEncoder", initialEncoder);
-    SmartDashboard.putNumber("Swerve Module " + name + "/TargetSpeed", m_targetState.speedMetersPerSecond);
+  protected String getDSKey(String field) {
+    return "Swerve Module " + m_name + "/" + field;
+  }
+
+  public void getModuleInfo() {
+    SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
+    // SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
+    // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
+    // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
+    // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);
+    // SmartDashboard.putNumber(getDSKey("VelocityEncoderVelocity"), m_velocity.getSelectedSensorVelocity());
+    SmartDashboard.putNumber(getDSKey("AbsoluteAngle"), getAbsoluteAngle());
+    // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
+    // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
   }
 
   public double encoderToDegrees(double counts) {
@@ -150,9 +176,6 @@ public abstract class SwerveModule {
   public double meterPerSecondToVelocityUnit(double metersPerSecond){
     return distanceMetersToEncoders(metersPerSecond) / 10;
   }
-  
-
-
 
   public void recalibrate() {
     initialEncoder = degreesToEncoder(getAbsoluteAngle());
@@ -178,3 +201,4 @@ public abstract class SwerveModule {
 
 
 }
+//“If you don’t agree to focus, you’re going to the business team.” -Josh 2/21/2023

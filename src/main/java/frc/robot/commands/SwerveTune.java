@@ -4,16 +4,21 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
-public class SwerveXMode extends CommandBase {
-  SwerveDrive m_swerveDrive;
-  /** Creates a new SwerveXMode. */
-  public SwerveXMode(SwerveDrive swerveDrive) {
-    m_swerveDrive = swerveDrive;
-    addRequirements(swerveDrive);
+public class SwerveTune extends CommandBase {
+  /** Creates a new SwerveTune. */
+  private SwerveDrive m_swervedrive;
+  public SwerveTune(SwerveDrive swervedrive) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_swervedrive = swervedrive;
+    addRequirements(swervedrive);
+    SmartDashboard.putNumber("SwerveTune/Velocity", 0);
+    SmartDashboard.putNumber("SwerveTune/Angle", 0);
   }
 
   // Called when the command is initially scheduled.
@@ -23,8 +28,10 @@ public class SwerveXMode extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.swerveXMode();
-
+    double velocity = SmartDashboard.getNumber("SwerveTune/Velocity", 0); 
+    double angle = SmartDashboard.getNumber("SwerveTune/Angle", 0); 
+    var swerveModuleState = new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle));
+    m_swervedrive.debug_setSwerveModule(swerveModuleState);
   }
 
   // Called once the command ends or is interrupted.

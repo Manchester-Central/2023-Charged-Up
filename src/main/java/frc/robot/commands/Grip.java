@@ -5,21 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.Gripper.GripperMode;
 
-public class RecalibrateModules extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
-  /** Creates a new RecalibrateModules. */
-  public RecalibrateModules(SwerveDrive swerveDrive) {
-    m_SwerveDrive = swerveDrive;
+public class Grip extends CommandBase {
+  Gripper m_Gripper;
+  /** Creates a new Grip. */
+  public Grip(Gripper gripper) {
+    m_Gripper = gripper;
+    addRequirements(gripper);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_SwerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_SwerveDrive.recalibrateModules();
+    m_Gripper.setGripperMode(GripperMode.grip);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,11 +29,13 @@ public class RecalibrateModules extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_Gripper.setGripperMode(GripperMode.stop);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

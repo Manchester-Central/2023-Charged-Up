@@ -4,51 +4,44 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import com.chaos131.auto.ParsedCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
-public class ResetPose extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
-  private Pose2d m_pose;
-  /** Creates a new ResetPose. */
-  public ResetPose(SwerveDrive swerveDrive, Pose2d pose) {
-    m_SwerveDrive = swerveDrive;
-    addRequirements(m_SwerveDrive);
-    m_pose = pose;
-    // Use addRequirements() here to declare subsystem dependencies.
+public class DriveToTargetWithLimelights extends DriveToTarget {
+
+    /** Creates a new DriveToTarget. */
+  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
+    super(swerveDrive, poseSupplier, translationTolerance);
   }
-  
-  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerve){
+
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+    double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
     if(pose == null) {
       return new InstantCommand();
     }
-    return new ResetPose(swerve, pose);
+    return new DriveToTargetWithLimelights(swerveDrive, () -> pose, translationTolerance);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_SwerveDrive.resetPose(m_pose);
+    m_swerveDrive.updatePoseFromLimelights();
+    super.initialize();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
+  public void execute() {
+    m_swerveDrive.updatePoseFromLimelights();
+    super.execute();
   }
+
 }

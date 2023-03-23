@@ -6,44 +6,29 @@ package frc.robot.commands;
 
 import com.chaos131.gamepads.Gamepad;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.Robot;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
-public class RobotRelativeDrive extends CommandBase {
-  private SwerveDrive m_swerveDrive;
-  private Gamepad m_driverController;
+public class RobotRelativeDrive extends BaseJoystickDrive {
   /** Creates a new RobotRelativeDrive. */
   public RobotRelativeDrive(SwerveDrive swerveDrive, Gamepad driverController) {
-    m_swerveDrive = swerveDrive;
-    m_driverController = driverController;
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerveDrive);
+    super(swerveDrive, driverController);
+    Robot.logManager.addNumber("Driver/left_x", () -> driverController.getLeftX());
+    Robot.logManager.addNumber("Driver/left_y", () -> driverController.getLeftY());
+    Robot.logManager.addNumber("Driver/right_x", () -> driverController.getRightX());
+    Robot.logManager.addNumber("Driver/right_y", () -> driverController.getRightY());
+    Robot.logManager.addNumber("Driver/slewed_left_x", () -> m_slewedLeftX.get());
+    Robot.logManager.addNumber("Driver/slewed_left_y", () -> m_slewedLeftY.get());
+    Robot.logManager.addNumber("Driver/slewed_right_x", () -> m_slewedRightX.get());
+    Robot.logManager.addNumber("Driver/slewed_right_y", () -> m_slewedRightY.get());
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() { }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = m_driverController.getLeftY();
-    double yMetersPerSecond = -m_driverController.getLeftX();
+    double xMetersPerSecond = -m_slewedLeftY.get();
+    double yMetersPerSecond = -m_slewedLeftX.get();
     double omegaRadiansPerSecond = -m_driverController.getRightX();
     m_swerveDrive.moveRobotRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_swerveDrive.stop();
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }

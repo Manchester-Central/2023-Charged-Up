@@ -4,22 +4,30 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import com.chaos131.auto.ParsedCommand;
 
-public class RecalibrateModules extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
-  /** Creates a new RecalibrateModules. */
-  public RecalibrateModules(SwerveDrive swerveDrive) {
-    m_SwerveDrive = swerveDrive;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.Gripper.GripperMode;
+
+public class UnGrip extends CommandBase {
+  Gripper m_gripper;
+  /** Creates a new UnGrip. */
+  public UnGrip(Gripper gripper) {
+    m_gripper = gripper;
+    addRequirements(gripper);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_SwerveDrive);
+  }
+
+  public static Command createAutoCommand(ParsedCommand parsedCommand, Gripper pGripper) {
+    return new UnGrip(pGripper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_SwerveDrive.recalibrateModules();
+    m_gripper.setGripperMode(GripperMode.unGrip);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,11 +36,13 @@ public class RecalibrateModules extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_gripper.setGripperMode(GripperMode.stop);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["resetPosition?x=8&y=4", "driveToTarget?x=12&y=6&angle=90", "driveToTarget?x=0&y=1&angle=185"],
+    "value": ["resetPosition?pose=Score9", "driveToPose?pose=Score9", "score?pose=ConeHighPose", "driveAndMoveArm?drivePose=IntakePrep4&armPose=IntakeBack", "driveToPose?pose=IntakeSweep4", "driveAndMoveArm?drivePose=Score8&armPose=CubeHighPose", "score?pose=CubeHighPose", "driveAndMoveArm?drivePose=BalancePrep&armPose=Stowed", "driveToPose?pose=Balance"],
     "properties": {
       "persistent": true
     }

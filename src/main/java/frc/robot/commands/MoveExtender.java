@@ -5,34 +5,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.arm.Arm;
 
-public class RecalibrateModules extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
-  /** Creates a new RecalibrateModules. */
-  public RecalibrateModules(SwerveDrive swerveDrive) {
-    m_SwerveDrive = swerveDrive;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_SwerveDrive);
+public class MoveExtender extends CommandBase {
+  private Arm m_arm;
+  private double m_extenderMeters;
+  
+  /** Creates a new MoveArm. */
+  public MoveExtender(Arm arm, double extenderLengthMeters) {
+    m_arm = arm;
+    m_extenderMeters = extenderLengthMeters;
+    addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_SwerveDrive.recalibrateModules();
+    m_arm.setExtenderTargetManual(m_extenderMeters);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_arm.setExtenderTargetManual(m_extenderMeters);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return m_arm.reachedTarget();
   }
 }

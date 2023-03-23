@@ -262,10 +262,10 @@ public class SwerveDrive extends SubsystemBase {
     m_AnglePid.setSetpoint(angle.getRadians());
   }
 
-  public void moveToTarget() {
+  public void moveToTarget(double maxTranslationSpeedPercent) {
     Pose2d pose = m_odometry.getPoseMeters();
-    double x = m_XPid.calculate(pose.getX());
-    double y = m_YPid.calculate(pose.getY());
+    double x = MathUtil.clamp(m_XPid.calculate(pose.getX()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
+    double y = MathUtil.clamp(m_YPid.calculate(pose.getY()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
     double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
     moveFieldRelativeForPID(x, y, angle);
   }

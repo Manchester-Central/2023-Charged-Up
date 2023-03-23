@@ -21,28 +21,31 @@ public class DriveToTarget extends CommandBase {
   protected SwerveDrive m_swerveDrive;
   private Supplier<Pose2d> m_poseSupplier;
   private double m_translationTolerance;
+  private double m_maxPercentSpeed;
 
   /** Creates a new DriveToTarget. */
-  public DriveToTarget(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
+  public DriveToTarget(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerveDrive = swerveDrive;
     m_poseSupplier = poseSupplier;
     m_translationTolerance = translationTolerance;
+    m_maxPercentSpeed = maxPercentSpeed;
     addRequirements(m_swerveDrive);
   }
 
     /** Creates a new DriveToTarget. */
-  public DriveToTarget(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance) {
-    this(swerveDrive, () -> pose, translationTolerance);
+  public DriveToTarget(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance, double maxPercentSpeed) {
+    this(swerveDrive, () -> pose, translationTolerance, maxPercentSpeed);
   }
 
   public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
     double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
+    double maxPercentSpeed = AutoUtil.getMaxPercentSpeed(parsedCommand);
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
     if(pose == null) {
       return new InstantCommand();
     }
-    return new DriveToTarget(swerveDrive, pose, translationTolerance);
+    return new DriveToTarget(swerveDrive, pose, translationTolerance, maxPercentSpeed);
   }
 
   public static DriveToTarget toClosestScoreTarget(SwerveDrive swerveDrive) {
@@ -54,7 +57,7 @@ public class DriveToTarget extends CommandBase {
         return null;
       }
       return closestPose;
-    }, Constants.DriveToTargetTolerance);
+    }, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent);
   }
 
   // Called when the command is initially scheduled.
@@ -77,7 +80,7 @@ public class DriveToTarget extends CommandBase {
     if (pose == null) {
       return;
     }
-    m_swerveDrive.moveToTarget();
+    m_swerveDrive.moveToTarget(m_maxPercentSpeed);
   }
 
   // Called once the command ends or is interrupted.

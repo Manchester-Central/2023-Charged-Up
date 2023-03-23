@@ -17,17 +17,18 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class DriveToTargetWithLimelights extends DriveToTarget {
 
     /** Creates a new DriveToTarget. */
-  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance) {
-    super(swerveDrive, poseSupplier, translationTolerance);
+  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
+    super(swerveDrive, poseSupplier, translationTolerance, maxPercentSpeed);
   }
 
   public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
     double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
+    double maxPercentSpeed = AutoUtil.getMaxPercentSpeed(parsedCommand);
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
     if(pose == null) {
       return new InstantCommand();
     }
-    return new DriveToTargetWithLimelights(swerveDrive, () -> pose, translationTolerance);
+    return new DriveToTargetWithLimelights(swerveDrive, () -> pose, translationTolerance, maxPercentSpeed);
   }
 
   // Called when the command is initially scheduled.

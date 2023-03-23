@@ -25,6 +25,14 @@ public class AutoUtil {
     public static double getTranslationTolerance(ParsedCommand parsedCommand) {
         return AutoUtil.ParseDouble(parsedCommand.getArgument("translationTolerance"), Constants.DriveToTargetTolerance);
     }
+    
+    /**
+     * Gets the mac percent speed from the auto script step
+     * @param parsedCommand the auto script step
+     */
+    public static double getMaxPercentSpeed(ParsedCommand parsedCommand) {
+        return AutoUtil.ParseDouble(parsedCommand.getArgument("maxPercentSpeed"), Constants.MaxTranslationPIDSpeedPercent);
+    }
 
     /**
      * Gets the drive pose from the auto script step (if pose doesn't exist, it returns null)

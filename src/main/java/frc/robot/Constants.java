@@ -62,6 +62,7 @@ public final class Constants {
   }
 
   public static final double UpdateFrequency_Hz = 50;
+  public static final double MaxTranslationPIDSpeedPercent = 1.0;
   public static final double DriveToTargetTolerance = 0.03;
   public static final double AnglePIDTolerance = 3.0;
 

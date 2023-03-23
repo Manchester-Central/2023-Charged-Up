@@ -26,18 +26,8 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class AutoComboCommands {
   
   public static Command driveAndMoveArm(ParsedCommand parsedCommand, SwerveDrive swerveDrive, Arm arm) {
-    String drivePoseName = parsedCommand.getArgument("drivePose");
-    DrivePose drivePose = drivePoseName == null ? null : DrivePose.DrivePoses.get(drivePoseName);
-
-    String armPoseName = parsedCommand.getArgument("armPose");
-    ArmPose armPose = armPoseName == null ? null : ArmPose.ArmPoses.get(armPoseName);
-
-    if(armPose == null || drivePose == null) {
-      return new InstantCommand();
-    }
-
-    var driveCommand = new DriveToTarget(swerveDrive, drivePose.getCurrentAlliancePose(), Constants.DriveToTargetTolerance);
-    var armCommand = new MoveArm(arm, armPose);
+    var driveCommand = DriveToTarget.createAutoCommand(parsedCommand, swerveDrive);
+    var armCommand = MoveArm.createAutoCommand(parsedCommand, arm);
     return driveCommand.alongWith(armCommand);
   }
 

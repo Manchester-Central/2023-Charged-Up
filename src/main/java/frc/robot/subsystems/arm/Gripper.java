@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.util.DashboardNumber;
 // i got the new forgis on the g
@@ -24,7 +25,7 @@ public class Gripper extends SubsystemBase {
 
         private double m_power;
         GripperMode(double power){
-            new DashboardNumber("gripper/speed/" + this.name(), power, (newPower) -> {
+            new DashboardNumber("Gripper/speed/" + this.name(), power, DebugConstants.EnableGripperDebug, (newPower) -> {
                 m_power = newPower;
             });
 
@@ -44,27 +45,28 @@ public class Gripper extends SubsystemBase {
         m_sparkMax = new CANSparkMax(GripperConstants.CanIdGripper, MotorType.kBrushless);
         m_sparkMax.setInverted(false);
         m_sparkMax.setOpenLoopRampRate(0.05);
-        new DashboardNumber("gripper/stallLimit", m_stallLimit, (newValue) -> {
+        new DashboardNumber("Gripper/stallLimit", m_stallLimit, DebugConstants.EnableGripperDebug, (newValue) -> {
             int stallLimit = (int)((double) newValue);
             updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
         });
-        new DashboardNumber("gripper/freeLimit", m_freeLimit, (newValue) -> {
+        new DashboardNumber("Gripper/freeLimit", m_freeLimit, DebugConstants.EnableGripperDebug, (newValue) -> {
             int freeLimit = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
         });
-        new DashboardNumber("gripper/limitRPM", m_limitRPM, (newValue) -> {
+        new DashboardNumber("Gripper/limitRPM", m_limitRPM, DebugConstants.EnableGripperDebug, (newValue) -> {
             int limitRPM = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
         });
         m_sparkMax.burnFlash();
 
-        Robot.logManager.addNumber("Gripper/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
-        Robot.logManager.addNumber("Gripper/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
-        Robot.logManager.addNumber("Gripper/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
-        Robot.logManager.addBoolean("Gripper/HasPiece", () -> hasPiece());
+        Robot.logManager.addNumber("Gripper/AppliedOutput", DebugConstants.EnableGripperDebug, () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Gripper/OutputCurrent", DebugConstants.EnableGripperDebug, () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Gripper/MotorTemperature_C", DebugConstants.EnableGripperDebug, () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addBoolean("Gripper/HasPiece", DebugConstants.EnableGripperDebug, () -> hasPiece());
+        Robot.logManager.addString("Gripper/Mode", DebugConstants.EnableGripperDebug, () -> getGripperMode().name());
     }
 
-    private boolean hasPiece(){
+    public boolean hasPiece(){
         return m_sparkMax.getOutputCurrent() > m_stallLimit - 5;
     }
 

@@ -19,6 +19,16 @@ import com.fazecast.jSerialComm.SerialPort;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final double UpdateFrequency_Hz = 50;
+
+  public static class DebugConstants {
+    public static final boolean IsDebugMode = false;
+    public static final boolean EnableDriveDebug = IsDebugMode;
+    public static final boolean EnableArmDebug = IsDebugMode;
+    public static final boolean EnableGripperDebug = IsDebugMode;
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
@@ -26,6 +36,9 @@ public final class Constants {
   }
 
   public static class SwerveConstants {
+    public static final double MaxTranslationPIDSpeedPercent = 1.0;
+    public static final double DriveToTargetTolerance = 0.03;
+    public static final double AnglePIDTolerance = 3.0;
     public static final double RobotWidth_in = 21.25;
     public static final double RobotLength_in = 22.25;
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
@@ -60,11 +73,6 @@ public final class Constants {
     public static final double FieldWidth_m = 8.02;
     public static final double FieldLength_m = 16.54;
   }
-
-  public static final double UpdateFrequency_Hz = 50;
-  public static final double MaxTranslationPIDSpeedPercent = 1.0;
-  public static final double DriveToTargetTolerance = 0.03;
-  public static final double AnglePIDTolerance = 3.0;
 
   public static class ArmConstants{
     public static class ShoulderConstants{

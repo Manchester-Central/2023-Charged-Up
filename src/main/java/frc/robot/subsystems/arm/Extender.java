@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.util.DashboardNumber;
@@ -36,38 +37,39 @@ public class Extender {
         m_sparkMax = new CANSparkMax(ExtenderConstants.CanIdExtender, MotorType.kBrushless);
         m_sparkMax.setInverted(true);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
-        m_pidTuner = new PIDTuner("ExtenderPID", true, 80, 0, 0, this::tunePID);
+        m_pidTuner = new PIDTuner("Extender/PID_Tuner", DebugConstants.EnableArmDebug, 80, 0, 0, this::tunePID);
         m_linearPot = m_sparkMax.getAnalog(Mode.kAbsolute);
         m_linearPot.setPositionConversionFactor(ExtenderConstants.LinearPotConversionFactor);
-        new DashboardNumber("Extender/EncoderConversionFactor", ExtenderConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
+        new DashboardNumber("Extender/EncoderConversionFactor", ExtenderConstants.SparkMaxEncoderConversionFactor, DebugConstants.EnableArmDebug, (newConversionFactor) -> {
             m_sparkMax.getEncoder().setPositionConversionFactor(newConversionFactor);
             recalibrateSensors();
         });
         m_SafetyZoneHelper = new SafetyZoneHelper(ExtenderConstants.MinimumPositionMeters, ExtenderConstants.MaximumPositionMeters);
         // m_sparkMax.setOpenLoopRampRate(ExtenderConstants.RampUpRate);
         // m_sparkMax.setClosedLoopRampRate(ExtenderConstants.RampUpRate);
-        new DashboardNumber("Extender/RampUprate", ExtenderConstants.RampUpRate, (newValue) -> {
+        new DashboardNumber("Extender/RampUprate", ExtenderConstants.RampUpRate, DebugConstants.EnableArmDebug, (newValue) -> {
             m_sparkMax.setOpenLoopRampRate(newValue);
             m_sparkMax.setClosedLoopRampRate(newValue);
         });
         m_sparkMax.getPIDController().setOutputRange(-ExtenderConstants.MaxPIDOutput, ExtenderConstants.MaxPIDOutput);
-        new DashboardNumber("extender/stallLimit", m_stallLimit, (newValue) -> {
+        new DashboardNumber("Extender/stallLimit", m_stallLimit, DebugConstants.EnableArmDebug, (newValue) -> {
             int stallLimit = (int)((double) newValue);
             updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
         });
-        new DashboardNumber("extender/freeLimit", m_freeLimit, (newValue) -> {
+        new DashboardNumber("Extender/freeLimit", m_freeLimit, DebugConstants.EnableArmDebug, (newValue) -> {
             int freeLimit = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
         });
-        new DashboardNumber("extender/limitRPM", m_limitRPM, (newValue) -> {
+        new DashboardNumber("Extender/limitRPM", m_limitRPM, DebugConstants.EnableArmDebug, (newValue) -> {
             int limitRPM = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
         });
         m_sparkMax.burnFlash();
-        Robot.logManager.addNumber("Extender/SparkMaxMeters", () -> m_sparkMax.getEncoder().getPosition());
-        Robot.logManager.addNumber("Extender/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
-        Robot.logManager.addNumber("Extender/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
-        Robot.logManager.addNumber("Extender/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Extender/Extension_m", DebugConstants.EnableArmDebug, () -> getPositionMeters());
+        Robot.logManager.addNumber("Extender/SparkMaxMeters", DebugConstants.EnableArmDebug, () -> m_sparkMax.getEncoder().getPosition());
+        Robot.logManager.addNumber("Extender/AppliedOutput", DebugConstants.EnableArmDebug, () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Extender/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addNumber("Extender/OutputCurrent", DebugConstants.EnableArmDebug, () -> m_sparkMax.getOutputCurrent());
 
 
     }

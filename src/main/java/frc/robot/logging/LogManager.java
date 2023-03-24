@@ -13,46 +13,44 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 
 /** Manages the logs recorded into the .csv file, stored on a flash drive on the robot*/
 public class LogManager {
-    private boolean m_willLogShuffleBoard;
     private ShuffleboardTab m_shuffleboardTab;
     private List<String> m_headers = new ArrayList<String>();
     private Map<String, Supplier<String>> m_suppliers = new HashMap<String, Supplier<String>>();
     private LoggingThread m_loggingThread;
 
-    public LogManager(boolean willLogShuffleBoard) {
+    public LogManager() {
         m_loggingThread = new LoggingThread();
         m_shuffleboardTab = Shuffleboard.getTab("Logging");
-        m_willLogShuffleBoard = willLogShuffleBoard;
-        addNumber("timeMs", () -> Robot.getCurrentTimeMs());
+        addNumber("timeMs", DebugConstants.IsDebugMode, () -> Robot.getCurrentTimeMs());
     }
 
-    public void addBoolean(String title, BooleanSupplier valueSupplier) {
+    public void addBoolean(String title, boolean willLogShuffleboard, BooleanSupplier valueSupplier) {
         m_headers.add(title);
         m_suppliers.put(title, () -> String.valueOf(valueSupplier.getAsBoolean()));
-        if (m_willLogShuffleBoard) {
+        if (willLogShuffleboard) {
             m_shuffleboardTab.addBoolean(title, valueSupplier);
         }
     }
 
-    public void addNumber(String title, DoubleSupplier valueSupplier) {
+    public void addNumber(String title, boolean willLogShuffleboard, DoubleSupplier valueSupplier) {
         m_headers.add(title);
         m_suppliers.put(title, () -> String.valueOf(valueSupplier.getAsDouble()));
-        if (m_willLogShuffleBoard) {
+        if (willLogShuffleboard) {
             m_shuffleboardTab.addNumber(title, valueSupplier);
         }
     }
 
-    public void addString(String title, Supplier<String> valueSupplier) {
+    public void addString(String title, boolean willLogShuffleboard, Supplier<String> valueSupplier) {
         m_headers.add(title);
         m_suppliers.put(title, valueSupplier);
-        if (m_willLogShuffleBoard) {
+        if (willLogShuffleboard) {
             m_shuffleboardTab.addString(title, valueSupplier);
         }
     }

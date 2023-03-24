@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
@@ -25,16 +26,11 @@ public class Arm extends SubsystemBase {
     m_extender = new Extender();
     m_wrist = new Wrist();
     m_gripper = gripper;
+    Robot.logManager.addBoolean("Arm/AtTarget", DebugConstants.EnableArmDebug, () -> reachedTarget());
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm/ShoulderRotation", m_shoulder.getRotation().getDegrees());
-    SmartDashboard.putNumber("Arm/ExtenderPosition", m_extender.getPositionMeters());
-    SmartDashboard.putNumber("Arm/WristRotation", m_wrist.getRotation().getDegrees());
-    SmartDashboard.putString("Arm/Grippermode", m_gripper.getGripperMode().name());
-    SmartDashboard.putBoolean("Arm/AtTarget", reachedTarget());
-    SmartDashboard.putNumber("Arm/ShoulderDegreesFromStowed", getShoulderDegreesFromStowed());
     m_shoulder.periodic(m_extender.getPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();
@@ -73,7 +69,9 @@ public class Arm extends SubsystemBase {
       armPose.wristAngle.getDegrees(), 
       0
     };
-    SmartDashboard.putNumberArray("Arm/TargetState", targetState);
+    if (DebugConstants.EnableArmDebug) {
+      SmartDashboard.putNumberArray("Arm/TargetState", targetState);
+    }
     double extensionMeters = m_extender.getPositionMeters();
     double normalizedCurrentAngle = Shoulder.normalize(m_shoulder.getRotation());
     double normalizedTargetAngle = Shoulder.normalize(armPose.shoulderAngle);
@@ -135,10 +133,6 @@ public class Arm extends SubsystemBase {
     m_shoulder.recalibrateSensors();
     m_extender.recalibrateSensors();
     m_wrist.recalibrateSensors();
-  }
-
-  public double getShoulderDegreesFromStowed() {
-    return Math.abs(m_shoulder.getRotation().plus(Rotation2d.fromDegrees(90)).getDegrees()); 
   }
 }
 

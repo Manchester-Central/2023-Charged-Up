@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -57,7 +58,7 @@ public class DriveToTarget extends CommandBase {
         return null;
       }
       return closestPose;
-    }, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent);
+    }, SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent);
   }
 
   // Called when the command is initially scheduled.

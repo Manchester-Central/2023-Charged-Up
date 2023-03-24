@@ -4,23 +4,17 @@
 
 package frc.robot.commands;
 
-import com.chaos131.gamepads.Gamepad;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
-import frc.robot.subsystems.arm.Gripper;
-import frc.robot.subsystems.arm.Gripper.GripperMode;
 
 public class DefaultArmCommand extends CommandBase {
   
   private Arm m_arm;
-  private Gamepad m_tester;
 
   /** Creates a new DefaultArmCommand. */
-  public DefaultArmCommand(Arm arm, Gamepad tester) {
+  public DefaultArmCommand(Arm arm) {
     m_arm = arm;
-    m_tester = tester;
     addRequirements(arm);
   }
 

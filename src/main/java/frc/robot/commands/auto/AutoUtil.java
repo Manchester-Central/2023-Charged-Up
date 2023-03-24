@@ -5,6 +5,7 @@ import com.chaos131.auto.ParsedCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Wrist.CoordinateType;
 import frc.robot.subsystems.swerve.DrivePose;
@@ -23,7 +24,7 @@ public class AutoUtil {
      * @param parsedCommand the auto script step
      */
     public static double getTranslationTolerance(ParsedCommand parsedCommand) {
-        return AutoUtil.ParseDouble(parsedCommand.getArgument("translationTolerance"), Constants.DriveToTargetTolerance);
+        return AutoUtil.ParseDouble(parsedCommand.getArgument("translationTolerance"), SwerveConstants.DriveToTargetTolerance);
     }
     
     /**
@@ -31,7 +32,7 @@ public class AutoUtil {
      * @param parsedCommand the auto script step
      */
     public static double getMaxPercentSpeed(ParsedCommand parsedCommand) {
-        return AutoUtil.ParseDouble(parsedCommand.getArgument("maxPercentSpeed"), Constants.MaxTranslationPIDSpeedPercent);
+        return AutoUtil.ParseDouble(parsedCommand.getArgument("maxPercentSpeed"), SwerveConstants.MaxTranslationPIDSpeedPercent);
     }
 
     /**

@@ -12,6 +12,7 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -114,6 +115,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
+    addCoachTabDashboardValues();
   }
 
   public void robotPeriodic(){
@@ -123,14 +125,18 @@ public class RobotContainer {
   public void delayedRobotInit(){
     m_swerveDrive.recalibrateModules();
     m_arm.recalibrateSensors();
-    addCoachTabDashboardValues();
   }
 
   public void addCoachTabDashboardValues() {
     var coachTab = Shuffleboard.getTab("Coach");
+    m_arm.addCoachTabDashboardValues(coachTab);
+    m_gripper.addCoachTabDashboardValues(coachTab);
+    m_swerveDrive.addCoachTabDashboardValues(coachTab);
     coachTab.addString("OperatorMode", () -> m_currentArmMode.name());
     coachTab.addString("OperatorModeColor", () -> m_currentArmMode.getColor());
-    coachTab.addBoolean("HasPiece?", () -> m_gripper.hasPiece());
+    coachTab.addString("AllianceColor", () -> DriverStation.getAlliance().name());
+    coachTab.addString("LeftLimelight", () -> "http://10.1.31.11:5800");
+    coachTab.addString("RightLimelight", () -> "http://10.1.31.23:5800");
     // TODO: Figure out the values the coach/drive team want displayed on the dashboard always
   }
 

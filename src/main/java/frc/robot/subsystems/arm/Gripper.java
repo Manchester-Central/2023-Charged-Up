@@ -7,6 +7,7 @@ package frc.robot.subsystems.arm;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
@@ -64,6 +65,12 @@ public class Gripper extends SubsystemBase {
         Robot.logManager.addNumber("Gripper/MotorTemperature_C", DebugConstants.EnableGripperDebug, () -> m_sparkMax.getMotorTemperature());
         Robot.logManager.addBoolean("Gripper/HasPiece", DebugConstants.EnableGripperDebug, () -> hasPiece());
         Robot.logManager.addString("Gripper/Mode", DebugConstants.EnableGripperDebug, () -> getGripperMode().name());
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+      coachTab.addBoolean("HasPiece?", () -> hasPiece());
+      coachTab.addNumber("Gripper Temp_C", () -> m_sparkMax.getMotorTemperature());
+      coachTab.addNumber("Gripper Current_A", () -> m_sparkMax.getOutputCurrent());
     }
 
     public boolean hasPiece(){

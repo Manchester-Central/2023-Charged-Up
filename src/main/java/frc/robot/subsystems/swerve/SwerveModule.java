@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -58,6 +59,10 @@ public abstract class SwerveModule {
     Robot.logManager.addNumber(getDSKey("Velocity_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_velocity.getTemperature());
     Robot.logManager.addNumber(getDSKey("Angle_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_angle.getTemperature());
 
+  }
+    
+  public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+    
   }
 
   public void driverModeInit() {

@@ -6,6 +6,8 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -27,6 +29,12 @@ public class Arm extends SubsystemBase {
     m_wrist = new Wrist();
     m_gripper = gripper;
     Robot.logManager.addBoolean("Arm/AtTarget", DebugConstants.EnableArmDebug, () -> reachedTarget());
+  }
+  
+  public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+    m_shoulder.addCoachTabDashboardValues(coachTab);
+    m_extender.addCoachTabDashboardValues(coachTab);
+    m_wrist.addCoachTabDashboardValues(coachTab);
   }
 
   @Override

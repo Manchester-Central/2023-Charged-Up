@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
@@ -70,8 +71,11 @@ public class Extender {
         Robot.logManager.addNumber("Extender/AppliedOutput", DebugConstants.EnableArmDebug, () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Extender/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> m_sparkMax.getMotorTemperature());
         Robot.logManager.addNumber("Extender/OutputCurrent", DebugConstants.EnableArmDebug, () -> m_sparkMax.getOutputCurrent());
-
-
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+      coachTab.addNumber("Extender Temp_C", () -> m_sparkMax.getMotorTemperature());
+      coachTab.addNumber("Extender Current A", () -> m_sparkMax.getOutputCurrent());
     }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){

@@ -23,6 +23,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -93,6 +94,10 @@ public class Shoulder {
         Robot.logManager.addNumber("Shoulder/target", DebugConstants.EnableArmDebug, () -> m_targetDegrees);
         Robot.logManager.addNumber("Shoulder/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
         Robot.logManager.addNumber("Shoulder/AngleFromStowed_deg", DebugConstants.EnableArmDebug, () -> getShoulderDegreesFromStowed());
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+        
     }
 
     public Rotation2d getRotation() {

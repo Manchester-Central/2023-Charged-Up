@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -106,9 +107,7 @@ public class SwerveDrive extends SubsystemBase {
         getModulePositions());
     resetPose(new Pose2d(8, 4, Rotation2d.fromDegrees(0)));
     m_field = new Field2d();
-    if (DebugConstants.EnableDriveDebug) {
-      SmartDashboard.putData("SwerveDrive", m_field);
-    }
+    SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(0.6, 0.05, 0.1);
     m_YPid = new PIDController(0.6, 0.05, 0.1);
     m_AnglePid = new PIDController(0.8, 0.01, 0.08);
@@ -136,6 +135,13 @@ public class SwerveDrive extends SubsystemBase {
     double angleD = 0;
     m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle_PID_Tuner", DebugConstants.EnableDriveDebug, angleP, angleI, angleD, this::updateAnglePIDConstants);
 
+  }
+    
+  public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+    m_frontLeft.addCoachTabDashboardValues(coachTab);
+    m_frontRight.addCoachTabDashboardValues(coachTab);
+    m_backLeft.addCoachTabDashboardValues(coachTab);
+    m_backRight.addCoachTabDashboardValues(coachTab);
   }
 
   public void driverModeInit() {
@@ -342,6 +348,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
+    if (!DebugConstants.EnableDriveDebug) {
+      return;
+    }
     Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);
     m_field.getObject(name).setPose(swerveModulePose);

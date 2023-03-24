@@ -22,6 +22,7 @@ import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
@@ -83,6 +84,11 @@ public class Wrist {
         Robot.logManager.addNumber("Wrist/OutputCurrent", DebugConstants.EnableArmDebug, () -> m_sparkMax.getOutputCurrent());
         Robot.logManager.addNumber("Wrist/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
 
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+      coachTab.addNumber("Wrist Temp_C", () -> m_sparkMax.getMotorTemperature());
+      coachTab.addNumber("Wrist Current_A", () -> m_sparkMax.getOutputCurrent());
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {

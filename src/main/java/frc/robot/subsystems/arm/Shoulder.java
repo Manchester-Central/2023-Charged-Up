@@ -23,10 +23,12 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
@@ -84,12 +86,18 @@ public class Shoulder {
             canSparkMax.setSmartCurrentLimit(0, 0, 0);
             //open loop = no pid, closed loop = pid
             canSparkMax.burnFlash();
-            Robot.logManager.addNumber("Shoulder/SparkMax" + canSparkMax.getDeviceId() + "/MotorTemperature_C", () -> canSparkMax.getMotorTemperature());
+            Robot.logManager.addNumber("Shoulder/SparkMax" + canSparkMax.getDeviceId() + "/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> canSparkMax.getMotorTemperature());
 
         }
-        m_pidTuner = new PIDTuner("ShoulderPID", true, 0.025, 0, 1.6, this::tunePID);
+        m_pidTuner = new PIDTuner("Shoulder/PID_Tuner", DebugConstants.EnableArmDebug, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
-        Robot.logManager.addNumber("Shoulder/target", () -> m_targetDegrees);
+        Robot.logManager.addNumber("Shoulder/target", DebugConstants.EnableArmDebug, () -> m_targetDegrees);
+        Robot.logManager.addNumber("Shoulder/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
+        Robot.logManager.addNumber("Shoulder/AngleFromStowed_deg", DebugConstants.EnableArmDebug, () -> getShoulderDegreesFromStowed());
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+        
     }
 
     public Rotation2d getRotation() {
@@ -97,6 +105,10 @@ public class Shoulder {
             return Rotation2d.fromRadians(m_armSim.getAngleRads());
         }
         return Rotation2d.fromDegrees((m_AbsoluteEncoder.getAbsolutePosition() * ShoulderConstants.AbsoluteAngleConversionFactor) + ShoulderConstants.AbsoluteAngleZeroOffset);
+    }
+
+    public double getShoulderDegreesFromStowed() {
+      return Math.abs(getRotation().plus(Rotation2d.fromDegrees(90)).getDegrees()); 
     }
 
     public Rotation2d getEncoderRotation() {
@@ -165,7 +177,7 @@ public class Shoulder {
        RelativeEncoder encoder = sparkMax.getEncoder();
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
        encoder.setPosition(absoluteAngle.getDegrees());
-       Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", ()->encoder.getPosition());
+       Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
     }
 
     public boolean atTarget(){

@@ -17,9 +17,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.util.DashboardNumber;
 
 public abstract class SwerveModule {
@@ -31,8 +33,8 @@ public abstract class SwerveModule {
   private double initialEncoder;
   private String m_name;
 
-  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, (newValue) -> {});
-  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, DebugConstants.EnableDriveDebug, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, DebugConstants.EnableDriveDebug, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
   public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
@@ -54,6 +56,13 @@ public abstract class SwerveModule {
     m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
     m_angle.configClosedloopRamp(0);
 
+    Robot.logManager.addNumber(getDSKey("Velocity_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_velocity.getTemperature());
+    Robot.logManager.addNumber(getDSKey("Angle_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_angle.getTemperature());
+
+  }
+    
+  public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+    
   }
 
   public void driverModeInit() {
@@ -130,16 +139,18 @@ public abstract class SwerveModule {
     return "Swerve Module " + m_name + "/" + field;
   }
 
-  public void getModuleInfo() {
-    SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
-    SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
-    // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
-    // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
-    // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);
-    // SmartDashboard.putNumber(getDSKey("VelocityEncoderVelocity"), m_velocity.getSelectedSensorVelocity());
-    SmartDashboard.putNumber(getDSKey("AbsoluteAngle"), getAbsoluteAngle());
-    // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
-    // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
+  public void updateDashboard() {
+    if (DebugConstants.EnableDriveDebug) {
+      SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
+      SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
+      // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
+      // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
+      // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);
+      // SmartDashboard.putNumber(getDSKey("VelocityEncoderVelocity"), m_velocity.getSelectedSensorVelocity());
+      SmartDashboard.putNumber(getDSKey("AbsoluteAngle"), getAbsoluteAngle());
+      // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
+      // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
+    }
   }
 
   public double encoderToDegrees(double counts) {

@@ -21,11 +21,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.RecalibrateModules;
 import frc.robot.logging.LogManager;
@@ -54,7 +56,7 @@ public class SwerveDrive extends SubsystemBase {
   private PIDTuner m_AnglePidTuner;
   private PIDTuner m_moduleVelocityPIDTuner;
   private PIDTuner m_moduleAnglePIDTuner;
-  private double m_driveToTargetTolerance = Constants.DriveToTargetTolerance;
+  private double m_driveToTargetTolerance = SwerveConstants.DriveToTargetTolerance;
   
   private Limelight m_limelightLeft;
   private Limelight m_limelightRight;
@@ -110,26 +112,36 @@ public class SwerveDrive extends SubsystemBase {
     m_YPid = new PIDController(0.6, 0.05, 0.1);
     m_AnglePid = new PIDController(0.8, 0.01, 0.08);
     m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
-    m_XPidTuner = new PIDTuner("X PID Tuner", true, m_XPid);
-    m_YPidTuner = new PIDTuner("Y PID Tuner", true, m_YPid);
-    m_XPid.setTolerance(Constants.DriveToTargetTolerance);
-    m_YPid.setTolerance(Constants.DriveToTargetTolerance);
-    m_AnglePid.setTolerance(Constants.AnglePIDTolerance);
-    m_AnglePidTuner = new PIDTuner("Angle PID Tuner", true, m_AnglePid);
-    Robot.logManager.addNumber("SwerveDrive/X_m", () -> m_odometry.getPoseMeters().getX());
-    Robot.logManager.addNumber("SwerveDrive/Y_m", () -> m_odometry.getPoseMeters().getY());
-    Robot.logManager.addNumber("SwerveDrive/Rotation_deg", () -> getOdometryRotation().getDegrees());
+    m_XPidTuner = new PIDTuner("SwerveDrive/X_PID_Tuner", DebugConstants.EnableDriveDebug, m_XPid);
+    m_YPidTuner = new PIDTuner("SwerveDrive/Y_PID_Tuner", DebugConstants.EnableDriveDebug, m_YPid);
+    m_XPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
+    m_YPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
+    m_AnglePid.setTolerance(SwerveConstants.AnglePIDTolerance);
+    m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", DebugConstants.EnableDriveDebug, m_AnglePid);
+    Robot.logManager.addNumber("SwerveDrive/X_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getX());
+    Robot.logManager.addNumber("SwerveDrive/Y_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getY());
+    Robot.logManager.addNumber("SwerveDrive/Rotation_deg", DebugConstants.EnableDriveDebug, () -> getOdometryRotation().getDegrees());
+    Robot.logManager.addNumber("SwerveDrive/Gyro_angle_deg", DebugConstants.EnableDriveDebug, () -> getGyroRotation().getDegrees());
+    Robot.logManager.addNumber("SwerveDrive/Gyro_pitch_deg", DebugConstants.EnableDriveDebug, () -> getPitch().getDegrees());
+    Robot.logManager.addNumber("SwerveDrive/Gyro_roll_deg", DebugConstants.EnableDriveDebug, () -> getRoll().getDegrees());
     double velocityP = 0.1;
     double velocityI = 0;
     double velocityD = 0;
     double velocityF = 0.054;
     // `this::updateVelocityPIDConstants` is basically shorthand for `(PIDUpdate update) -> updateVelocityPIDConstants(update)`
-    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity", false, velocityP, velocityI, velocityD, velocityF, this::updateVelocityPIDConstants);
+    m_moduleVelocityPIDTuner = new PIDTuner("Swerve/ModuleVelocity_PID_Tuner", DebugConstants.EnableDriveDebug, velocityP, velocityI, velocityD, velocityF, this::updateVelocityPIDConstants);
     double angleP = 0.2;
     double angleI = 0;
     double angleD = 0;
-    m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle", false, angleP, angleI, angleD, this::updateAnglePIDConstants);
+    m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle_PID_Tuner", DebugConstants.EnableDriveDebug, angleP, angleI, angleD, this::updateAnglePIDConstants);
 
+  }
+    
+  public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+    m_frontLeft.addCoachTabDashboardValues(coachTab);
+    m_frontRight.addCoachTabDashboardValues(coachTab);
+    m_backLeft.addCoachTabDashboardValues(coachTab);
+    m_backRight.addCoachTabDashboardValues(coachTab);
   }
 
   public void driverModeInit() {
@@ -174,13 +186,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {
-    SmartDashboard.putNumber("Swerve/x_input", chassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Swerve/y_input", chassisSpeeds.vyMetersPerSecond);
     chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
     chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
     chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps * SpeedModifier;
-    SmartDashboard.putNumber("Swerve/x_output", chassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("Swerve/y_output", chassisSpeeds.vyMetersPerSecond);
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
       stop();
       return;
@@ -247,7 +255,7 @@ public class SwerveDrive extends SubsystemBase {
     m_XPid.reset();
     m_YPid.reset();
     m_AnglePid.reset();
-    setDriveTranslationTolerance(Constants.DriveToTargetTolerance);
+    setDriveTranslationTolerance(SwerveConstants.DriveToTargetTolerance);
   }
 
   public boolean atTarget() {
@@ -310,25 +318,20 @@ public class SwerveDrive extends SubsystemBase {
       m_simrotation = m_simrotation.plus(Rotation2d.fromRadians(radians));
     }
     Pose2d robotPose = m_odometry.update(getGyroRotation(), getModulePositions());
-    SmartDashboard.putNumber("SwerveDrive/X", robotPose.getX());
-    SmartDashboard.putNumber("SwerveDrive/y", robotPose.getY());
-    SmartDashboard.putNumber("SwerveDrive/Rotation", robotPose.getRotation().getDegrees());
     m_field.setRobotPose(robotPose);
     updateModuleOnField(m_frontLeft, robotPose, "FL");
     updateModuleOnField(m_frontRight, robotPose, "FR");
     updateModuleOnField(m_backLeft, robotPose, "BL");
     updateModuleOnField(m_backRight, robotPose, "BR");
-    SmartDashboard.putNumber("gyro_angle", getGyroRotation().getDegrees());
-    SmartDashboard.putNumber("gyro_pitch", GetPitch().getDegrees());
     m_XPidTuner.tune();
     m_YPidTuner.tune();
     m_AnglePidTuner.tune();
     m_moduleVelocityPIDTuner.tune();
     m_moduleAnglePIDTuner.tune();
-    m_frontLeft.getModuleInfo();
-    m_frontRight.getModuleInfo();
-    m_backLeft.getModuleInfo();
-    m_backRight.getModuleInfo();
+    m_frontLeft.updateDashboard();
+    m_frontRight.updateDashboard();
+    m_backLeft.updateDashboard();
+    m_backRight.updateDashboard();
   }
 
   public void resetPose(Pose2d targetPose){
@@ -345,6 +348,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void updateModuleOnField(SwerveModule swerveModule, Pose2d robotPose, String name) {
+    if (!DebugConstants.EnableDriveDebug) {
+      return;
+    }
     Transform2d transform = new Transform2d(swerveModule.getTranslation().times(5), swerveModule.getModuleState().angle);
     Pose2d swerveModulePose = robotPose.transformBy(transform);
     m_field.getObject(name).setPose(swerveModulePose);
@@ -395,8 +401,12 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
-  public Rotation2d GetPitch() {
+  public Rotation2d getPitch() {
     return Rotation2d.fromDegrees(m_gyro.getPitch());
+  }
+
+  public Rotation2d getRoll() {
+    return Rotation2d.fromDegrees(m_gyro.getRoll());
   }
 }
 // “I love polyester.” -Kenny

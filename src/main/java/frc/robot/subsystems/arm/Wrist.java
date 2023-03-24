@@ -17,10 +17,12 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import java.lang.annotation.Target;
 
 import frc.robot.Robot;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.ArmConstants.WristConstants;
 import frc.robot.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
@@ -45,51 +47,57 @@ public class Wrist {
         m_sparkMax.setInverted(false);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
         m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle); 
-        new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, (newValue) -> {
+        new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, DebugConstants.EnableArmDebug, (newValue) -> {
             m_AbsoluteEncoder.setPositionConversionFactor(newValue);
             recalibrateSensors();
             // m_sparkMax.burnFlash();
         });
         m_AbsoluteEncoder.setInverted(false);
-        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, (newOffset) -> {
+        new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, DebugConstants.EnableArmDebug, (newOffset) -> {
             m_AbsoluteEncoder.setZeroOffset(newOffset);
             recalibrateSensors();
             // m_sparkMax.burnFlash();
         });
-        m_pidTuner = new PIDTuner("WristPID", true, 0.02, 0, 1.0, this::tunePID);
+        m_pidTuner = new PIDTuner("Wrist/PID_Tuner", DebugConstants.EnableArmDebug, 0.02, 0, 1.0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
         initializeSparkMaxEncoder(m_sparkMax, getRotation());
         m_AbsoluteEncoder.setInverted(false);
-        new DashboardNumber("Wrist/RampUprate", WristConstants.RampUpRate, (newValue) -> {
+        new DashboardNumber("Wrist/RampUprate", WristConstants.RampUpRate, DebugConstants.EnableArmDebug, (newValue) -> {
             m_sparkMax.setOpenLoopRampRate(newValue);
             m_sparkMax.setClosedLoopRampRate(newValue);
         });
-        new DashboardNumber("wrist/stallLimit", m_stallLimit, (newValue) -> {
+        new DashboardNumber("Wrist/stallLimit", m_stallLimit, DebugConstants.EnableArmDebug, (newValue) -> {
             int stallLimit = (int)((double) newValue);
             updateCurrentLimit(stallLimit, m_freeLimit, m_limitRPM);
         });
-        new DashboardNumber("wrist/freeLimit", m_freeLimit, (newValue) -> {
+        new DashboardNumber("Wrist/freeLimit", m_freeLimit, DebugConstants.EnableArmDebug, (newValue) -> {
             int freeLimit = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, freeLimit, m_limitRPM);
         });
-        new DashboardNumber("wrist/limitRPM", m_limitRPM, (newValue) -> {
+        new DashboardNumber("Wrist/limitRPM", m_limitRPM, DebugConstants.EnableArmDebug, (newValue) -> {
             int limitRPM = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
         });
         m_sparkMax.burnFlash();
-        Robot.logManager.addNumber("Wrist/AppliedOutput", () -> m_sparkMax.getAppliedOutput());
-        Robot.logManager.addNumber("Wrist/MotorTemperature_C", () -> m_sparkMax.getMotorTemperature());
-        Robot.logManager.addNumber("Wrist/OutputCurrent", () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Wrist/AppliedOutput", DebugConstants.EnableArmDebug, () -> m_sparkMax.getAppliedOutput());
+        Robot.logManager.addNumber("Wrist/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> m_sparkMax.getMotorTemperature());
+        Robot.logManager.addNumber("Wrist/OutputCurrent", DebugConstants.EnableArmDebug, () -> m_sparkMax.getOutputCurrent());
+        Robot.logManager.addNumber("Wrist/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
 
+    }
+    
+    public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
+      coachTab.addNumber("Wrist Temp_C", () -> m_sparkMax.getMotorTemperature());
+      coachTab.addNumber("Wrist Current_A", () -> m_sparkMax.getOutputCurrent());
     }
 
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
         RelativeEncoder encoder = sparkMax.getEncoder();
-        new DashboardNumber("Wrist/EncoderConversionFactor", WristConstants.SparkMaxEncoderConversionFactor, (newConversionFactor) -> {
+        new DashboardNumber("Wrist/EncoderConversionFactor", WristConstants.SparkMaxEncoderConversionFactor, DebugConstants.EnableArmDebug, (newConversionFactor) -> {
             encoder.setPositionConversionFactor(newConversionFactor);
             recalibrateSensors();
         });
-        Robot.logManager.addNumber("Wrist/EncoderRotation", () -> encoder.getPosition());
+        Robot.logManager.addNumber("Wrist/EncoderRotation", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
         
     }
 

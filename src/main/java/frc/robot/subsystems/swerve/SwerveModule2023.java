@@ -7,6 +7,7 @@ package frc.robot.subsystems.swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.util.DashboardNumber;
 
@@ -20,7 +21,7 @@ public class SwerveModule2023 extends SwerveModule {
 
         m_absoluteEncoder = new AnalogEncoder(absoluteAnalogPort);
 
-        new DashboardNumber(getDSKey("absoluteAngleOffset"), absoluteAngleOffset, (newValue) -> {
+        new DashboardNumber(getDSKey("absoluteAngleOffset"), absoluteAngleOffset, DebugConstants.EnableDriveDebug,  (newValue) -> {
             m_absoluteAngleOffset = newValue;
             recalibrate();
         });

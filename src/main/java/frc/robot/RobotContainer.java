@@ -12,7 +12,9 @@ import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveToTarget;
@@ -76,8 +80,6 @@ public class RobotContainer {
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
 
-  private final Gamepad m_tester = new Gamepad(OperatorConstants.kTesterControllerPort);
-
   private enum ArmMode{ 
     Cube("#8a2be2"),
     Cone("#f9e909"),
@@ -113,12 +115,10 @@ public class RobotContainer {
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     // Configure the trigger bindings
     configureBindings();
+    addCoachTabDashboardValues();
   }
 
-  
   public void robotPeriodic(){
-    SmartDashboard.putString("OperatorMode", m_currentArmMode.name());
-    SmartDashboard.putString("OperatorModeColor", m_currentArmMode.getColor());
     AutoBalanceDrive.PIDTuner.tune();
   }
 
@@ -126,6 +126,20 @@ public class RobotContainer {
     m_swerveDrive.recalibrateModules();
     m_arm.recalibrateSensors();
   }
+
+  public void addCoachTabDashboardValues() {
+    var coachTab = Shuffleboard.getTab("Coach");
+    m_arm.addCoachTabDashboardValues(coachTab);
+    m_gripper.addCoachTabDashboardValues(coachTab);
+    m_swerveDrive.addCoachTabDashboardValues(coachTab);
+    coachTab.addString("OperatorMode", () -> m_currentArmMode.name());
+    coachTab.addString("OperatorModeColor", () -> m_currentArmMode.getColor());
+    coachTab.addString("AllianceColor", () -> DriverStation.getAlliance().name());
+    coachTab.addString("LeftLimelight", () -> "http://10.1.31.11:5800");
+    coachTab.addString("RightLimelight", () -> "http://10.1.31.23:5800");
+    // TODO: Figure out the values the coach/drive team want displayed on the dashboard always
+  }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -172,7 +186,7 @@ public class RobotContainer {
   }
 
   private void operaterControls(){
-    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm, m_tester));
+    m_arm.setDefaultCommand(new DefaultArmCommand(m_arm));
     Command defaultGripCommand = new InstantCommand(() -> m_gripper.setGripperMode(GripperMode.hold), m_gripper);
     m_gripper.setDefaultCommand(defaultGripCommand);
 
@@ -209,8 +223,10 @@ public class RobotContainer {
     m_operator.rightTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
     
     // test
-    m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
-    m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
+    if (DebugConstants.EnableArmDebug) {
+      m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
+      m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
+    }
   }
 
   private Command scorePrep(ArmPose pose) {
@@ -223,44 +239,54 @@ public class RobotContainer {
 
   private void dashboardCommands() {
     // created a test command on Shuffleboard for each known pose
-    ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
-    DrivePose.DrivePoses.forEach((String poseName, DrivePose pose) -> {
-      SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
-      SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
-    });
+    if (DebugConstants.EnableArmDebug) {
+      ArmPose.forAllPoses((String poseName, ArmPose pose) -> SmartDashboard.putData("Set Arm Pose/" + poseName, new MoveArm(m_arm, pose).repeatedly()));
+    }
+    if (DebugConstants.EnableDriveDebug) {
+      DrivePose.DrivePoses.forEach((String poseName, DrivePose pose) -> {
+        SmartDashboard.putData("Drive To Target/" + pose.m_redName, new DriveToTarget(m_swerveDrive, pose.m_redPose, SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
+        SmartDashboard.putData("Drive To Target/" + pose.m_blueName, new DriveToTarget(m_swerveDrive, pose.m_bluePose, SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
+      });
+    }
   }
 
   private void testCommands() {
-    // m_tester.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
-    // m_tester.x().whileTrue(new MoveExtender(m_arm, 1.1));
-    // m_tester.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
-    // m_tester.b().whileTrue(new TestWrist(m_arm, m_tester));
-    // m_tester.back().whileTrue(new Grip(m_gripper));
-    // m_tester.start().whileTrue(new UnGrip(m_gripper));
-    // m_tester.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
-    // m_tester.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
-    // m_tester.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
-    // m_tester.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
-    // m_tester.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
-    // m_tester.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
-    // m_tester.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
-    // m_tester.a().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper));
-    // m_tester.b().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper));
-    // m_tester.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
-    // m_tester.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
-    // m_tester.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
-    // m_tester.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
-    // m_tester.rightBumper().whileTrue(
+    // Don't make the tester controller and commands if not in debug mode
+    if(!DebugConstants.IsDebugMode) {
+      return;
+    }
+
+    Gamepad testController = new Gamepad(OperatorConstants.kTesterControllerPort);
+    // testController.a().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MinimumPositionMeters + 0.02));
+    // testController.x().whileTrue(new MoveExtender(m_arm, 1.1));
+    // testController.y().whileTrue(new MoveExtender(m_arm, ExtenderConstants.MaximumPositionMeters - 0.02));
+    // testController.b().whileTrue(new TestWrist(m_arm, testController));
+    // testController.back().whileTrue(new Grip(m_gripper));
+    // testController.start().whileTrue(new UnGrip(m_gripper));
+    // testController.povUp().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(0)));
+    // testController.povRight().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-45)));
+    // testController.povDown().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-90)));
+    // testController.povLeft().whileTrue(new MoveShoulder(m_arm, Rotation2d.fromDegrees(-135)));
+    // testController.rightTrigger().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(90)));
+    // testController.rightBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(270)));
+    // testController.leftBumper().whileTrue(new MoveWrist(m_arm, Rotation2d.fromDegrees(180)));
+    // testController.a().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.grip),m_gripper));
+    // testController.b().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.hold),m_gripper));
+    // testController.y().whileTrue(new RunCommand( () -> m_gripper.setGripperMode(GripperMode.unGrip),m_gripper));
+    // testController.povUp().whileTrue(new ShuffleBoardPose(m_arm, "povUp").repeatedly());
+    // testController.povDown().whileTrue(new ShuffleBoardPose(m_arm, "povDown").repeatedly());
+    // testController.rightTrigger().whileTrue(new AutoBalanceDrive(m_swerveDrive));
+    // testController.rightBumper().whileTrue(
     //   new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
     //   .andThen(new SwerveXMode(m_swerveDrive))
     // );
     var xStart = 8;
     var yStart = 4;
-    m_tester.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0))));
-    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
-    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart + 1, yStart, Rotation2d.fromDegrees(90)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
-    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart - 1, yStart, Rotation2d.fromDegrees(270)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
-    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart + 1, Rotation2d.fromDegrees(180)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
+    testController.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0))));
+    testController.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0)), SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
+    testController.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart + 1, yStart, Rotation2d.fromDegrees(90)), SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
+    testController.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart - 1, yStart, Rotation2d.fromDegrees(270)), SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
+    testController.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart + 1, Rotation2d.fromDegrees(180)), SwerveConstants.DriveToTargetTolerance, SwerveConstants.MaxTranslationPIDSpeedPercent));
 
   }
 
@@ -275,9 +301,11 @@ public class RobotContainer {
   }
 
   public void addSmartDashboard() {
-    SmartDashboard.putNumber("Driver Left X", m_driver.getLeftX());
-    SmartDashboard.putNumber("Driver Right X", m_driver.getRightX());
-    SmartDashboard.putNumber("Driver Left Y", m_driver.getLeftY());
-    SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
+    if (DebugConstants.EnableDriveDebug) {
+      SmartDashboard.putNumber("Driver Left X", m_driver.getLeftX());
+      SmartDashboard.putNumber("Driver Right X", m_driver.getRightX());
+      SmartDashboard.putNumber("Driver Left Y", m_driver.getLeftY());
+      SmartDashboard.putNumber("Driver Right Y", m_driver.getRightY());
+    }
   }
 }

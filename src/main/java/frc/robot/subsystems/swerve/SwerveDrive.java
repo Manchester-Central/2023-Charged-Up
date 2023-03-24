@@ -186,6 +186,7 @@ public class SwerveDrive extends SubsystemBase {
       return;
     }
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.MaxRobotSpeed_mps);
     m_frontLeft.setTarget(states[0]);
     m_frontRight.setTarget(states[1]);
     m_backLeft.setTarget(states[2]);

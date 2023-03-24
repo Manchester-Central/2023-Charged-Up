@@ -132,7 +132,7 @@ public abstract class SwerveModule {
 
   public void getModuleInfo() {
     SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
-    // SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
+    SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
     // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
     // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
     // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);

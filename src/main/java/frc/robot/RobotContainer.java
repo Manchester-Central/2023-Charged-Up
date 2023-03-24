@@ -254,11 +254,13 @@ public class RobotContainer {
     //   new DriveToTargetWithLimelights(m_swerveDrive, () -> DrivePose.Balance.getCurrentAlliancePose(), Constants.DriveToTargetTolerance)
     //   .andThen(new SwerveXMode(m_swerveDrive))
     // );
-    m_tester.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))));
-    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
-    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
-    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(-1, 0, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
-    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent).repeatedly());
+    var xStart = 8;
+    var yStart = 4;
+    m_tester.start().onTrue(new ResetPose(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0))));
+    m_tester.b().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart, Rotation2d.fromDegrees(0)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
+    m_tester.y().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart + 1, yStart, Rotation2d.fromDegrees(90)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
+    m_tester.a().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart - 1, yStart, Rotation2d.fromDegrees(270)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
+    m_tester.x().whileTrue(new DriveToTarget(m_swerveDrive, new Pose2d(xStart, yStart + 1, Rotation2d.fromDegrees(180)), Constants.DriveToTargetTolerance, Constants.MaxTranslationPIDSpeedPercent));
 
   }
 

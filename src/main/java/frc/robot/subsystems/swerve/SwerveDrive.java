@@ -117,7 +117,7 @@ public class SwerveDrive extends SubsystemBase {
     m_XPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
     m_YPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
     m_AngleDegreesPid.setTolerance(SwerveConstants.AnglePIDTolerance.getDegrees());
-    m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", DebugConstants.EnableDriveDebug, m_AngleDegreesPid);
+    m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", true, m_AngleDegreesPid);
     Robot.logManager.addNumber("SwerveDrive/X_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", DebugConstants.EnableDriveDebug, () -> getOdometryRotation().getDegrees());

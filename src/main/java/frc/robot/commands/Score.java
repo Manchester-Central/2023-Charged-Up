@@ -75,7 +75,7 @@ public class Score extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_releaseTime_MS != 0) {
-      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 500; 
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 750; 
     }
     return false;
   }

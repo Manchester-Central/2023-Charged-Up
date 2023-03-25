@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.fazecast.jSerialComm.SerialPort;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -38,7 +40,7 @@ public final class Constants {
   public static class SwerveConstants {
     public static final double MaxTranslationPIDSpeedPercent = 1.0;
     public static final double DriveToTargetTolerance = 0.03;
-    public static final double AnglePIDTolerance = 3.0;
+    public static final Rotation2d AnglePIDTolerance = Rotation2d.fromDegrees(3.0);
     public static final double RobotWidth_in = 21.25;
     public static final double RobotLength_in = 22.25;
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;

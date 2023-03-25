@@ -50,7 +50,7 @@ public class SwerveDrive extends SubsystemBase {
 
   private PIDController m_XPid;
   private PIDController m_YPid;
-  private PIDController m_AnglePid;
+  private PIDController m_AngleDegreesPid;
   private PIDTuner m_XPidTuner;
   private PIDTuner m_YPidTuner;
   private PIDTuner m_AnglePidTuner;
@@ -110,14 +110,14 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(0.6, 0.05, 0.1);
     m_YPid = new PIDController(0.6, 0.05, 0.1);
-    m_AnglePid = new PIDController(0.8, 0.01, 0.08);
-    m_AnglePid.enableContinuousInput(-Math.PI, Math.PI);
+    m_AngleDegreesPid = new PIDController(0.01, 0.0001, 0.00);
+    m_AngleDegreesPid.enableContinuousInput(-180, 180);
     m_XPidTuner = new PIDTuner("SwerveDrive/X_PID_Tuner", DebugConstants.EnableDriveDebug, m_XPid);
     m_YPidTuner = new PIDTuner("SwerveDrive/Y_PID_Tuner", DebugConstants.EnableDriveDebug, m_YPid);
     m_XPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
     m_YPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
-    m_AnglePid.setTolerance(SwerveConstants.AnglePIDTolerance);
-    m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", DebugConstants.EnableDriveDebug, m_AnglePid);
+    m_AngleDegreesPid.setTolerance(SwerveConstants.AnglePIDTolerance.getDegrees());
+    m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", DebugConstants.EnableDriveDebug, m_AngleDegreesPid);
     Robot.logManager.addNumber("SwerveDrive/X_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getX());
     Robot.logManager.addNumber("SwerveDrive/Y_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", DebugConstants.EnableDriveDebug, () -> getOdometryRotation().getDegrees());
@@ -234,7 +234,7 @@ public class SwerveDrive extends SubsystemBase {
     double omega = 0;
     ChassisSpeeds speeds;
     if (Math.abs(magnitude) >= 0.2) {
-      omega = m_AnglePid.calculate(getOdometryRotation().getRadians(), angle.getRadians()) * magnitude;
+      omega = m_AngleDegreesPid.calculate(getOdometryRotation().getDegrees(), angle.getDegrees()) * magnitude;
     }
     if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSecond, yMetersPerSecond, omega, getOdometryRotation().minus(new Rotation2d(Math.PI)));
@@ -254,28 +254,28 @@ public class SwerveDrive extends SubsystemBase {
   public void resetPids() {
     m_XPid.reset();
     m_YPid.reset();
-    m_AnglePid.reset();
+    m_AngleDegreesPid.reset();
     setDriveTranslationTolerance(SwerveConstants.DriveToTargetTolerance);
   }
 
   public boolean atTarget() {
     boolean isXTolerable = Math.abs(m_odometry.getPoseMeters().getX() - m_XPid.getSetpoint()) <= m_driveToTargetTolerance;
     boolean isYTolerable = Math.abs(m_odometry.getPoseMeters().getY() - m_YPid.getSetpoint()) <= m_driveToTargetTolerance;
-    return isXTolerable && isYTolerable && m_AnglePid.atSetpoint();
+    return isXTolerable && isYTolerable && m_AngleDegreesPid.atSetpoint();
 
   }
 
   public void setTarget(double x, double y, Rotation2d angle) {
     m_XPid.setSetpoint(x);
     m_YPid.setSetpoint(y);
-    m_AnglePid.setSetpoint(angle.getRadians());
+    m_AngleDegreesPid.setSetpoint(angle.getDegrees());
   }
 
   public void moveToTarget(double maxTranslationSpeedPercent) {
     Pose2d pose = m_odometry.getPoseMeters();
     double x = MathUtil.clamp(m_XPid.calculate(pose.getX()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
     double y = MathUtil.clamp(m_YPid.calculate(pose.getY()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
-    double angle = m_AnglePid.calculate(pose.getRotation().getRadians());
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
     moveFieldRelativeForPID(x, y, angle);
   }
 

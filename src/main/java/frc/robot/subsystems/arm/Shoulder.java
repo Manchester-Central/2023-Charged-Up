@@ -180,11 +180,11 @@ public class Shoulder {
        Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
     }
 
-    public boolean atTarget(){
-        if (Double.isNaN(m_targetDegrees)) {
+    public boolean atTarget(double targetDegrees){
+        if (Double.isNaN(targetDegrees)) {
             return false;
         }
-        return Math.abs(getEncoderRotation().getDegrees() - m_targetDegrees) < ShoulderConstants.ToleranceDegrees;
+        return Math.abs(getEncoderRotation().getDegrees() - targetDegrees) < ShoulderConstants.ToleranceDegrees;
     }
 
     // We want to add an arbitrary feed forward that applies outside the PID control loop.

@@ -28,7 +28,7 @@ public class Arm extends SubsystemBase {
     m_extender = new Extender();
     m_wrist = new Wrist();
     m_gripper = gripper;
-    Robot.logManager.addBoolean("Arm/AtTarget", DebugConstants.EnableArmDebug, () -> reachedTarget());
+    //Robot.logManager.addBoolean("Arm/AtTarget", DebugConstants.EnableArmDebug, () -> reachedTarget());
   }
   
   public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
@@ -115,8 +115,8 @@ public class Arm extends SubsystemBase {
     // m_wrist.stop();
   }
 
-  public boolean reachedTarget() {
-    return m_shoulder.atTarget() && m_extender.atTarget() && m_wrist.atTarget();
+  public boolean reachedTarget(ArmPose targetPose) {
+    return m_shoulder.atTarget(targetPose.shoulderAngle.getDegrees()) && m_extender.atTarget(targetPose.extenderPos) && m_wrist.atTarget(targetPose.wristAngle.getDegrees());
   }
 
   public void manualShoulder(double speed) {

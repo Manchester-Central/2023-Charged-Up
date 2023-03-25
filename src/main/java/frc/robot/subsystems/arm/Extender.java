@@ -126,8 +126,8 @@ public class Extender {
         m_sparkMax.getPIDController().setFF(pidUpdate.F);
     }
 
-    public boolean atTarget(){
-        return Math.abs(getEncoderPositionMeters() - m_targetMeters) < ExtenderConstants.ToleranceMeters;
+    public boolean atTarget(double targetDegrees){
+        return Math.abs(getEncoderPositionMeters() - targetDegrees) < ExtenderConstants.ToleranceMeters;
     }
 
     public void periodic() {

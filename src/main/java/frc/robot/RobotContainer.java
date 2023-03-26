@@ -69,7 +69,7 @@ public class RobotContainer {
 
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
-  private SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
+  public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -223,10 +223,11 @@ public class RobotContainer {
     m_operator.rightTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
     
     // test
-    if (DebugConstants.EnableArmDebug) {
-      m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
-      m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
-    }
+    // if (DebugConstants.EnableArmDebug) {
+    //   m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
+    //   m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
+    // }
+    m_operator.start().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
   }
 
   private Command scorePrep(ArmPose pose) {

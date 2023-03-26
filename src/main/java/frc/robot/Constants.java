@@ -25,7 +25,7 @@ public final class Constants {
   public static final double UpdateFrequency_Hz = 50;
 
   public static class DebugConstants {
-    public static final boolean IsDebugMode = false;
+    public static final boolean IsDebugMode = true; // SET ME TO FALSE BEFORE MATCHES
     public static final boolean EnableDriveDebug = IsDebugMode;
     public static final boolean EnableArmDebug = IsDebugMode;
     public static final boolean EnableGripperDebug = IsDebugMode;

@@ -142,6 +142,7 @@ public class SwerveDrive extends SubsystemBase {
     m_frontRight.addCoachTabDashboardValues(coachTab);
     m_backLeft.addCoachTabDashboardValues(coachTab);
     m_backRight.addCoachTabDashboardValues(coachTab);
+    coachTab.addNumber("Pitch", ()-> getPitch().getDegrees());
   }
 
   public void driverModeInit() {

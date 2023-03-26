@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
       public void run() {
         m_robotContainer.delayedRobotInit();
       }
-    }, 1000 );
+    }, 3000 ); // Delaying by 3 seconds, since the swerve modules will require 2ish seconds for a rolling average for callibration
   }
 
   public static double robotMode()
@@ -105,6 +105,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_robotContainer.m_arm.stop();
+    m_robotContainer.m_swerveDrive.recalibrateModules();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

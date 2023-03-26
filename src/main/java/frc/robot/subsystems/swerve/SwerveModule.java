@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -32,6 +33,8 @@ public abstract class SwerveModule {
   private WPI_TalonFX m_velocity;
   private double initialEncoder;
   private String m_name;
+  private LinearFilter m_absoluteAngleDegreesRollingAverage = LinearFilter.movingAverage(100);
+  private double m_absoluteAngleDegreesRollingAverageValue = 0;
 
   private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, DebugConstants.EnableDriveDebug, (newValue) -> {});
   private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, DebugConstants.EnableDriveDebug, (newValue) -> {});
@@ -139,7 +142,7 @@ public abstract class SwerveModule {
     return "Swerve Module " + m_name + "/" + field;
   }
 
-  public void updateDashboard() {
+  private void updateDashboard() {
     if (DebugConstants.EnableDriveDebug) {
       SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
       SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
@@ -148,9 +151,15 @@ public abstract class SwerveModule {
       // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);
       // SmartDashboard.putNumber(getDSKey("VelocityEncoderVelocity"), m_velocity.getSelectedSensorVelocity());
       SmartDashboard.putNumber(getDSKey("AbsoluteAngle"), getAbsoluteAngle());
+      SmartDashboard.putNumber(getDSKey("AbsoluteAngleRollingAverage"), m_absoluteAngleDegreesRollingAverageValue);
       // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
       // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
     }
+  }
+
+  public void periodic() {
+    m_absoluteAngleDegreesRollingAverageValue = m_absoluteAngleDegreesRollingAverage.calculate(getAbsoluteAngle());
+    updateDashboard();
   }
 
   public double encoderToDegrees(double counts) {
@@ -189,7 +198,7 @@ public abstract class SwerveModule {
   }
 
   public void recalibrate() {
-    initialEncoder = degreesToEncoder(getAbsoluteAngle());
+    initialEncoder = degreesToEncoder(m_absoluteAngleDegreesRollingAverageValue);
     m_angle.setSelectedSensorPosition(initialEncoder);
   }
 

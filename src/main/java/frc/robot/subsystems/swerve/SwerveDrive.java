@@ -328,10 +328,10 @@ public class SwerveDrive extends SubsystemBase {
     m_AnglePidTuner.tune();
     m_moduleVelocityPIDTuner.tune();
     m_moduleAnglePIDTuner.tune();
-    m_frontLeft.updateDashboard();
-    m_frontRight.updateDashboard();
-    m_backLeft.updateDashboard();
-    m_backRight.updateDashboard();
+    m_frontLeft.periodic();
+    m_frontRight.periodic();
+    m_backLeft.periodic();
+    m_backRight.periodic();
   }
 
   public void resetPose(Pose2d targetPose){

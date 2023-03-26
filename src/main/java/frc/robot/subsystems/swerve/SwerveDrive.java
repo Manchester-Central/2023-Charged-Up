@@ -381,23 +381,25 @@ public class SwerveDrive extends SubsystemBase {
       // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
       double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
       double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
+      Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
+      Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
       if (leftDistance < rightDistance){
-        resetPose(LLLeftPose);
+        resetPose(LLLeftPoseWithGyro);
       }
       else{
-        resetPose(LLRightPose);
+        resetPose(LLRightPoseWithGyro);
       }
       
     }
     else if (LLRightPose != null){
       // System.out.println(LLRightPose.toString()); 
-
-      resetPose(LLRightPose);
+      Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
+      resetPose(LLRightPoseWithGyro);
     }
     else if (LLLeftPose != null){
       // System.out.println(LLLeftPose.toString()); 
-
-      resetPose(LLLeftPose);
+      Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
+      resetPose(LLLeftPoseWithGyro);
     }
   }
 

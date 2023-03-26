@@ -68,14 +68,14 @@ public class Score extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_gripper.setGripperMode(GripperMode.hold);
+    m_gripper.setGripperMode(GripperMode.unGrip);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if (m_releaseTime_MS != 0) {
-      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 500; 
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 750; 
     }
     return false;
   }

@@ -30,6 +30,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
+import frc.robot.commands.DriveUntilTipped;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriveToTargetWithLimelights;
 import frc.robot.commands.DriverRelativeDrive;
@@ -113,6 +114,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
     autoBuilder.registerCommand("stow", (parsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
+    autoBuilder.registerCommand("driveUntilTipped", (parsedCommand)-> DriveUntilTipped.createAutoCommand(parsedCommand, m_swerveDrive));
     // Configure the trigger bindings
     configureBindings();
     addCoachTabDashboardValues();

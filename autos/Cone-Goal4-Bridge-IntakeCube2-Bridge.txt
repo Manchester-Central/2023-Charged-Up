@@ -1,0 +1,12 @@
+resetPosition?drivePose=Score4
+score?armPose=ConeHighPose
+stow
+drive?x=3.269&y=5.276&angle=180
+drive?x=4.488&y=5.276&angle=180&maxPercentSpeed=1.0
+drive?x=5.473&y=5.878&angle=180
+moveArm?armPose=IntakeCubeBack
+driveAndGrip?x=6.989&y=5.878&angle=180
+stow
+drive?x=4.488&y=5.276&angle=180
+drive?x=3.678&y=5.272&angle=180&maxPercentSpeed=1.0
+xMode

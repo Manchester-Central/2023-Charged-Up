@@ -155,8 +155,8 @@ public class Wrist {
         // m_sparkMax.burnFlash();
     }
 
-    public boolean atTarget(){
-        return Math.abs(getEncoderRotation().getDegrees() - m_targetDegrees) < WristConstants.ToleranceDegrees;
+    public boolean atTarget(double targetDegrees){
+        return Math.abs(getEncoderRotation().getDegrees() - targetDegrees) < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {

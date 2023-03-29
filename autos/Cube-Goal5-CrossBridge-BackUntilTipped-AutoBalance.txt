@@ -1,0 +1,8 @@
+resetPosition?drivePose=Score5
+score?armPose=CubeHighPose
+driveAndMoveArm?x=3.269&y=5.276&angle=180&armPose=Stowed&timems=3000
+drive?x=7.750&y=5.276&angle=180&maxPercentSpeed=0.6
+wait?timems=500
+driveUntilTipped?speed=0.4&minAngleDegrees=12
+autoBalance
+xMode

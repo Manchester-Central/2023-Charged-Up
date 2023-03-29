@@ -15,10 +15,10 @@ import frc.robot.util.DashboardNumber;
 import frc.robot.util.DriveDirection;
 
 public class AutoBalanceDrive extends CommandBase {
-  private static PIDController pid = new PIDController(0.1, 0.0, 0.0);
+  private static PIDController pid = new PIDController(0.0075, 0.0, 0.0);
   public static PIDTuner PIDTuner = new PIDTuner("AutoBalance/PID_Tuner", DebugConstants.EnableDriveDebug, pid);
-  private static DashboardNumber MaxSpeed = new DashboardNumber("AutoBalance/MaxPercentPower", 0.5, DebugConstants.EnableDriveDebug, (newSpeed) -> {});
-  private static DashboardNumber AngleTolerance = new DashboardNumber("AutoBalance/AngleTolerance", 5, DebugConstants.EnableDriveDebug, (newTolerance) -> {});
+  private static DashboardNumber MaxSpeed = new DashboardNumber("AutoBalance/MaxPercentPower", 0.08, DebugConstants.EnableDriveDebug, (newSpeed) -> {});
+  private static DashboardNumber AngleTolerance = new DashboardNumber("AutoBalance/AngleTolerance", 12, DebugConstants.EnableDriveDebug, (newTolerance) -> {});
   SwerveDrive m_swerveDrive;
 
   public AutoBalanceDrive(SwerveDrive swerveDrive) {
@@ -39,7 +39,8 @@ public class AutoBalanceDrive extends CommandBase {
       m_swerveDrive.swerveXMode();
     } else {
       var speedX = MathUtil.clamp(pid.calculate(m_swerveDrive.getPitch().getDegrees()), -MaxSpeed.get(), MaxSpeed.get());
-      m_swerveDrive.moveFieldRelativeAngle(speedX, 0, DriveDirection.Towards.getAllianceAngle(), 1.0);
+      // m_swerveDrive.moveFieldRelativeAngle(speedX, 0, DriveDirection.Towards.getAllianceAngle(), 1.0);
+      m_swerveDrive.moveRobotRelative(speedX, 0, 0.0);
     }
   }
 }

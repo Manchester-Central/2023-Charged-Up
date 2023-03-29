@@ -30,6 +30,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
+import frc.robot.commands.DriveUntilTipped;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriveToTargetWithLimelights;
 import frc.robot.commands.DriverRelativeDrive;
@@ -69,7 +70,7 @@ public class RobotContainer {
 
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
-  private SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
+  public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -113,6 +114,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("driveAndGrip", (parsedCommand) -> AutoComboCommands.driveAndGrip(parsedCommand, m_swerveDrive, m_gripper));
     autoBuilder.registerCommand("stow", (parsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
+    autoBuilder.registerCommand("driveUntilTipped", (parsedCommand)-> DriveUntilTipped.createAutoCommand(parsedCommand, m_swerveDrive));
     // Configure the trigger bindings
     configureBindings();
     addCoachTabDashboardValues();
@@ -223,10 +225,11 @@ public class RobotContainer {
     m_operator.rightTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
     
     // test
-    if (DebugConstants.EnableArmDebug) {
-      m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
-      m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
-    }
+    // if (DebugConstants.EnableArmDebug) {
+    //   m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
+    //   m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
+    // }
+    m_operator.start().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
   }
 
   private Command scorePrep(ArmPose pose) {

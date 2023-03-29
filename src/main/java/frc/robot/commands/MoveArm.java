@@ -64,7 +64,7 @@ public class MoveArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.reachedTarget();
+    return m_arm.reachedTarget(m_armPoseSupplier.get());
   }
 }
 

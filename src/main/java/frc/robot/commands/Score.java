@@ -40,7 +40,7 @@ public class Score extends CommandBase {
     if (armPose == null) {
       return new InstantCommand();
     }
-    return new Score(arm, gripper, armPose, arm::reachedTarget);
+    return new Score(arm, gripper, armPose, () -> arm.reachedTarget(armPose));
   }
 
   // Called when the command is initially scheduled.
@@ -61,21 +61,21 @@ public class Score extends CommandBase {
       }
     }
     else{
-      m_gripper.setGripperMode(GripperMode.grip);
+      m_gripper.setGripperMode(GripperMode.hold);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_gripper.setGripperMode(GripperMode.grip);
+    m_gripper.setGripperMode(GripperMode.unGrip);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if (m_releaseTime_MS != 0) {
-      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 500; 
+      return Robot.getCurrentTimeMs() - m_releaseTime_MS > 750; 
     }
     return false;
   }

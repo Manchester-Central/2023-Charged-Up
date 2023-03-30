@@ -203,10 +203,10 @@ public class RobotContainer {
     BooleanSupplier isConeMode = () -> m_currentArmMode == ArmMode.Cone;
     BooleanSupplier isCubeMode = () -> m_currentArmMode == ArmMode.Cube;
 
-    //m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose));
+    m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose, ArmPose.ConeHighPoseBack));
     m_operator.povUp().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose, ArmPose.CubeHighPoseBack));
     
-    //m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose));
+    m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose, ArmPose.ConeMidPose));
     m_operator.povLeft().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose, ArmPose.CubeMidPoseBack));
     
     m_operator.povDown().whileTrue(scorePrep(ArmPose.LowScorePose, ArmPose.LowScorePoseBack));
@@ -214,14 +214,14 @@ public class RobotContainer {
     m_operator.povRight().whileTrue(scorePrep(ArmPose.LowScorePoseBack, ArmPose.LowScorePoseBack));
 
     // Intake Controls
-    m_operator.leftBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeDoubleStationBackCone));
-    m_operator.leftBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeDoubleStationBackCube));
+    m_operator.leftBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeDoubleStationConeFront, ArmPose.IntakeDoubleStationConeBack, PoseType.doubleSub));
+    m_operator.leftBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeDoubleStationCubeFront, ArmPose.IntakeDoubleStationCubeBack, PoseType.doubleSub));
     m_operator.leftTrigger().and(isConeMode).whileTrue(intake(ArmPose.IntakeConeVerticalBack));
     m_operator.leftTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
 
     
-    m_operator.rightBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeSingleStationCone));
-    m_operator.rightBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeSingleStationCube));
+    m_operator.rightBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeSingleStationConeFront, ArmPose.IntakeSingleStationConeBack, PoseType.singleSub));
+    m_operator.rightBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeSingleStationCubeFront, ArmPose.IntakeSingleStationCubeBack, PoseType.singleSub));
     m_operator.rightTrigger().and(isConeMode).whileTrue(intake(ArmPose.IntakeConeTippedBack));
     m_operator.rightTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
     

@@ -21,7 +21,7 @@ public class SmartArmPoseSelector {
     private ArmPose m_backPose;
     private PoseType m_poseType;
 
-    SmartArmPoseSelector(ArmPose frontPose, ArmPose backPose, PoseType poseType) {
+    public SmartArmPoseSelector(ArmPose frontPose, ArmPose backPose, PoseType poseType) {
         m_frontPose = frontPose;
         m_backPose = backPose;
         m_poseType = poseType;

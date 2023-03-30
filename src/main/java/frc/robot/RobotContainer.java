@@ -54,7 +54,9 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.SmartArmPoseSelector;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
+import frc.robot.subsystems.arm.SmartArmPoseSelector.PoseType;
 import frc.robot.subsystems.swerve.DrivePose;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.util.DriveDirection;
@@ -201,16 +203,15 @@ public class RobotContainer {
     BooleanSupplier isConeMode = () -> m_currentArmMode == ArmMode.Cone;
     BooleanSupplier isCubeMode = () -> m_currentArmMode == ArmMode.Cube;
 
-    m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose));
-    m_operator.povUp().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose));
+    //m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose));
+    m_operator.povUp().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose, ArmPose.CubeHighPoseBack));
     
-    m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose));
-    m_operator.povLeft().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose));
+    //m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose));
+    m_operator.povLeft().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose, ArmPose.CubeMidPoseBack));
     
-    m_operator.povDown().and(isConeMode).whileTrue(scorePrep(ArmPose.LowScorePose));
-    m_operator.povDown().and(isCubeMode).whileTrue(scorePrep(ArmPose.LowScorePose));
+    m_operator.povDown().whileTrue(scorePrep(ArmPose.LowScorePose, ArmPose.LowScorePoseBack));
     
-    m_operator.povRight().whileTrue(scorePrep(ArmPose.LowScorePoseBack));
+    m_operator.povRight().whileTrue(scorePrep(ArmPose.LowScorePoseBack, ArmPose.LowScorePoseBack));
 
     // Intake Controls
     m_operator.leftBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeDoubleStationBackCone));
@@ -232,12 +233,18 @@ public class RobotContainer {
     m_operator.start().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
   }
 
-  private Command scorePrep(ArmPose pose) {
-    return new MoveArm(m_arm, pose).repeatedly();
+  private Command scorePrep(ArmPose frontPose, ArmPose backPose) {
+    SmartArmPoseSelector poseSelector = new SmartArmPoseSelector(frontPose, backPose, PoseType.score);
+    return new MoveArm(m_arm, () -> poseSelector.getSmartPose(m_swerveDrive.getOdometryRotation())).repeatedly();
   }
 
   private Command intake(ArmPose pose) {
     return new MoveArm(m_arm, pose).repeatedly().alongWith(new Grip(m_gripper));
+  }
+
+  private Command intake(ArmPose frontPose, ArmPose backPose, PoseType poseType) {
+    SmartArmPoseSelector poseSelector = new SmartArmPoseSelector(frontPose, backPose, poseType);
+    return new MoveArm(m_arm, () -> poseSelector.getSmartPose(m_swerveDrive.getOdometryRotation())).repeatedly().alongWith(new Grip(m_gripper));
   }
 
   private void dashboardCommands() {
@@ -300,7 +307,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Always stow the arm before any auto
-    return (new MoveArm(m_arm, ArmPose.StowedPose).andThen(autoBuilder.createAutoCommand())).deadlineWith(new AutoTImerCommand());
+    return autoBuilder.createAutoCommand().deadlineWith(new AutoTImerCommand());
   }
 
   public void addSmartDashboard() {

@@ -206,7 +206,7 @@ public class RobotContainer {
     m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose, ArmPose.ConeHighPoseBack));
     m_operator.povUp().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose, ArmPose.CubeHighPoseBack));
     
-    m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose, ArmPose.ConeMidPose));
+    m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose, ArmPose.ConeMidPoseBack));
     m_operator.povLeft().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose, ArmPose.CubeMidPoseBack));
     
     m_operator.povDown().whileTrue(scorePrep(ArmPose.LowScorePose, ArmPose.LowScorePoseBack));

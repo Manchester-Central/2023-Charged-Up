@@ -1,18 +1,19 @@
 package frc.robot.subsystems;
 
-import com.fazecast.jSerialComm.SerialPort;
 
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CommConstants;
 
 public class ArduinoIO extends SubsystemBase {
     private SerialPort m_arduinoPort;
-    public byte[] m_rgbValues = {0, 0, 0};
+    private String m_rgbMessage;
     private Object m_mutex = new Object();
 
     public ArduinoIO() {
+        setRGB(255, 255, 255);
         try {
-            m_arduinoPort = SerialPort.getCommPort(CommConstants.arduinoPort); 
+            m_arduinoPort = new SerialPort(9600, SerialPort.Port.kUSB1);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -21,19 +22,20 @@ public class ArduinoIO extends SubsystemBase {
     @Override
     public void periodic() {
         synchronized(m_mutex) {
-        try {
-            m_arduinoPort.writeBytes(m_rgbValues, 3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                m_arduinoPort.writeString(m_rgbMessage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void setRGB(byte R, byte G, byte B) {
+    public void setRGB(int red, int green,  int blue) {  
         synchronized(m_mutex) {
-            m_rgbValues[0] = R;
-            m_rgbValues[1] = G;
-            m_rgbValues[2] = B;
+            String redString = String.format("%03d", red);
+            String greenString = String.format("%03d", green);
+            String blueString = String.format("%03d", blue);
+            m_rgbMessage = redString + greenString + blueString + ";";
         }
     }
 

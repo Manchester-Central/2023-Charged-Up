@@ -50,6 +50,7 @@ import frc.robot.commands.UnGrip;
 import frc.robot.commands.auto.AutoComboCommands;
 import frc.robot.commands.auto.AutoTImerCommand;
 import frc.robot.commands.test.TestWrist;
+import frc.robot.subsystems.ArduinoIO;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -73,6 +74,7 @@ public class RobotContainer {
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
   public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
+  public ArduinoIO m_arduino = new ArduinoIO();
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);

@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
       public void run() {
         m_robotContainer.delayedRobotInit();
       }
-    }, 3000 ); // Delaying by 3 seconds, since the swerve modules will require 2ish seconds for a rolling average for callibration
+    }, 5000 ); // Delaying by 3 seconds, since the swerve modules will require 2ish seconds for a rolling average for callibration
   }
 
   public static double robotMode()

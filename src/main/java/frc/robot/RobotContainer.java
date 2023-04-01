@@ -13,7 +13,9 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -78,6 +80,7 @@ public class RobotContainer {
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
+  private PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
   
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -106,6 +109,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    pdh.setSwitchableChannel(true);
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));

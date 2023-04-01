@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArduinoIO extends SubsystemBase {
@@ -11,6 +12,9 @@ public class ArduinoIO extends SubsystemBase {
 
     public ArduinoIO() {
         setRGB(255, 255, 255);
+        SmartDashboard.putNumber("led/red", 255);
+        SmartDashboard.putNumber("led/green", 255);
+        SmartDashboard.putNumber("led/blue", 255);
         try {
             m_arduinoPort = new SerialPort(9600, SerialPort.Port.kUSB1);
         } catch(Exception e) {
@@ -20,6 +24,10 @@ public class ArduinoIO extends SubsystemBase {
     
     @Override
     public void periodic() {
+        var red = (int)SmartDashboard.getNumber("led/red", 255);
+        var green = (int)SmartDashboard.getNumber("led/green", 255);
+        var blue = (int)SmartDashboard.getNumber("led/blue", 255);
+        setRGB(red, green, blue);
         synchronized(m_mutex) {
             try {
                 m_arduinoPort.writeString(m_rgbMessage);

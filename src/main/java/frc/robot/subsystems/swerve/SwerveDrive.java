@@ -10,17 +10,18 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,8 +30,6 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.RecalibrateModules;
-import frc.robot.logging.LogManager;
 import frc.robot.subsystems.Limelight;
 
 public class SwerveDrive extends SubsystemBase {
@@ -44,7 +43,7 @@ public class SwerveDrive extends SubsystemBase {
   private AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private SwerveDriveKinematics m_kinematics;
-  private SwerveDriveOdometry m_odometry;
+  private SwerveDrivePoseEstimator m_odometry;
   private Field2d m_field;
   private Rotation2d m_simrotation = new Rotation2d();
 
@@ -102,10 +101,12 @@ public class SwerveDrive extends SubsystemBase {
     
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());
-    m_odometry = new SwerveDriveOdometry(
+    Pose2d initialPoseMeters = new Pose2d(8, 4, Rotation2d.fromDegrees(0));
+    m_odometry = new SwerveDrivePoseEstimator(
         m_kinematics, getGyroRotation(),
-        getModulePositions());
-    resetPose(new Pose2d(8, 4, Rotation2d.fromDegrees(0)));
+        getModulePositions(),
+        initialPoseMeters);
+    resetPose(initialPoseMeters);
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
     m_XPid = new PIDController(0.6, 0.05, 0.1);
@@ -118,8 +119,8 @@ public class SwerveDrive extends SubsystemBase {
     m_YPid.setTolerance(SwerveConstants.DriveToTargetTolerance);
     m_AngleDegreesPid.setTolerance(SwerveConstants.AnglePIDTolerance.getDegrees());
     m_AnglePidTuner = new PIDTuner("SwerveDrive/Angle_PID_Tuner", true, m_AngleDegreesPid);
-    Robot.logManager.addNumber("SwerveDrive/X_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getX());
-    Robot.logManager.addNumber("SwerveDrive/Y_m", DebugConstants.EnableDriveDebug, () -> m_odometry.getPoseMeters().getY());
+    Robot.logManager.addNumber("SwerveDrive/X_m", DebugConstants.EnableDriveDebug, () -> getPose().getX());
+    Robot.logManager.addNumber("SwerveDrive/Y_m", DebugConstants.EnableDriveDebug, () -> getPose().getY());
     Robot.logManager.addNumber("SwerveDrive/Rotation_deg", DebugConstants.EnableDriveDebug, () -> getOdometryRotation().getDegrees());
     Robot.logManager.addNumber("SwerveDrive/Gyro_angle_deg", DebugConstants.EnableDriveDebug, () -> getGyroRotation().getDegrees());
     Robot.logManager.addNumber("SwerveDrive/Gyro_pitch_deg", DebugConstants.EnableDriveDebug, () -> getPitch().getDegrees());
@@ -260,8 +261,8 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public boolean atTarget() {
-    boolean isXTolerable = Math.abs(m_odometry.getPoseMeters().getX() - m_XPid.getSetpoint()) <= m_driveToTargetTolerance;
-    boolean isYTolerable = Math.abs(m_odometry.getPoseMeters().getY() - m_YPid.getSetpoint()) <= m_driveToTargetTolerance;
+    boolean isXTolerable = Math.abs(getPose().getX() - m_XPid.getSetpoint()) <= m_driveToTargetTolerance;
+    boolean isYTolerable = Math.abs(getPose().getY() - m_YPid.getSetpoint()) <= m_driveToTargetTolerance;
     return isXTolerable && isYTolerable && m_AngleDegreesPid.atSetpoint();
 
   }
@@ -273,7 +274,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void moveToTarget(double maxTranslationSpeedPercent) {
-    Pose2d pose = m_odometry.getPoseMeters();
+    Pose2d pose = getPose();
     double x = MathUtil.clamp(m_XPid.calculate(pose.getX()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
     double y = MathUtil.clamp(m_YPid.calculate(pose.getY()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
     double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
@@ -288,11 +289,11 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
 
   public Rotation2d getOdometryRotation() {
-    return m_odometry.getPoseMeters().getRotation();
+    return getPose().getRotation();
   }
 
   public void recalibrateModules(){
@@ -343,7 +344,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void resetHeading(Rotation2d targetHeading) {
-    var currentPose = m_odometry.getPoseMeters();
+    var currentPose = getPose();
     var updatedPose = new Pose2d(currentPose.getX(), currentPose.getY(), targetHeading);
     resetPose(updatedPose);
   }
@@ -385,22 +386,22 @@ public class SwerveDrive extends SubsystemBase {
       Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
       Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
       if (leftDistance < rightDistance){
-        resetPose(LLLeftPoseWithGyro);
+        m_odometry.addVisionMeasurement(LLLeftPoseWithGyro, Timer.getFPGATimestamp());
       }
       else{
-        resetPose(LLRightPoseWithGyro);
+        m_odometry.addVisionMeasurement(LLRightPoseWithGyro, Timer.getFPGATimestamp());
       }
       
     }
     else if (LLRightPose != null){
       // System.out.println(LLRightPose.toString()); 
       Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
-      resetPose(LLRightPoseWithGyro);
+      m_odometry.addVisionMeasurement(LLRightPoseWithGyro, Timer.getFPGATimestamp()); 
     }
     else if (LLLeftPose != null){
       // System.out.println(LLLeftPose.toString()); 
       Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
-      resetPose(LLLeftPoseWithGyro);
+      m_odometry.addVisionMeasurement(LLLeftPoseWithGyro, Timer.getFPGATimestamp());
     }
   }
 

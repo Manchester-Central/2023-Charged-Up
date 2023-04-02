@@ -117,6 +117,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("stow", (parsedCommand) -> new MoveArm(m_arm, ArmPose.StowedPose));
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     autoBuilder.registerCommand("driveUntilTipped", (parsedCommand)-> DriveUntilTipped.createAutoCommand(parsedCommand, m_swerveDrive));
+    autoBuilder.registerCommand("recalibrateArm", (parsedCommand) -> new InstantCommand(() -> m_arm.recalibrateSensors()));
     // Configure the trigger bindings
     configureBindings();
     addCoachTabDashboardValues();
@@ -230,8 +231,9 @@ public class RobotContainer {
     //   m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
     //   m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
     // }
-    m_operator.start().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
-    m_operator.back().whileTrue(new RunCommand(() -> m_swerveDrive.updatePoseFromLimelights()));
+    m_operator.back().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
+    m_operator.start().onTrue(new InstantCommand(() -> m_arm.recalibrateSensors()));
+    // m_operator.back().whileTrue(new RunCommand(() -> m_swerveDrive.updatePoseFromLimelights()));
   }
 
   private Command scorePrep(ArmPose frontPose, ArmPose backPose) {

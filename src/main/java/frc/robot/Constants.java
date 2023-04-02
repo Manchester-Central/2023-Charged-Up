@@ -130,5 +130,9 @@ public final class Constants {
     }
   } 
 
+  public static class PWMConstants {
+    public static final int lightStripPWMPort = 0;
+  }
+
 
 }

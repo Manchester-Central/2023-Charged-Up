@@ -30,6 +30,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
+import frc.robot.commands.DefaultLedCommand;
 import frc.robot.commands.DriveUntilTipped;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriveToTargetWithLimelights;
@@ -74,7 +75,7 @@ public class RobotContainer {
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
   public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
-  public ArduinoIO m_arduino = new ArduinoIO();
+  public ArduinoIO m_leds;
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -85,10 +86,10 @@ public class RobotContainer {
 
   private final Gamepad m_operator = new Gamepad(OperatorConstants.kOperatorControllerPort);
 
-  private enum ArmMode{ 
+  public enum ArmMode{ 
     Cube("#8a2be2"),
     Cone("#f9e909"),
-    Intake("#134122");
+    Unset("#134122");
     String m_colorString;
     ArmMode(String colorString){
       m_colorString = colorString;
@@ -99,13 +100,14 @@ public class RobotContainer {
     }
    }
 
-  private ArmMode m_currentArmMode = ArmMode.Intake;
+  private ArmMode m_currentArmMode = ArmMode.Unset;
 
 
   private final AutoBuilder autoBuilder = new AutoBuilder();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    m_leds = new ArduinoIO(() -> m_currentArmMode, m_gripper::hasPiece);
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));

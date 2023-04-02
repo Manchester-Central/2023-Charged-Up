@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer.ArmMode;
-import frc.robot.subsystems.ArduinoIO;
+import frc.robot.subsystems.LEDs;
 
 public class DefaultLedCommand extends CommandBase {
-  private ArduinoIO m_ledStrip;
+  private LEDs m_ledStrip;
   private Supplier<ArmMode> m_armModeSupplier;
 
-  public DefaultLedCommand(ArduinoIO leds, Supplier<ArmMode> armModeSupplier) {
+  public DefaultLedCommand(LEDs leds, Supplier<ArmMode> armModeSupplier) {
     m_ledStrip = leds;
     m_armModeSupplier = armModeSupplier;
     addRequirements(m_ledStrip);

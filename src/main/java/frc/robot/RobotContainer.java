@@ -51,7 +51,7 @@ import frc.robot.commands.UnGrip;
 import frc.robot.commands.auto.AutoComboCommands;
 import frc.robot.commands.auto.AutoTImerCommand;
 import frc.robot.commands.test.TestWrist;
-import frc.robot.subsystems.ArduinoIO;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
@@ -75,7 +75,7 @@ public class RobotContainer {
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
   public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
-  public ArduinoIO m_leds;
+  public LEDs m_leds;
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
   public final Arm m_arm = new Arm(m_gripper);
@@ -107,7 +107,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_leds = new ArduinoIO(() -> m_currentArmMode, m_gripper::hasPiece);
+    m_leds = new LEDs(() -> m_currentArmMode, m_gripper::hasPiece);
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));
@@ -201,8 +201,8 @@ public class RobotContainer {
     // Pose selection
     m_operator.y().onTrue(new InstantCommand(() -> m_currentArmMode = ArmMode.Cone));
     m_operator.x().onTrue(new InstantCommand(() -> m_currentArmMode = ArmMode.Cube));
-    m_operator.x().whileTrue(new StartEndCommand(() -> ArduinoIO.flashing = true, () -> ArduinoIO.flashing = false));
-    m_operator.y().whileTrue(new StartEndCommand(() -> ArduinoIO.flashing = true, () -> ArduinoIO.flashing = false));
+    m_operator.x().whileTrue(new StartEndCommand(() -> LEDs.flashing = true, () -> LEDs.flashing = false));
+    m_operator.y().whileTrue(new StartEndCommand(() -> LEDs.flashing = true, () -> LEDs.flashing = false));
     
     m_operator.a().whileTrue(new Grip(m_gripper));
     m_operator.b().whileTrue(new UnGrip(m_gripper));

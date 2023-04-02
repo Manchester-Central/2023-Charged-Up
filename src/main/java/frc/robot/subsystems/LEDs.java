@@ -12,7 +12,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.PWMConstants;
 import frc.robot.RobotContainer.ArmMode;
 
-public class ArduinoIO extends SubsystemBase {
+public class LEDs extends SubsystemBase {
     private AddressableLED m_lightStrip;
     private AddressableLEDBuffer m_buffer;
     private Supplier<ArmMode> m_armModeSupplier;
@@ -20,7 +20,7 @@ public class ArduinoIO extends SubsystemBase {
     private Object m_mutex = new Object();
     public static boolean flashing = false;
 
-    public ArduinoIO(Supplier<ArmMode> armModeSupplier, Supplier<Boolean> gripperHasPiece) {
+    public LEDs(Supplier<ArmMode> armModeSupplier, Supplier<Boolean> gripperHasPiece) {
         m_armModeSupplier = armModeSupplier;
         m_griperHasPieceSupplier = gripperHasPiece;
         SmartDashboard.putNumber("red", 255);

@@ -231,7 +231,8 @@ public class RobotContainer {
     //   m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
     // }
     m_operator.start().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
-    m_operator.back().whileTrue(new RunCommand(() -> m_swerveDrive.updatePoseFromLimelights()));
+    m_operator.back().onTrue(new InstantCommand(() -> m_arm.recalibrateSensors()));
+    // m_operator.back().whileTrue(new RunCommand(() -> m_swerveDrive.updatePoseFromLimelights()));
   }
 
   private Command scorePrep(ArmPose frontPose, ArmPose backPose) {

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.PWMConstants;
 import frc.robot.RobotContainer.ArmMode;
 
@@ -17,7 +18,7 @@ public class ArduinoIO extends SubsystemBase {
     private Supplier<ArmMode> m_armModeSupplier;
     private Supplier<Boolean> m_griperHasPieceSupplier;
     private Object m_mutex = new Object();
-    private boolean lightOn = true;
+    public static boolean flashing = false;
 
     public ArduinoIO(Supplier<ArmMode> armModeSupplier, Supplier<Boolean> gripperHasPiece) {
         m_armModeSupplier = armModeSupplier;
@@ -39,6 +40,12 @@ public class ArduinoIO extends SubsystemBase {
          * int blue = (int) SmartDashboard.getNumber("blue", 100);
          * setRGB(red, green, blue);
          */
+        if(flashing == true) {
+            if(Robot.getCurrentTimeMs() % 200 < 100) {
+                setRGB(0, 0, 0);
+                return;
+            }
+        }
         if (DriverStation.isDSAttached() == false) {
             setRGB(255, 30, 0);
             return;
@@ -72,10 +79,6 @@ public class ArduinoIO extends SubsystemBase {
             setRGB(200, 200, 200);
             return;
         }
-
-        
-
-
     }
 
     public void setRGB(int red, int green, int blue) {

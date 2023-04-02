@@ -201,6 +201,9 @@ public class RobotContainer {
     // Pose selection
     m_operator.y().onTrue(new InstantCommand(() -> m_currentArmMode = ArmMode.Cone));
     m_operator.x().onTrue(new InstantCommand(() -> m_currentArmMode = ArmMode.Cube));
+    m_operator.x().whileTrue(new StartEndCommand(() -> ArduinoIO.flashing = true, () -> ArduinoIO.flashing = false));
+    m_operator.y().whileTrue(new StartEndCommand(() -> ArduinoIO.flashing = true, () -> ArduinoIO.flashing = false));
+    
     m_operator.a().whileTrue(new Grip(m_gripper));
     m_operator.b().whileTrue(new UnGrip(m_gripper));
 

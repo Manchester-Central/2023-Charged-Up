@@ -37,7 +37,7 @@ public abstract class SwerveModule {
   private double m_absoluteAngleDegreesRollingAverageValue = 0;
 
   private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, DebugConstants.EnableDriveDebug, (newValue) -> {});
-  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.25, DebugConstants.EnableDriveDebug, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.375, DebugConstants.EnableDriveDebug, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
   public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {

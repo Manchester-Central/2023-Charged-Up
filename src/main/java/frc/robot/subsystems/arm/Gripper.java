@@ -74,7 +74,7 @@ public class Gripper extends SubsystemBase {
     }
 
     public boolean hasPiece(){
-        return m_sparkMax.getOutputCurrent() > m_stallLimit - 5;
+        return (m_sparkMax.getOutputCurrent() > m_stallLimit - 0.1) && (m_gripperMode == GripperMode.grip);
     }
 
     private void updateCurrentLimit(int stallLimit, int freeLimit, int limitRPM) {

@@ -12,11 +12,16 @@ public class ArduinoIO extends SubsystemBase {
     private Object m_mutex = new Object();
 
     public ArduinoIO() {
-        setRGB(0, 0, 255);
+        setRGB(255, 255, 255);
         try {
-            
-            m_arduinoPort = SerialPort.getCommPort(SerialPort.getCommPorts()[3].getSystemPortPath());
+            SerialPort[] ports = SerialPort.getCommPorts();
+            for(int i = 0; i < ports.length; i++) {
+              //  SmartDashboard.putString("Port path " + Integer.toString(i), ports[i].getSystemPortPath());
+              //  SmartDashboard.putString("Port name " + Integer.toString(i), ports[i].getDescriptivePortName());
+            }
+            m_arduinoPort = ports[3];
             m_arduinoPort.openPort();
+            
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -26,7 +31,8 @@ public class ArduinoIO extends SubsystemBase {
     public void periodic() {
         synchronized(m_mutex) {
             try {
-                m_arduinoPort.writeBytes(m_rgbMessage.getBytes(), m_rgbMessage.length());
+                    SmartDashboard.putBoolean("isPortOpen", m_arduinoPort.isOpen());
+                    m_arduinoPort.writeBytes(m_rgbMessage.getBytes(), m_rgbMessage.length());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,6 +45,7 @@ public class ArduinoIO extends SubsystemBase {
             String greenString = String.format("%03d", green);
             String blueString = String.format("%03d", blue);
             m_rgbMessage = redString + greenString + blueString + ";\n";
+            SmartDashboard.putString("rgb", m_rgbMessage);
         }
     }
 

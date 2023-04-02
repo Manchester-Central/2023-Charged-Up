@@ -11,12 +11,12 @@ public class ArduinoIO extends SubsystemBase {
     private Object m_mutex = new Object();
 
     public ArduinoIO() {
-        setRGB(255, 255, 255);
-        SmartDashboard.putNumber("led/red", 255);
-        SmartDashboard.putNumber("led/green", 255);
-        SmartDashboard.putNumber("led/blue", 255);
+        setRGB(100, 100, 100);
+        SmartDashboard.putNumber("led/red", 100);
+        SmartDashboard.putNumber("led/green", 100);
+        SmartDashboard.putNumber("led/blue", 100);
         try {
-            m_arduinoPort = new SerialPort(9600, SerialPort.Port.kUSB1);
+            m_arduinoPort = new SerialPort(9600, SerialPort.Port.kUSB2);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -24,9 +24,9 @@ public class ArduinoIO extends SubsystemBase {
     
     @Override
     public void periodic() {
-        var red = (int)SmartDashboard.getNumber("led/red", 255);
-        var green = (int)SmartDashboard.getNumber("led/green", 255);
-        var blue = (int)SmartDashboard.getNumber("led/blue", 255);
+        var red = (int)SmartDashboard.getNumber("led/red", 100);
+        var green = (int)SmartDashboard.getNumber("led/green", 100);
+        var blue = (int)SmartDashboard.getNumber("led/blue", 100);
         setRGB(red, green, blue);
         synchronized(m_mutex) {
             try {

@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 
-import edu.wpi.first.wpilibj.SerialPort;
+import com.fazecast.jSerialComm.SerialPort;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArduinoIO extends SubsystemBase {
@@ -10,9 +12,11 @@ public class ArduinoIO extends SubsystemBase {
     private Object m_mutex = new Object();
 
     public ArduinoIO() {
-        setRGB(255, 255, 255);
+        setRGB(0, 0, 255);
         try {
-            m_arduinoPort = new SerialPort(9600, SerialPort.Port.kUSB1);
+            
+            m_arduinoPort = SerialPort.getCommPort(SerialPort.getCommPorts()[3].getSystemPortPath());
+            m_arduinoPort.openPort();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -22,7 +26,7 @@ public class ArduinoIO extends SubsystemBase {
     public void periodic() {
         synchronized(m_mutex) {
             try {
-                m_arduinoPort.writeString(m_rgbMessage);
+                m_arduinoPort.writeBytes(m_rgbMessage.getBytes(), m_rgbMessage.length());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -34,7 +38,7 @@ public class ArduinoIO extends SubsystemBase {
             String redString = String.format("%03d", red);
             String greenString = String.format("%03d", green);
             String blueString = String.format("%03d", blue);
-            m_rgbMessage = redString + greenString + blueString + ";";
+            m_rgbMessage = redString + greenString + blueString + ";\n";
         }
     }
 

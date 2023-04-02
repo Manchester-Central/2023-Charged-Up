@@ -43,7 +43,7 @@ public class ArmPose {
         "Stowed", 
         -93 + shoulderOffset,
         ExtenderConstants.MinimumPositionMeters, 
-        190, 
+        185, 
         CoordinateType.ArmRelative
     );
 

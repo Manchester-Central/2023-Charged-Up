@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ArduinoIO extends SubsystemBase {
     private AddressableLED m_lightStrip;
     private AddressableLEDBuffer m_buffer;
-    private Object m_mutex = new Object();
 
     public ArduinoIO() {
         m_buffer = new AddressableLEDBuffer(30);

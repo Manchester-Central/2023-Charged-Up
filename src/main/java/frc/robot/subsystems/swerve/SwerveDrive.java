@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -59,6 +60,11 @@ public class SwerveDrive extends SubsystemBase {
   
   private Limelight m_limelightLeft;
   private Limelight m_limelightRight;
+
+  private SlewRateLimiter m_slewRateLimiterX = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+  private SlewRateLimiter m_slewRateLimiterY = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+  private SlewRateLimiter m_slewRateLimiterAngle = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(Limelight limelightLeft, Limelight limelightRight) {
@@ -258,6 +264,10 @@ public class SwerveDrive extends SubsystemBase {
     m_YPid.reset();
     m_AngleDegreesPid.reset();
     setDriveTranslationTolerance(SwerveConstants.DriveToTargetTolerance);
+    m_slewRateLimiterX.reset(0);
+    m_slewRateLimiterY.reset(0);
+    m_slewRateLimiterAngle.reset(0);
+
   }
 
   public boolean atTarget() {
@@ -276,9 +286,14 @@ public class SwerveDrive extends SubsystemBase {
   public void moveToTarget(double maxTranslationSpeedPercent) {
     Pose2d pose = getPose();
     double x = MathUtil.clamp(m_XPid.calculate(pose.getX()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
+    double xSlewed = m_slewRateLimiterX.calculate(x);
     double y = MathUtil.clamp(m_YPid.calculate(pose.getY()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
+    double ySlewed = m_slewRateLimiterY.calculate(y);
     double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
-    moveFieldRelativeForPID(x, y, angle);
+    double angleSlewed = m_slewRateLimiterAngle.calculate(angle);
+    moveFieldRelativeForPID(xSlewed, ySlewed, angleSlewed);
+    // moveFieldRelativeForPID(x, y, angle);
+    
   }
 
   public Rotation2d getGyroRotation() {

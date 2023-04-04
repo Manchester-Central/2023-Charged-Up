@@ -32,6 +32,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Limelight;
+import frc.robot.util.DashboardNumber;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -141,7 +142,11 @@ public class SwerveDrive extends SubsystemBase {
     double angleI = 0;
     double angleD = 0;
     m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle_PID_Tuner", DebugConstants.EnableDriveDebug, angleP, angleI, angleD, this::updateAnglePIDConstants);
-
+    new DashboardNumber("SwerveDrive/autoSlewLimit", SwerveConstants.AutoSlewRateLimit, DebugConstants.EnableDriveDebug, (newValue) -> {
+      m_slewRateLimiterX = new SlewRateLimiter(newValue);
+      m_slewRateLimiterY = new SlewRateLimiter(newValue);
+      m_slewRateLimiterAngle = new SlewRateLimiter(newValue);
+    });
   }
     
   public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {

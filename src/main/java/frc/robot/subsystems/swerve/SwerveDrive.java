@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -31,6 +32,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Limelight;
+import frc.robot.util.DashboardNumber;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -53,12 +55,21 @@ public class SwerveDrive extends SubsystemBase {
   private PIDTuner m_XPidTuner;
   private PIDTuner m_YPidTuner;
   private PIDTuner m_AnglePidTuner;
+  private final double kTranslationP = 0.6;
+  private final double kTranslationI = 0.05;
+  private final double kTranslationD = 0.1;
+
   private PIDTuner m_moduleVelocityPIDTuner;
   private PIDTuner m_moduleAnglePIDTuner;
   private double m_driveToTargetTolerance = SwerveConstants.DriveToTargetTolerance;
   
   private Limelight m_limelightLeft;
   private Limelight m_limelightRight;
+
+  private SlewRateLimiter m_slewRateLimiterX = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+  private SlewRateLimiter m_slewRateLimiterY = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+  private SlewRateLimiter m_slewRateLimiterAngle = new SlewRateLimiter(SwerveConstants.AutoSlewRateLimit);
+
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(Limelight limelightLeft, Limelight limelightRight) {
@@ -109,8 +120,8 @@ public class SwerveDrive extends SubsystemBase {
     resetPose(initialPoseMeters);
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
-    m_XPid = new PIDController(0.6, 0.05, 0.1);
-    m_YPid = new PIDController(0.6, 0.05, 0.1);
+    m_XPid = new PIDController(kTranslationP, kTranslationI, kTranslationD);
+    m_YPid = new PIDController(kTranslationP, kTranslationI, kTranslationD);
     m_AngleDegreesPid = new PIDController(0.01, 0.0001, 0.00);
     m_AngleDegreesPid.enableContinuousInput(-180, 180);
     m_XPidTuner = new PIDTuner("SwerveDrive/X_PID_Tuner", DebugConstants.EnableDriveDebug, m_XPid);
@@ -135,7 +146,11 @@ public class SwerveDrive extends SubsystemBase {
     double angleI = 0;
     double angleD = 0;
     m_moduleAnglePIDTuner = new PIDTuner("Swerve/ModuleAngle_PID_Tuner", DebugConstants.EnableDriveDebug, angleP, angleI, angleD, this::updateAnglePIDConstants);
-
+    new DashboardNumber("SwerveDrive/autoSlewLimit", SwerveConstants.AutoSlewRateLimit, DebugConstants.EnableDriveDebug, (newValue) -> {
+      m_slewRateLimiterX = new SlewRateLimiter(newValue);
+      m_slewRateLimiterY = new SlewRateLimiter(newValue);
+      m_slewRateLimiterAngle = new SlewRateLimiter(newValue);
+    });
   }
     
   public void addCoachTabDashboardValues(ShuffleboardTab coachTab) {
@@ -258,6 +273,10 @@ public class SwerveDrive extends SubsystemBase {
     m_YPid.reset();
     m_AngleDegreesPid.reset();
     setDriveTranslationTolerance(SwerveConstants.DriveToTargetTolerance);
+    m_slewRateLimiterX.reset(0);
+    m_slewRateLimiterY.reset(0);
+    m_slewRateLimiterAngle.reset(0);
+
   }
 
   public boolean atTarget() {
@@ -276,9 +295,14 @@ public class SwerveDrive extends SubsystemBase {
   public void moveToTarget(double maxTranslationSpeedPercent) {
     Pose2d pose = getPose();
     double x = MathUtil.clamp(m_XPid.calculate(pose.getX()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
+    double xSlewed = m_slewRateLimiterX.calculate(x);
     double y = MathUtil.clamp(m_YPid.calculate(pose.getY()), -maxTranslationSpeedPercent, maxTranslationSpeedPercent);
+    double ySlewed = m_slewRateLimiterY.calculate(y);
     double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
-    moveFieldRelativeForPID(x, y, angle);
+    double angleSlewed = m_slewRateLimiterAngle.calculate(angle);
+    moveFieldRelativeForPID(xSlewed, ySlewed, angleSlewed);
+    // moveFieldRelativeForPID(x, y, angle);
+    
   }
 
   public Rotation2d getGyroRotation() {
@@ -374,6 +398,13 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setDriveTranslationTolerance(double tolerance) {
     m_driveToTargetTolerance = tolerance;
+    if(tolerance >= SwerveConstants.DriveToTargetTolerance * 2) {
+      m_XPid.setP(kTranslationP * 4);
+      m_YPid.setP(kTranslationP * 4);
+    } else {
+      m_XPid.setP(kTranslationP);
+      m_YPid.setP(kTranslationP);
+    }
   }
 
   public void updatePoseFromLimelights() {

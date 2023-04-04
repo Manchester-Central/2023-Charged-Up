@@ -55,6 +55,10 @@ public class SwerveDrive extends SubsystemBase {
   private PIDTuner m_XPidTuner;
   private PIDTuner m_YPidTuner;
   private PIDTuner m_AnglePidTuner;
+  private final double kTranslationP = 0.6;
+  private final double kTranslationI = 0.05;
+  private final double kTranslationD = 0.1;
+
   private PIDTuner m_moduleVelocityPIDTuner;
   private PIDTuner m_moduleAnglePIDTuner;
   private double m_driveToTargetTolerance = SwerveConstants.DriveToTargetTolerance;
@@ -116,8 +120,8 @@ public class SwerveDrive extends SubsystemBase {
     resetPose(initialPoseMeters);
     m_field = new Field2d();
     SmartDashboard.putData("SwerveDrive", m_field);
-    m_XPid = new PIDController(0.6, 0.05, 0.1);
-    m_YPid = new PIDController(0.6, 0.05, 0.1);
+    m_XPid = new PIDController(kTranslationP, kTranslationI, kTranslationD);
+    m_YPid = new PIDController(kTranslationP, kTranslationI, kTranslationD);
     m_AngleDegreesPid = new PIDController(0.01, 0.0001, 0.00);
     m_AngleDegreesPid.enableContinuousInput(-180, 180);
     m_XPidTuner = new PIDTuner("SwerveDrive/X_PID_Tuner", DebugConstants.EnableDriveDebug, m_XPid);
@@ -394,6 +398,13 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setDriveTranslationTolerance(double tolerance) {
     m_driveToTargetTolerance = tolerance;
+    if(tolerance >= SwerveConstants.DriveToTargetTolerance * 2) {
+      m_XPid.setP(kTranslationP * 4);
+      m_YPid.setP(kTranslationP * 4);
+    } else {
+      m_XPid.setP(kTranslationP);
+      m_YPid.setP(kTranslationP);
+    }
   }
 
   public void updatePoseFromLimelights() {

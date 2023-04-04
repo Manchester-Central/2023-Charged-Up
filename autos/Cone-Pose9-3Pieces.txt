@@ -1,18 +1,20 @@
+CONE POSE 9 - 3 Pieces
 resetPosition?drivePose=Score9
+-- PIECE #1 Cone
 score?armPose=ConeHighPose
+-- PIECE #2 Cube
 driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=IntakeCubeBack&timems=3000&translationTolerance=0.12
-driveAndGrip?x=7.531&y=3.439&angle=180
-driveAndMoveArm?x=2.18&y=3.296&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.12
+driveAndGrip?x=7.531&y=3.439&angle=180&translationTolerance=0.2
+driveAndMoveArm?x=2.38&y=3.296&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.12
 driveAndMoveArm?drivePose=Score8&timems=1200&armPose=CubeHighPose
 score?armPose=CubeHighPose
-
-driveAndMoveArm?x=2.18&y=3.296&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.12
+-- PIECE #3 Cone
+driveAndMoveArm?x=2.68&y=3.272&angle=180&armPose=Stowed&timems=1000&translationTolerance=0.12
 driveAndMoveArm?x=5.176&y=3.272&angle=180&translationTolerance=0.12
-driveAndMoveArm?x=5.676&y=3.272&angle=235&armPose=IntakeConeTippedBack&translationTolerance=0.12
+driveAndMoveArm?x=6.176&y=3.972&angle=235&armPose=IntakeConeTippedBack&translationTolerance=0.2
 moveArm?armPose=IntakeConeTippedBack
-driveAndGrip?x=7.031&y=4.659&angle=235&translationTolerance=0.12
-driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.12
+driveAndGrip?x=7.231&y=4.959&angle=235&translationTolerance=0.2
+driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.2
 drive?x=2.18&y=3.296&angle=180&translationTolerance=0.12
 driveAndMoveArm?drivePose=Score7&timems=1200&armPose=ConeHighPose
 score?armPose=ConeHighPose
-stow?timems=1000

@@ -160,7 +160,7 @@ public class Wrist {
     }
 
     public void periodic() {
-        double increment = 2;
+        double increment = 4;
         if (Math.abs(m_simAngle - m_targetDegrees) <= Math.abs(increment)) {
             m_simAngle = m_targetDegrees;
         } else if(m_targetDegrees <= m_simAngle) {

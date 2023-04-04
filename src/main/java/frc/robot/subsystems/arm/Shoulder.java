@@ -44,7 +44,7 @@ public class Shoulder {
     PIDTuner m_pidTuner;
     SafetyZoneHelper m_SafetyZoneHelper;
     double m_targetDegrees = Double.NaN;
-    PIDController m_simPid = new PIDController(0.025, 0, 0); //d in simulator was causing issues, so simPID will use it's own values
+    PIDController m_simPid = new PIDController(0.05, 0, 0); //d in simulator was causing issues, so simPID will use it's own values
 
     private final double kSimExtenderFixedPosition = ExtenderConstants.MaximumPositionMeters;
 

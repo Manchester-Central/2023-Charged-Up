@@ -25,7 +25,7 @@ public final class Constants {
   public static final double UpdateFrequency_Hz = 50;
 
   public static class DebugConstants {
-    public static final boolean IsDebugMode = true; // SET ME TO FALSE BEFORE MATCHES
+    public static final boolean IsDebugMode = false; // SET ME TO FALSE BEFORE MATCHES
     public static final boolean EnableDriveDebug = IsDebugMode;
     public static final boolean EnableArmDebug = IsDebugMode;
     public static final boolean EnableGripperDebug = IsDebugMode;
@@ -46,7 +46,7 @@ public final class Constants {
     public static final double RobotWidth_m = RobotWidth_in / 39.3701;
     public static final double RobotLength_m = RobotLength_in / 39.3701;
     public static final double MaxRobotSpeed_mps = 4.6 * 0.9; //4.6 
-    public static final double MaxRobotRotation_radps = 5 * 0.9; //5
+    public static final double MaxRobotRotation_radps = 3; //5
     public static final double MaxSwerveModuleSpeed_mps = MaxRobotSpeed_mps;
     public static final int CanIdFrontLeftAngle = 1;
     public static final int CanIdFrontLeftVelocity = 2;

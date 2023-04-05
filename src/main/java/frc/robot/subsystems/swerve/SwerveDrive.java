@@ -34,7 +34,8 @@ import frc.robot.subsystems.Limelight;
 
 public class SwerveDrive extends SubsystemBase {
 
-  public static double SpeedModifier = 1.0;
+  public static double TranslationSpeedModifier = 1.0;
+  public static double RotationSpeedModifier = 1.0;
 
   private SwerveModule m_frontLeft;
   private SwerveModule m_frontRight;
@@ -188,9 +189,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void move(ChassisSpeeds chassisSpeeds) {
-    chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
-    chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps * SpeedModifier;
-    chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps * SpeedModifier;
+    chassisSpeeds.vxMetersPerSecond = MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1) * SwerveConstants.MaxRobotSpeed_mps * TranslationSpeedModifier;
+    chassisSpeeds.vyMetersPerSecond = MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)* SwerveConstants.MaxRobotSpeed_mps * TranslationSpeedModifier;
+    chassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1) * SwerveConstants.MaxRobotRotation_radps * RotationSpeedModifier;
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
       stop();
       return;

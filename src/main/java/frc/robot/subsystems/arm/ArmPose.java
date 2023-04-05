@@ -59,7 +59,7 @@ public class ArmPose {
         "IntakeConeTippedBack", 
         -124 + shoulderOffset, 
         1.040, 
-        329, 
+        334, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeCubeBack = addStaticPose(

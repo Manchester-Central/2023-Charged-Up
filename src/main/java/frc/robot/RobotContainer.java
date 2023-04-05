@@ -167,8 +167,20 @@ public class RobotContainer {
   private void driverControls() {
     Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
-    var slowModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.4, ()-> SwerveDrive.SpeedModifier = 1);
-    var creepModeCommand = new StartEndCommand(()-> SwerveDrive.SpeedModifier = 0.2, ()-> SwerveDrive.SpeedModifier = 1);
+    var slowModeCommand = new StartEndCommand(()-> {
+      SwerveDrive.TranslationSpeedModifier = 0.4;
+      SwerveDrive.RotationSpeedModifier = 0.4;
+    }, ()-> {
+      SwerveDrive.TranslationSpeedModifier = 1;
+      SwerveDrive.RotationSpeedModifier = 1;
+    });
+    var creepModeCommand = new StartEndCommand(()-> {
+      SwerveDrive.TranslationSpeedModifier = 0.2;
+      SwerveDrive.RotationSpeedModifier = 0.3;
+    }, ()-> {
+      SwerveDrive.TranslationSpeedModifier = 1;
+      SwerveDrive.RotationSpeedModifier = 1;
+    });
 
     m_driver.start().onTrue(driverRelativeDrive);
     m_driver.back().onTrue(new RobotRelativeDrive(m_swerveDrive, m_driver));

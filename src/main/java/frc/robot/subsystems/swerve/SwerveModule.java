@@ -36,8 +36,8 @@ public abstract class SwerveModule {
   private LinearFilter m_absoluteAngleDegreesRollingAverage = LinearFilter.movingAverage(100);
   private double m_absoluteAngleDegreesRollingAverageValue = 0;
 
-  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 1, DebugConstants.EnableDriveDebug, (newValue) -> {});
-  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.375, DebugConstants.EnableDriveDebug, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 0.2, DebugConstants.EnableDriveDebug, (newValue) -> {});
+  private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.5, DebugConstants.EnableDriveDebug, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
   public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
@@ -146,6 +146,8 @@ public abstract class SwerveModule {
     if (DebugConstants.EnableDriveDebug) {
       SmartDashboard.putNumber(getDSKey("Angle"), getModuleState().angle.getDegrees());
       SmartDashboard.putNumber(getDSKey("Speed"), getModuleState().speedMetersPerSecond);
+      SmartDashboard.putNumber(getDSKey("TargetSpeed"), m_targetState.speedMetersPerSecond);
+      SmartDashboard.putNumber(getDSKey("Current_amps"), m_velocity.getStatorCurrent());
       // SmartDashboard.putNumber(getDSKey("VelocityEncoderPosition"), m_velocity.getSelectedSensorPosition());
       // SmartDashboard.putNumber(getDSKey("AngleEncoder"), m_angle.getSelectedSensorPosition());
       // SmartDashboard.putNumber(getDSKey("Position"), getPosition().distanceMeters);

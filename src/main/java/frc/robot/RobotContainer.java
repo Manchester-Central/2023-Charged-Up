@@ -44,6 +44,7 @@ import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.RobotRelativeDrive;
 import frc.robot.commands.Score;
+import frc.robot.commands.SetPoseFromLimelights;
 import frc.robot.commands.ShuffleBoardPose;
 import frc.robot.commands.SwerveXMode;
 import frc.robot.commands.UnGrip;
@@ -109,7 +110,7 @@ public class RobotContainer {
     m_leds = new LEDs(() -> m_currentArmMode, m_gripper::hasPiece);
     // Register auto commands
     autoBuilder.registerCommand("resetPosition", (parsedCommand) -> ResetPose.createAutoCommand(parsedCommand, m_swerveDrive));
-    autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new InstantCommand(() -> m_swerveDrive.updatePoseFromLimelights(), m_swerveDrive));
+    autoBuilder.registerCommand("resetPositionWithLimelights", (parsedCommand) -> new SetPoseFromLimelights(m_swerveDrive));
     autoBuilder.registerCommand("drive", (parsedCommand) -> DriveToTarget.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("xMode", (parsedCommand) -> new SwerveXMode(m_swerveDrive));
     autoBuilder.registerCommand("driveWithLimelights", (parsedCommand) -> DriveToTargetWithLimelights.createAutoCommand(parsedCommand, m_swerveDrive));

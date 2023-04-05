@@ -377,32 +377,33 @@ public class SwerveDrive extends SubsystemBase {
     m_driveToTargetTolerance = tolerance;
   }
 
-  public void updatePoseFromLimelights() {
+  public Pose2d getPoseFromLimelights() {
     Pose2d LLLeftPose = m_limelightLeft.getPose();
     Pose2d LLRightPose = m_limelightRight.getPose();
     if (LLLeftPose != null && LLRightPose != null){
-      // System.out.println(LLLeftPose.toString() + LLRightPose.toString()); 
       double leftDistance = Math.abs(m_limelightLeft.getTargetXDistancePixels());
       double rightDistance = Math.abs(m_limelightRight.getTargetXDistancePixels());
-      Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
-      Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
       if (leftDistance < rightDistance){
-        m_odometry.addVisionMeasurement(LLLeftPoseWithGyro, Timer.getFPGATimestamp());
+        return LLLeftPose;
       }
       else{
-        m_odometry.addVisionMeasurement(LLRightPoseWithGyro, Timer.getFPGATimestamp());
+        return LLRightPose;
       }
-      
     }
     else if (LLRightPose != null){
-      // System.out.println(LLRightPose.toString()); 
-      Pose2d LLRightPoseWithGyro = new Pose2d(LLRightPose.getX(), LLRightPose.getY(), getOdometryRotation());
-      m_odometry.addVisionMeasurement(LLRightPoseWithGyro, Timer.getFPGATimestamp()); 
+      return LLRightPose;
     }
     else if (LLLeftPose != null){
-      // System.out.println(LLLeftPose.toString()); 
-      Pose2d LLLeftPoseWithGyro = new Pose2d(LLLeftPose.getX(), LLLeftPose.getY(), getOdometryRotation());
-      m_odometry.addVisionMeasurement(LLLeftPoseWithGyro, Timer.getFPGATimestamp());
+      return LLLeftPose;
+    }
+    return null;
+  }
+
+  public void updatePoseFromLimelights() {
+    var limelightPose = getPoseFromLimelights();
+    if(limelightPose != null) {
+      var poseWithGyro = new Pose2d(limelightPose.getX(), limelightPose.getY(), getOdometryRotation());
+      m_odometry.addVisionMeasurement(poseWithGyro, Timer.getFPGATimestamp());
     }
   }
 

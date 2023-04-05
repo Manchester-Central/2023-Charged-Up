@@ -125,7 +125,7 @@ public class SwerveDrive extends SubsystemBase {
     Robot.logManager.addNumber("SwerveDrive/Gyro_angle_deg", DebugConstants.EnableDriveDebug, () -> getGyroRotation().getDegrees());
     Robot.logManager.addNumber("SwerveDrive/Gyro_pitch_deg", DebugConstants.EnableDriveDebug, () -> getPitch().getDegrees());
     Robot.logManager.addNumber("SwerveDrive/Gyro_roll_deg", DebugConstants.EnableDriveDebug, () -> getRoll().getDegrees());
-    double velocityP = 0.1;
+    double velocityP = 0.0375;
     double velocityI = 0;
     double velocityD = 0;
     double velocityF = 0.054;

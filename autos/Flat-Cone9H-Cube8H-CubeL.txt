@@ -1,0 +1,17 @@
+Flat-Cone9H-Cube8H-CubeL
+--Piece 1
+resetPosition?drivePose=Score9
+score?armPose=ConeHighPose
+recalibrateArm
+--Piece 2
+driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=IntakeCubeBack&timems=3000&translationTolerance=0.15
+driveAndGrip?x=7.531&y=3.439&angle=180&translationTolerance=0.15
+driveAndMoveArm?x=2.38&y=3.096&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.15
+drive?x=1.855&y=3.592&angle=180&timems=1200
+score?armPose=CubeHighPose
+--Piece 3
+driveAndMoveArm?x=5.676&y=3.296&angle=180&armPose=IntakeCubeBack&timems=3000&translationTolerance=0.15
+driveAndGrip?x=7.58&y=3.177&angle=135&translationTolerance=0.15
+driveAndMoveArm?x=5.676&y=3.296&angle=180&armPose=LowScorePose&timems=3000&translationTolerance=0.15
+driveAndMoveArm?x=2.38&y=3.096&angle=180&armPose=LowScorePose&timems=3000
+score?armPose=LowScorePose

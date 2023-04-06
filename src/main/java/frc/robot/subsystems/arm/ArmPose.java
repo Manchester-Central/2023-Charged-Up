@@ -121,7 +121,7 @@ public class ArmPose {
 
     public static final ArmPose IntakeDoubleStationConeFront = addStaticPose(
         "IntakeDoubleStationConeFront", 
-        3.5 + shoulderOffset,
+        6.5 + shoulderOffset,
         0.823, 
         350.01, 
         CoordinateType.ArmRelative
@@ -129,7 +129,7 @@ public class ArmPose {
 
     public static final ArmPose IntakeDoubleStationCubeFront = addStaticPose(
         "IntakeDoubleStationCubeFront", 
-        11.82 + shoulderOffset,
+        14.82 + shoulderOffset,
         0.818, 
         323, 
         CoordinateType.ArmRelative
@@ -137,7 +137,7 @@ public class ArmPose {
 
     public static final ArmPose IntakeDoubleStationConeBack = addStaticPose(
         "IntakeDoubleStationConeBack", 
-        -185.63 + shoulderOffset,
+        -177.63 + shoulderOffset,
         0.82, 
         28.8, 
         CoordinateType.ArmRelative
@@ -145,7 +145,7 @@ public class ArmPose {
 
     public static final ArmPose IntakeDoubleStationCubeBack = addStaticPose(
         "IntakeDoubleStationCubeBack", 
-        167.30 + shoulderOffset,
+        177.30 + shoulderOffset,
         0.874, 
         45, 
         CoordinateType.ArmRelative

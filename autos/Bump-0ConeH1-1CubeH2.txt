@@ -12,8 +12,3 @@ driveAndIntake?x=8.0&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&tran
 driveAndMoveArm?x=2.9&y=7.219&angle=180&armPose=CubeHighPose&timems=2200&translationTolerance=0.15
 driveAndMoveArm?x=2.2&y=6.932&angle=180&armPose=CubeHighPose&timems=3500&translationTolerance=0.15
 score?armPose=CubeHighPose&timems=3000
---Balance
-driveAndMoveArm?x=2.573&y=5.85&angle=180&armPose=Stowed&translationTolerance=0.15&timems=1000
-drive?x=5.7&y=5.837&angle=180&translationTolerance=0.15&timems=3000
-autoBalance?translationTolerance=4000&timems=1000
-xMode

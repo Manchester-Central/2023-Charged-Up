@@ -330,7 +330,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Always stow the arm before any auto
-    return autoBuilder.createAutoCommand().deadlineWith(new AutoTImerCommand());
+    return new InstantCommand(() -> m_gripper.setGripperMode(GripperMode.hold)).andThen(autoBuilder.createAutoCommand().deadlineWith(new AutoTImerCommand()));
   }
 
   public void addSmartDashboard() {

@@ -1,7 +1,9 @@
 Bump-0ConeH1-1CubeP-2CubeH2
 --Piece 1
+wait?timems=25
 resetPosition?drivePose=Score1
 moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
 recalibrateArm
 score?armPose=ConeHighPose&timems=3000
 --Piece 2

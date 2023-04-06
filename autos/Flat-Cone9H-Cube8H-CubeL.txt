@@ -1,7 +1,9 @@
 Flat-Cone9H-Cube8H-CubeL
 --Piece 1
+wait?timems=25
 resetPosition?drivePose=Score9
 moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
 recalibrateArm
 score?armPose=ConeHighPose&timems=3000
 --Piece 2

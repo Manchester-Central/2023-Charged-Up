@@ -5,7 +5,7 @@ score?armPose=ConeHighPose
 recalibrateArm
 --Piece 2
 driveAndMoveArm?x=5.622&y=7.136&angle=174.8&armPose=IntakeCubeBack&timeout=3500&translationTolerance=0.15
-driveAndIntake?x=6.8&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndIntake?x=7.55&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
 driveAndMoveArm?x=4.397&y=7.434&angle=180&armPose=LowScorePose&timeout=3500&translationTolerance=0.30
 score?armPose=LowScorePose
 --Piece 3

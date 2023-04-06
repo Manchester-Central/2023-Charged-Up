@@ -1,0 +1,14 @@
+Bump-0ConeH1-1CubeH2-Balance
+--Piece 1
+resetPosition?drivePose=Score1
+score?armPose=ConeHighPose
+recalibrateArm
+--Piece 2
+driveAndIntake?x=6.8&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&timeout=3500&translationTolerance=0.15
+score?armPose=CubeHighPose
+--Balance
+driveAndMoveArm?x=2.573&y=5.85&angle=180&armPose=Stowed&translationTolernce=0.15
+drive?x=3.5&y=5.837&angle=180&translationTolerance=0.15
+autoBalance?translationTolerance=4000
+xMode

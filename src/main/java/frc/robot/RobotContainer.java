@@ -122,6 +122,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     autoBuilder.registerCommand("driveUntilTipped", (parsedCommand)-> DriveUntilTipped.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("recalibrateArm", (parsedCommand) -> new InstantCommand(() -> m_arm.recalibrateSensors()));
+    autoBuilder.registerCommand("driveAndIntake", (parsedCommand) -> AutoComboCommands.DriveAndIntake(parsedCommand, m_swerveDrive, m_gripper, m_arm));
     // Configure the trigger bindings
     configureBindings();
     addCoachTabDashboardValues();

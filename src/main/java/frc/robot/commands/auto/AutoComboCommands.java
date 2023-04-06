@@ -37,4 +37,11 @@ public class AutoComboCommands {
     // TODO update when we can detect that we have pick up the game piece
     return new ParallelRaceGroup(driveCommand, gripCommand);
   }
+
+  public static Command DriveAndIntake(ParsedCommand pc, SwerveDrive swerveDrive, Gripper gripper, Arm arm) {
+    Command driveCommand = DriveToTarget.createAutoCommand(pc, swerveDrive);
+    Command gripCommand = new Grip(gripper);
+    Command armPoseCommand = MoveArm.createAutoCommand(pc, arm);
+    return armPoseCommand.alongWith(new ParallelRaceGroup(driveCommand, gripCommand));
+  }
 }

@@ -4,7 +4,9 @@ resetPosition?drivePose=Score1
 score?armPose=ConeHighPose
 recalibrateArm
 --Piece 2
+driveAndMoveArm?x=5.622&y=7.136&angle=174.8&armPose=IntakeCubeBack&timeout=3500&translationTolerance=0.15
 driveAndIntake?x=6.8&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndMoveArm?x=2.391&y=7.219&angle=180&armPose=CubeHighPose&timeout=3500&translationTolerance=0.15
 driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&timeout=3500&translationTolerance=0.15
 score?armPose=CubeHighPose
 --Balance

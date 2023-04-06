@@ -1,16 +1,16 @@
 Bump-0ConeH1-1CubeH2-Balance
 --Piece 1
 resetPosition?drivePose=Score1
-score?armPose=ConeHighPose
+score?armPose=ConeHighPose&timems=3000
 recalibrateArm
 --Piece 2
-driveAndMoveArm?x=5.622&y=7.136&angle=174.8&armPose=IntakeCubeBack&timeout=3500&translationTolerance=0.15
+driveAndMoveArm?x=5.622&y=7.136&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
 driveAndIntake?x=7.55&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
-driveAndMoveArm?x=2.391&y=7.219&angle=180&armPose=CubeHighPose&timeout=3500&translationTolerance=0.15
-driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&timeout=3500&translationTolerance=0.15
-score?armPose=CubeHighPose
+driveAndMoveArm?x=2.391&y=7.219&angle=180&armPose=CubeHighPose&timems=3500&translationTolerance=0.15
+driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&timems=3500&translationTolerance=0.15
+score?armPose=CubeHighPose&timems=3000
 --Balance
-driveAndMoveArm?x=2.573&y=5.85&angle=180&armPose=Stowed&translationTolernce=0.15
-drive?x=3.5&y=5.837&angle=180&translationTolerance=0.15
-autoBalance?translationTolerance=4000
+driveAndMoveArm?x=2.573&y=5.85&angle=180&armPose=Stowed&translationTolerance=0.15&timems=3000
+drive?x=3.5&y=5.837&angle=180&translationTolerance=0.15&timems=3000
+autoBalance?translationTolerance=4000&timems=5000
 xMode

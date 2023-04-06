@@ -185,7 +185,7 @@ public class ArmPose {
     );
     public static final ArmPose CubeHighPose = addStaticPose(
         "CubeHighPose", 
-        16.4 + shoulderOffset,
+        19.4 + shoulderOffset,
         1.194, 
         321, 
         CoordinateType.ArmRelative
@@ -202,7 +202,7 @@ public class ArmPose {
 
     public static final ArmPose ConeMidPose = addStaticPose(
         "ConeMidPose", 
-        9, 
+        12, 
         ExtenderConstants.MinimumPositionMeters + 0.07, 
         311, 
         CoordinateType.ArmRelative
@@ -216,9 +216,9 @@ public class ArmPose {
     );
     public static final ArmPose ConeHighPose = addStaticPose(
         "ConeHighPose", 
-        17.5 + shoulderOffset, 
+        19.5 + shoulderOffset, 
         1.194, 
-        321, 
+        326, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose ConeHighPoseBack = addStaticPose(

@@ -92,7 +92,7 @@ public class DrivePose {
         var xDistanceToMid = FieldMidpointMeters - pose.getX();
         var newX = FieldMidpointMeters + xDistanceToMid;
         var newY = pose.getY();
-        var newAngle = pose.getRotation().plus(Rotation2d.fromDegrees(180));
+        var newAngle = Rotation2d.fromDegrees(180).minus(pose.getRotation());
         return new Pose2d(newX, newY, newAngle);
     }
 }

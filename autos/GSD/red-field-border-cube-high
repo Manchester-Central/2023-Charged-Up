@@ -1,0 +1,8 @@
+red-field-border-cube-high
+resetPosition?x=13.62&y=1.5&angle=0
+stow?timeMS=1000
+cubeHighPose?timeMS=3000
+unGrip?timeMS=1000
+stow?timeMS=2000
+driveToTarget?x=13.62&y=1.2&angle=0&timeMS=1000
+driveToTarget?x=9&y=1.2&angle=0

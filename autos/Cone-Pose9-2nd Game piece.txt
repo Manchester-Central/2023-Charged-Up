@@ -2,9 +2,9 @@ resetPosition?drivePose=Score9
 score?armPose=ConeHighPose
 driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=Stowed&timems=3000
 moveArm?armPose=IntakeCubeBack
-driveAndGrip?x=7.531&y=3.439&angle=180
+driveAndGrip?x=7.031&y=3.439&angle=180
 driveAndMoveArm?x=2.18&y=3.296&angle=180&armPose=Stowed&timems=3000
-drive?drivePose=Score8&timems=1500
+drive?drivePose=Score8
 score?armPose=CubeHighPose
 driveAndMoveArm?x=2.18&y=3.296&angle=180&armPose=Stowed&timems=3000
 drive?x=5.676&y=3.272&angle=180

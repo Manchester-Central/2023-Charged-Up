@@ -1,0 +1,3 @@
+resetPosition?x=8&y=4
+namedPose?pose=LowScorePose
+namedPose?pose=CubeHighPose

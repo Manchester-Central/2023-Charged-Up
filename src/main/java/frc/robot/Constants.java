@@ -131,7 +131,11 @@ public final class Constants {
   } 
 
   public static class PWMConstants {
-    public static final int lightStripPWMPort = 0;
+    public static final int LightStripPWMPort = 0;
+  }
+
+  public static class LedConstants {
+    public static final int NumLeds = 100;
   }
 
 

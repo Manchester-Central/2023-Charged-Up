@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.LedConstants;
 import frc.robot.Constants.PWMConstants;
 import frc.robot.RobotContainer.ArmMode;
 
@@ -19,6 +21,7 @@ public class LEDs extends SubsystemBase {
     private Supplier<Boolean> m_griperHasPieceSupplier;
     private Object m_mutex = new Object();
     public static boolean flashing = false;
+    public static boolean strobeTeamColors = false;
 
     public LEDs(Supplier<ArmMode> armModeSupplier, Supplier<Boolean> gripperHasPiece) {
         m_armModeSupplier = armModeSupplier;
@@ -26,8 +29,8 @@ public class LEDs extends SubsystemBase {
         SmartDashboard.putNumber("red", 255);
         SmartDashboard.putNumber("green", 0);
         SmartDashboard.putNumber("blue", 100);
-        m_buffer = new AddressableLEDBuffer(100);
-        m_lightStrip = new AddressableLED(PWMConstants.lightStripPWMPort);
+        m_buffer = new AddressableLEDBuffer(LedConstants.NumLeds);
+        m_lightStrip = new AddressableLED(PWMConstants.LightStripPWMPort);
         m_lightStrip.setLength(m_buffer.getLength());
         m_lightStrip.start();
     }
@@ -40,6 +43,19 @@ public class LEDs extends SubsystemBase {
          * int blue = (int) SmartDashboard.getNumber("blue", 100);
          * setRGB(red, green, blue);
          */
+
+         if(strobeTeamColors == true) {
+            for(int i = 0; i < LedConstants.NumLeds; i++) {
+                m_buffer.setLED(i, new Color(255, 30, 0));
+                m_lightStrip.setData(m_buffer);
+            }
+            for(int i = 0; i < LedConstants.NumLeds; i++) {
+                m_buffer.setLED(i, new Color(0, 0, 0));
+                m_lightStrip.setData(m_buffer);
+            }
+            return;
+         }
+
         if(flashing == true) {
             if(Robot.getCurrentTimeMs() % 200 < 100) {
                 setRGB(0, 0, 0);

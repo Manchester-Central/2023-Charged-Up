@@ -56,7 +56,7 @@ public class ArmPose {
     );
     public static final ArmPose IntakeConeTippedBack = addStaticPose(
         "IntakeConeTippedBack", 
-        -121, 
+        -119, 
         1.040, 
         334, 
         CoordinateType.ArmRelative
@@ -65,7 +65,7 @@ public class ArmPose {
         "IntakeCubeBack", 
         -116.5, 
         0.803, 
-        343, 
+        348, 
         CoordinateType.ArmRelative
     );
     public static final ArmPose IntakeConeVerticalFront = addStaticPose(
@@ -153,9 +153,9 @@ public class ArmPose {
     // Low pose
     public static final ArmPose LowScorePose = addStaticPose(
         "LowScorePose", 
-        -84, 
+        -80, 
         ExtenderConstants.MinimumPositionMeters, 
-        105, 
+        115, 
         CoordinateType.ArmRelative
     );
 
@@ -191,7 +191,7 @@ public class ArmPose {
     );
     public static final ArmPose CubeHighPoseBack = addStaticPose(
         "CubeHighPoseBack", 
-        -192, 
+        -187, 
         1.194, 
         49, 
         CoordinateType.ArmRelative //TODO finalize values

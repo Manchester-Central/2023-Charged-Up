@@ -19,6 +19,7 @@ public class LEDs extends SubsystemBase {
     private Supplier<Boolean> m_griperHasPieceSupplier;
     private Object m_mutex = new Object();
     public static boolean flashing = false;
+    private int m_rainbowFirstPixelHue = 0;
 
     public LEDs(Supplier<ArmMode> armModeSupplier, Supplier<Boolean> gripperHasPiece) {
         m_armModeSupplier = armModeSupplier;
@@ -41,10 +42,8 @@ public class LEDs extends SubsystemBase {
          * setRGB(red, green, blue);
          */
         if(flashing == true) {
-            if(Robot.getCurrentTimeMs() % 200 < 100) {
-                setRGB(0, 0, 0);
-                return;
-            }
+            rainbow();
+            return;
         }
         if (DriverStation.isDSAttached() == false) {
             setRGB(255, 30, 0);
@@ -62,17 +61,16 @@ public class LEDs extends SubsystemBase {
             return;
         }
 
-        if(m_griperHasPieceSupplier.get() == true) {
+        /* if(m_griperHasPieceSupplier.get() == true) {
             setRGB(0, 255, 0);
             return;
-        }
+        } */
 
-        // Check whether we are in cubee mode or cone mode. Set the led color
-        // appropriately.
-        if (m_armModeSupplier.get() == ArmMode.Cone) {
+        // Hijack cube/cone to get CHAOS colors.
+        if (m_armModeSupplier.get() == ArmMode.Cone) { // Green
             setRGB(255, 100, 0);
             return;
-        } else if (m_armModeSupplier.get() == ArmMode.Cube) {
+        } else if (m_armModeSupplier.get() == ArmMode.Cube) { // Orange
             setRGB(115, 0, 75);
             return;
         } else if (m_armModeSupplier.get() == ArmMode.Unset) {
@@ -89,4 +87,21 @@ public class LEDs extends SubsystemBase {
             m_lightStrip.setData(m_buffer);
         }
     }
+
+    // Ripped straight from the WPILib documentation. Smooth.
+    private void rainbow() {
+        // For every pixel
+        for (var i = 0; i < m_buffer.getLength(); i++) {
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (m_rainbowFirstPixelHue + (i * 180 / m_buffer.getLength())) % 180;
+        // Set the value
+        m_buffer.setHSV(i, hue, 255, 128);
+        }
+        // Increase by to make the rainbow "move"
+        m_rainbowFirstPixelHue += 3;
+        // Check bounds
+        m_rainbowFirstPixelHue %= 180;
+        m_lightStrip.setData(m_buffer);
+  }
 }

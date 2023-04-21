@@ -61,10 +61,10 @@ public class LEDs extends SubsystemBase {
             return;
         }
 
-        /* if(m_griperHasPieceSupplier.get() == true) {
+         if(m_griperHasPieceSupplier.get() == true) {
             setRGB(0, 255, 0);
             return;
-        } */
+        } 
 
         // Hijack cube/cone to get CHAOS colors.
         if (m_armModeSupplier.get() == ArmMode.Cone) { // Green

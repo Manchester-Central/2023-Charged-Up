@@ -1,0 +1,21 @@
+Bump-0ConeH1-1CubeP-2CubeH2
+--Piece 1
+wait?timems=25
+resetPosition?drivePose=Score1
+moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
+recalibrateArm
+score?armPose=ConeHighPose&timems=3000
+--Piece 2
+driveAndMoveArm?x=6.75&y=7.136&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndIntake?x=7.55&y=6.729&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndMoveArm?x=6.25&y=7.434&angle=174.8&armPose=LowScorePose&timems=3500&translationTolerance=0.15
+score?armPose=LowScorePose&timems=3000
+--Piece 3
+drive?x=7.0&y=7.426&angle=148&timems=1000
+driveAndMoveArm?x=7.25&y=7.43&angle=148&armPose=IntakeCubeBack&translationTolerance=0.15&timems=3000
+driveAndIntake?x=8.0&y=5.894&angle=148&armPose=IntakeCubeBack&translationTolerance=0.15&timems=3000
+driveAndMoveArm?x=7.0&y=7.426&angle=180&armPose=Stowed&translationTolerance=0.15&timems=3000
+driveAndMoveArm?x=2.3&y=7.46&angle=180&armPose=CubeHighPose&translationTolerance=0.15&timems=3000
+driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&translationTolerance=0.15&timems=1000
+score?armPose=CubeHighPose&timems=3000

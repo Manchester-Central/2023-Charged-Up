@@ -26,7 +26,7 @@ public class LEDs extends SubsystemBase {
         SmartDashboard.putNumber("red", 255);
         SmartDashboard.putNumber("green", 0);
         SmartDashboard.putNumber("blue", 100);
-        m_buffer = new AddressableLEDBuffer(60);
+        m_buffer = new AddressableLEDBuffer(100);
         m_lightStrip = new AddressableLED(PWMConstants.lightStripPWMPort);
         m_lightStrip.setLength(m_buffer.getLength());
         m_lightStrip.start();

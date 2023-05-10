@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["resetPosition?drivePose=Score5", "score?armPose=ConeHighPose", "stow", "drive?x=3.269&y=5.276&angle=180", "drive?x=4.488&y=5.276&angle=180&maxPercentSpeed=1.0", "drive?x=5.473&y=5.878&angle=180", "moveArm?armPose=IntakeCubeBack", "driveAndGrip?x=6.489&y=5.878&angle=180", "stow", "drive?x=4.488&y=5.276&angle=180", "drive?x=3.269&y=5.276&angle=180&maxPercentSpeed=1.0", "drive?drivePose=Score4", "score?armPose=CubeHighPose", "drive?x=3.269&y=5.276&angle=180", "drive?x=3.878&y=5.272&angle=180", "", ""],
+    "value": ["Bump-0ConeH1-1CubeP-2CubeH2", "--Piece 1", "resetPosition?drivePose=Score1", "score?armPose=ConeHighPose", "recalibrateArm", "--Piece 2", "driveAndMoveArm?x=5.622&y=7.136&angle=174.8&armPose=IntakeCubeBack&timeout=3500&translationTolerance=0.15", "driveAndIntake?x=6.8&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15", "driveAndMoveArm?x=4.397&y=7.434&angle=180&armPose=LowScorePose&timeout=3500&translationTolerance=0.30", "score?armPose=LowScorePose", "--Piece 3", "driveAndMoveArm?x=6.195&y=6.318&angle=148&armPose=IntakeCubeBack&translationTolernce=0.15", "driveAndIntake?x=6.879&y=5.894&angle=148&armPose=IntakeCubeBack&translationTolerance=0.15", "driveAndMoveArm?x=5&y=7.426&angle=180&armPose=Stowed&translationTolernce=0.15", "driveAndMoveArm?x=2.3&y=7.46&angle=180&armPose=CubeHighPose&translationTolerance=0.15", "driveAndMoveArm?x=1.843&y=6.932&angle=180&armPose=CubeHighPose&translationTolerance=0.15&timeout=1000", "score?armPose=CubeHighPose", ""],
     "properties": {
       "persistent": true
     }

@@ -1,0 +1,8 @@
+blue-barrier-cube-mid
+resetPosition?x=2.35&y=4.5&angle=180
+stow?timeMS=1000
+cubeMidPose?timeMS=3000
+unGrip?timeMS=1000
+stow?timeMS=2000
+driveToTarget?x=3.11&y=4.7&angle=180&timeMS=1000
+driveToTarget?x=4.5&y=4.7&angle=180

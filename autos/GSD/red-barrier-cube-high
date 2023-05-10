@@ -1,0 +1,8 @@
+red-barrier-cube-high
+resetPosition?x=13.5&y=4.5&angle=0
+stow?timeMS=1000
+cubeHighPose?timeMS=3000
+unGrip?timeMS=1000
+stow?timeMS=2000
+driveToTarget?x=12.9&y=4.7&angle=0&timeMS=1000
+driveToTarget?x=11.5&y=4.7&angle=0

@@ -84,7 +84,7 @@ public final class Constants {
       public static final int CanIdShoulderR_B = 13;
       public static final int AbsoluteEncoderDIOPort = 0;
       public static final double AbsoluteAngleConversionFactor = 360; 
-      public static final double AbsoluteAngleZeroOffset = -190; 
+      public static final double AbsoluteAngleZeroOffset = -193; 
       public static final double SparkMaxEncoderConversionFactor = 2.6768; 
       public static final double MinimumAngleDegrees = -205; 
       public static final double MaximumAngleDegrees = 25; 
@@ -116,7 +116,7 @@ public final class Constants {
       public static final double MinimumAngle = -30; 
       public static final double MaximumAngle = 410; 
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
-      public static final double AbsoluteAngleZeroOffset = 130.0;
+      public static final double AbsoluteAngleZeroOffset = 126.0;
       public static final double SparkMaxEncoderConversionFactor = 5.803;
       public static final double RampUpRate = 0.1; 
       public static final double ToleranceDegrees = 2.0; 

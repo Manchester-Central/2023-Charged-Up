@@ -10,6 +10,7 @@ import com.chaos131.auto.AutoBuilder;
 import com.chaos131.auto.ParsedCommand;
 import com.chaos131.gamepads.Gamepad;
 
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -122,6 +123,7 @@ public class RobotContainer {
     autoBuilder.registerCommand("score", (parsedCommand) -> Score.createAutoCommand(parsedCommand, m_arm, m_gripper));
     autoBuilder.registerCommand("driveUntilTipped", (parsedCommand)-> DriveUntilTipped.createAutoCommand(parsedCommand, m_swerveDrive));
     autoBuilder.registerCommand("recalibrateArm", (parsedCommand) -> new InstantCommand(() -> m_arm.recalibrateSensors()));
+    autoBuilder.registerCommand("driveAndIntake", (parsedCommand) -> AutoComboCommands.DriveAndIntake(parsedCommand, m_swerveDrive, m_gripper, m_arm));
     // Configure the trigger bindings
     configureBindings();
     addCoachTabDashboardValues();
@@ -223,27 +225,27 @@ public class RobotContainer {
     BooleanSupplier isConeMode = () -> m_currentArmMode == ArmMode.Cone;
     BooleanSupplier isCubeMode = () -> m_currentArmMode == ArmMode.Cube;
 
-    m_operator.povUp().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose, ArmPose.ConeHighPoseBack));
-    m_operator.povUp().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose, ArmPose.CubeHighPoseBack));
+    m_operator.povUp().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(scorePrep(ArmPose.ConeHighPose, ArmPose.ConeHighPoseBack));
+    m_operator.povUp().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeHighPose, ArmPose.CubeHighPoseBack));
     
-    m_operator.povLeft().and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose, ArmPose.ConeMidPoseBack));
-    m_operator.povLeft().and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose, ArmPose.CubeMidPoseBack));
+    m_operator.povLeft().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(scorePrep(ArmPose.ConeMidPose, ArmPose.ConeMidPoseBack));
+    m_operator.povLeft().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(scorePrep(ArmPose.CubeMidPose, ArmPose.CubeMidPoseBack));
     
-    m_operator.povDown().whileTrue(scorePrep(ArmPose.LowScorePose, ArmPose.LowScorePoseBack));
+    m_operator.povDown().debounce(0.1, DebounceType.kFalling).whileTrue(scorePrep(ArmPose.LowScorePose, ArmPose.LowScorePoseBack));
     
-    m_operator.povRight().whileTrue(scorePrep(ArmPose.LowScorePoseBack, ArmPose.LowScorePoseBack));
+    m_operator.povRight().debounce(0.1, DebounceType.kFalling).whileTrue(scorePrep(ArmPose.LowScorePoseBack, ArmPose.LowScorePoseBack));
 
     // Intake Controls
-    m_operator.leftBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeDoubleStationConeFront, ArmPose.IntakeDoubleStationConeBack, PoseType.doubleSub));
-    m_operator.leftBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeDoubleStationCubeFront, ArmPose.IntakeDoubleStationCubeBack, PoseType.doubleSub));
-    m_operator.leftTrigger().and(isConeMode).whileTrue(intake(ArmPose.IntakeConeVerticalBack));
-    m_operator.leftTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
+    m_operator.leftBumper().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(intake(ArmPose.IntakeDoubleStationConeFront, ArmPose.IntakeDoubleStationConeBack, PoseType.doubleSub));
+    m_operator.leftBumper().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(intake(ArmPose.IntakeDoubleStationCubeFront, ArmPose.IntakeDoubleStationCubeBack, PoseType.doubleSub));
+    m_operator.leftTrigger().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(intake(ArmPose.IntakeConeVerticalBack));
+    m_operator.leftTrigger().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
 
     
-    m_operator.rightBumper().and(isConeMode).whileTrue(intake(ArmPose.IntakeSingleStationConeFront, ArmPose.IntakeSingleStationConeBack, PoseType.singleSub));
-    m_operator.rightBumper().and(isCubeMode).whileTrue(intake(ArmPose.IntakeSingleStationCubeFront, ArmPose.IntakeSingleStationCubeBack, PoseType.singleSub));
-    m_operator.rightTrigger().and(isConeMode).whileTrue(intake(ArmPose.IntakeConeTippedBack));
-    m_operator.rightTrigger().and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
+    m_operator.rightBumper().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(intake(ArmPose.IntakeSingleStationConeFront, ArmPose.IntakeSingleStationConeBack, PoseType.singleSub));
+    m_operator.rightBumper().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(intake(ArmPose.IntakeSingleStationCubeFront, ArmPose.IntakeSingleStationCubeBack, PoseType.singleSub));
+    m_operator.rightTrigger().debounce(0.1, DebounceType.kFalling).and(isConeMode).whileTrue(intake(ArmPose.IntakeConeTippedBack));
+    m_operator.rightTrigger().debounce(0.1, DebounceType.kFalling).and(isCubeMode).whileTrue(intake(ArmPose.IntakeCubeBack));
     
     // test
     // if (DebugConstants.EnableArmDebug) {
@@ -329,7 +331,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Always stow the arm before any auto
-    return autoBuilder.createAutoCommand().deadlineWith(new AutoTImerCommand());
+    return new InstantCommand(() -> m_gripper.setGripperMode(GripperMode.hold)).andThen(autoBuilder.createAutoCommand().deadlineWith(new AutoTImerCommand()));
   }
 
   public void addSmartDashboard() {

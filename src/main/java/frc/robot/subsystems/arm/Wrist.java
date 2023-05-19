@@ -7,7 +7,6 @@ package frc.robot.subsystems.arm;
 import com.chaos131.pid.PIDTuner;
 import com.chaos131.pid.PIDUpdate;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -40,6 +39,7 @@ public class Wrist {
     private int m_stallLimit = 15;
     private int m_freeLimit = 45;
     private int m_limitRPM = 250;
+    private double m_SensorToCodeEncoderOffset = WristConstants.SensorToCodeEncoderOffset;
 
     public Wrist(){
         m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
@@ -49,18 +49,15 @@ public class Wrist {
         m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle); 
         new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, DebugConstants.EnableArmDebug, (newValue) -> {
             m_AbsoluteEncoder.setPositionConversionFactor(newValue);
-            recalibrateSensors();
             // m_sparkMax.burnFlash();
         });
         m_AbsoluteEncoder.setInverted(false);
         new DashboardNumber("Wrist/AbsoluteAngleZeroOffset", WristConstants.AbsoluteAngleZeroOffset, DebugConstants.EnableArmDebug, (newOffset) -> {
             m_AbsoluteEncoder.setZeroOffset(newOffset);
-            recalibrateSensors();
             // m_sparkMax.burnFlash();
         });
         m_pidTuner = new PIDTuner("Wrist/PID_Tuner", DebugConstants.EnableArmDebug, 0.02, 0, 1.0, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(WristConstants.MinimumAngle, WristConstants.MaximumAngle);
-        initializeSparkMaxEncoder(m_sparkMax, getRotation());
         m_AbsoluteEncoder.setInverted(false);
         new DashboardNumber("Wrist/RampUprate", WristConstants.RampUpRate, DebugConstants.EnableArmDebug, (newValue) -> {
             m_sparkMax.setOpenLoopRampRate(newValue);
@@ -78,6 +75,11 @@ public class Wrist {
             int limitRPM = (int)((double) newValue);
             updateCurrentLimit(m_stallLimit, m_freeLimit, limitRPM);
         });
+        new DashboardNumber("Wrist/sensorToCodeEncoderOffset", m_SensorToCodeEncoderOffset, DebugConstants.EnableArmDebug, (newValue) -> {
+            UpdateSensorToCodeEncoderOffset(newValue);
+        });
+
+        m_sparkMax.getPIDController().setFeedbackDevice(m_AbsoluteEncoder);
         m_sparkMax.burnFlash();
         Robot.logManager.addNumber("Wrist/AppliedOutput", DebugConstants.EnableArmDebug, () -> m_sparkMax.getAppliedOutput());
         Robot.logManager.addNumber("Wrist/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> m_sparkMax.getMotorTemperature());
@@ -91,15 +93,6 @@ public class Wrist {
       coachTab.addNumber("Wrist Current_A", () -> m_sparkMax.getOutputCurrent());
     }
 
-    private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
-        RelativeEncoder encoder = sparkMax.getEncoder();
-        new DashboardNumber("Wrist/EncoderConversionFactor", WristConstants.SparkMaxEncoderConversionFactor, DebugConstants.EnableArmDebug, (newConversionFactor) -> {
-            encoder.setPositionConversionFactor(newConversionFactor);
-            recalibrateSensors();
-        });
-        Robot.logManager.addNumber("Wrist/EncoderRotation", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
-        
-    }
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle) {
         // double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
@@ -115,7 +108,7 @@ public class Wrist {
     }
 
     public void setTarget(Rotation2d target) {
-        double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees());
+        double targetDegrees = m_SafetyZoneHelper.getSafeValue(target.getDegrees()) - m_SensorToCodeEncoderOffset;
         m_sparkMax.getPIDController().setReference(targetDegrees, ControlType.kPosition);
         m_targetDegrees = targetDegrees;
     }
@@ -126,26 +119,19 @@ public class Wrist {
         m_limitRPM = limitRPM;
         m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
+    private void UpdateSensorToCodeEncoderOffset(double newValue){
+        m_SensorToCodeEncoderOffset = newValue;
+    }
 
     public Rotation2d getRotation() {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }
         var rawValue = m_AbsoluteEncoder.getPosition();
-        var belowWrapAround = rawValue > 420;
-        var shiftedValue = rawValue;
-        if(belowWrapAround) {
-            shiftedValue = rawValue - 460;
-        }
+        var shiftedValue = rawValue + m_SensorToCodeEncoderOffset; 
         return Rotation2d.fromDegrees(shiftedValue);
     }
 
-    public Rotation2d getEncoderRotation() {
-        if(Robot.isSimulation()) {
-            return Rotation2d.fromDegrees(m_simAngle);
-        }
-        return Rotation2d.fromDegrees(m_sparkMax.getEncoder().getPosition());
-    }
 
     public void tunePID(PIDUpdate pidUpdate){
         m_sparkMax.getPIDController().setP(pidUpdate.P);
@@ -156,7 +142,7 @@ public class Wrist {
     }
 
     public boolean atTarget(double targetDegrees){
-        return Math.abs(getEncoderRotation().getDegrees() - targetDegrees) < WristConstants.ToleranceDegrees;
+        return Math.abs(getRotation().getDegrees() - targetDegrees) < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {
@@ -181,7 +167,4 @@ public class Wrist {
         m_targetDegrees = m_simAngle;
     }
 
-    public void recalibrateSensors() {
-        m_sparkMax.getEncoder().setPosition(getRotation().getDegrees());
-    }
 }

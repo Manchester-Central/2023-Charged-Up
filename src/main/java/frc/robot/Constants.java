@@ -117,12 +117,12 @@ public final class Constants {
       public static final double MaximumAngle = 410; 
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
       public static final double AbsoluteAngleZeroOffset = 126.0;
-      public static final double SparkMaxEncoderConversionFactor = 5.803;
       public static final double RampUpRate = 0.1; 
       public static final double ToleranceDegrees = 2.0; 
       public static final double MinimumSafeAngleDegrees = 150;
       public static final double MaximumSafeAngleDegrees = 210;
       public static final double MaxPIDOutput = 1.0;
+      public static final double SensorToCodeEncoderOffset = -30; 
     }
 
     public static class GripperConstants{

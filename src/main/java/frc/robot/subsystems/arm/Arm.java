@@ -140,7 +140,6 @@ public class Arm extends SubsystemBase {
   public void recalibrateSensors() {
     m_shoulder.recalibrateSensors();
     m_extender.recalibrateSensors();
-    m_wrist.recalibrateSensors();
   }
 }
 

@@ -1,0 +1,12 @@
+wait?timems=25
+resetPosition?drivePose=Score5
+moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
+recalibrateArm
+score?armPose=ConeHighPose&timems=3000
+driveAndMoveArm?x=3.269&y=5.276&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.15
+drive?x=7.50&y=5.276&angle=180&maxPercentSpeed=0.6&translationTolerance=0.15
+wait?timems=500
+driveUntilTipped?speed=0.6&minAngleDegrees=12
+autoBalance
+xMode

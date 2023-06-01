@@ -1,7 +1,7 @@
-Middle-Cone7H
+BC-Middle-Cone3H
 --Piece 1
 wait?timems=25
-resetPosition?drivePose=Score7
+resetPosition?drivePose=Score3
 moveArm?armPose=ConeHighPose&timems=3000
 wait?timems=50
 recalibrateArm

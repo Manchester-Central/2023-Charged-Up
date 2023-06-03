@@ -100,7 +100,7 @@ public class Shoulder {
         
     }
 
-    public Rotation2d getRotation() {
+    private Rotation2d getRotation() {
         if(Robot.isSimulation()) {
             return Rotation2d.fromRadians(m_armSim.getAngleRads());
         }
@@ -108,7 +108,7 @@ public class Shoulder {
     }
 
     public double getShoulderDegreesFromStowed() {
-      return Math.abs(getRotation().plus(Rotation2d.fromDegrees(90)).getDegrees()); 
+      return Math.abs(getEncoderRotation().plus(Rotation2d.fromDegrees(90)).getDegrees()); 
     }
 
     public Rotation2d getEncoderRotation() {
@@ -120,7 +120,7 @@ public class Shoulder {
 
     public void updateSafetyZones(ArmPose targetArmPose, double extenderLengthMeters, Rotation2d wristAngle) {
         if (extenderLengthMeters >= ExtenderConstants.ExtenderSafeLimit) {
-            double normalizedCurrentAngle = normalize(getRotation());
+            double normalizedCurrentAngle = normalize(getEncoderRotation());
             if (normalizedCurrentAngle < -90) {
                 m_SafetyZoneHelper.excludeUp(ShoulderConstants.MinDangerAngle);
             } else{
@@ -194,7 +194,7 @@ public class Shoulder {
         (ExtenderConstants.MaximumPositionMeters - ExtenderConstants.MinimumPositionMeters);
         double offset = ShoulderConstants.MinimumFeedForwardVoltage - (ExtenderConstants.MinimumPositionMeters * slope);
         double maxFeedForward = (slope * currentExtensionMeters) + offset;
-        return maxFeedForward * getRotation().getCos();
+        return maxFeedForward * getEncoderRotation().getCos();
     }
 
     public void periodic(double currentExtensionMeters) {

@@ -2,7 +2,7 @@
   {
     "name": "/SmartDashboard/Auto Steps",
     "type": "string[]",
-    "value": ["BC-Cone-Goal4-ChargeLeft", "wait?timems=25", "resetPosition?drivePose=Score4", "moveArm?armPose=ConeHighPose&timems=3000", "wait?timems=50", "recalibrateArm", "score?armPose=ConeHighPose&timems=3000", "driveAndMoveArm?x=4.12&y=5.837&angle=180&armPose=Stowed&translationTolerance=0.25&timems=1500", "xMode", "", "", ""],
+    "value": ["BC-Cone-Goal4-TeamBalanceLeft", "wait?timems=25", "resetPosition?drivePose=Score4", "moveArm?armPose=ConeHighPose&timems=3000", "wait?timems=50", "recalibrateArm", "score?armPose=ConeHighPose&timems=3000", "driveAndMoveArm?x=4.12&y=5.837&angle=180&armPose=Stowed&translationTolerance=0.25&timems=1500", "xMode", "", "", ""],
     "properties": {
       "persistent": true
     }

@@ -39,14 +39,14 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_shoulder.periodic(m_extender.getPositionMeters());
+    m_shoulder.periodic(m_extender.getEncoderPositionMeters());
     m_extender.periodic();
     m_wrist.periodic();
 
     double [] ArmState = {
       m_shoulder.getEncoderRotation().getDegrees(), 
-      m_extender.getPositionMeters(), 
-      m_wrist.getRotation().getDegrees(), 
+      m_extender.getEncoderPositionMeters(), 
+      m_wrist.getEncoderRotation().getDegrees(), 
       m_gripper.getGripperMode().getPower()
     };
     SmartDashboard.putNumberArray("Arm/State", ArmState);
@@ -55,18 +55,18 @@ public class Arm extends SubsystemBase {
 
 
   public void setShoulderTargetManual(Rotation2d angle) {
-    double extensionMeters = m_extender.getPositionMeters();
-    m_shoulder.updateSafetyZones(new ArmPose(angle, extensionMeters, m_wrist.getRotation(), CoordinateType.ArmRelative), extensionMeters, m_wrist.getRotation());
+    double extensionMeters = m_extender.getEncoderPositionMeters();
+    m_shoulder.updateSafetyZones(new ArmPose(angle, extensionMeters, m_wrist.getEncoderRotation(), CoordinateType.ArmRelative), extensionMeters, m_wrist.getEncoderRotation());
     m_shoulder.setTargetAngle(angle, extensionMeters);
   }
 
   public void setExtenderTargetManual(double positionMeters) {
-    m_extender.updateSafetyZones(new ArmPose(m_shoulder.getEncoderRotation(), positionMeters, m_wrist.getRotation(), CoordinateType.ArmRelative), m_shoulder.getEncoderRotation());
+    m_extender.updateSafetyZones(new ArmPose(m_shoulder.getEncoderRotation(), positionMeters, m_wrist.getEncoderRotation(), CoordinateType.ArmRelative), m_shoulder.getEncoderRotation());
     m_extender.ExtendToTarget(positionMeters);
   }
 
   public void setWristTargetManual(Rotation2d angle) {
-    m_wrist.updateSafetyZones(new ArmPose(m_shoulder.getEncoderRotation(), m_extender.getPositionMeters(), angle, CoordinateType.ArmRelative), m_shoulder.getEncoderRotation());
+    m_wrist.updateSafetyZones(new ArmPose(m_shoulder.getEncoderRotation(), m_extender.getEncoderPositionMeters(), angle, CoordinateType.ArmRelative), m_shoulder.getEncoderRotation());
     m_wrist.setTarget(angle);
   }
 
@@ -80,13 +80,13 @@ public class Arm extends SubsystemBase {
     if (DebugConstants.EnableArmDebug) {
       SmartDashboard.putNumberArray("Arm/TargetState", targetState);
     }
-    double extensionMeters = m_extender.getPositionMeters();
+    double extensionMeters = m_extender.getEncoderPositionMeters();
     double normalizedCurrentAngle = Shoulder.normalize(m_shoulder.getEncoderRotation());
     double normalizedTargetAngle = Shoulder.normalize(armPose.shoulderAngle);
     double angleDifference = Math.abs(normalizedCurrentAngle - normalizedTargetAngle);
-    double wristAngleDegrees = m_wrist.getRotation().getDegrees();
+    double wristAngleDegrees = m_wrist.getEncoderRotation().getDegrees();
 
-    m_shoulder.updateSafetyZones(armPose, extensionMeters, m_wrist.getRotation());
+    m_shoulder.updateSafetyZones(armPose, extensionMeters, m_wrist.getEncoderRotation());
     m_extender.updateSafetyZones(armPose, m_shoulder.getEncoderRotation());
     m_wrist.updateSafetyZones(armPose, m_shoulder.getEncoderRotation());
 

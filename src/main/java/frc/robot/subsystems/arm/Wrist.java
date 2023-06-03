@@ -127,7 +127,7 @@ public class Wrist {
         m_sparkMax.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM);
     }
 
-    public Rotation2d getRotation() {
+    private Rotation2d getRotation() {
         if(Robot.isSimulation()) {
             return Rotation2d.fromDegrees(m_simAngle);
         }

@@ -127,7 +127,9 @@ public class Extender {
     }
 
     public boolean atTarget(double targetDegrees){
-        return Math.abs(getEncoderPositionMeters() - targetDegrees) < ExtenderConstants.ToleranceMeters;
+        var dist = Math.abs(getEncoderPositionMeters() - targetDegrees);
+        // SmartDashboard.putNumber("extenderDist", dist);
+        return dist < ExtenderConstants.ToleranceMeters;
     }
 
     public void periodic() {

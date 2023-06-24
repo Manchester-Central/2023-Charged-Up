@@ -156,7 +156,9 @@ public class Wrist {
     }
 
     public boolean atTarget(double targetDegrees){
-        return Math.abs(getEncoderRotation().getDegrees() - targetDegrees) < WristConstants.ToleranceDegrees;
+        var dist =  Math.abs(getEncoderRotation().getDegrees() - targetDegrees);
+        // SmartDashboard.putNumber("wristDist", dist);
+        return dist < WristConstants.ToleranceDegrees;
     }
 
     public void periodic() {

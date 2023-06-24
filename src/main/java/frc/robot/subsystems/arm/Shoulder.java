@@ -176,7 +176,7 @@ public class Shoulder {
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
        RelativeEncoder encoder = sparkMax.getEncoder();
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
-       encoder.setPosition(absoluteAngle.getDegrees());
+       encoder.setPosition(normalize(absoluteAngle));
        Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
     }
 
@@ -229,9 +229,9 @@ public class Shoulder {
     }
 
     public void recalibrateSensors() {
-        m_shoulderL_A.getEncoder().setPosition(getRotation().getDegrees());
-        m_shoulderL_B.getEncoder().setPosition(getRotation().getDegrees());
-        m_shoulderR_A.getEncoder().setPosition(getRotation().getDegrees());
-        m_shoulderR_B.getEncoder().setPosition(getRotation().getDegrees());
+        m_shoulderL_A.getEncoder().setPosition(normalize(getRotation()));
+        m_shoulderL_B.getEncoder().setPosition(normalize(getRotation()));
+        m_shoulderR_A.getEncoder().setPosition(normalize(getRotation()));
+        m_shoulderR_B.getEncoder().setPosition(normalize(getRotation()));
     }
 }

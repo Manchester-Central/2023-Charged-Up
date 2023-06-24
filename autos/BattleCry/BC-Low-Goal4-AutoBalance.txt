@@ -1,0 +1,12 @@
+BC-Low-Goal4-AutoBalance
+wait?timems=25
+resetPosition?drivePose=Score4
+moveArm?armPose=LowScorePose&timems=1000
+wait?timems=50
+recalibrateArm
+score?armPose=LowScorePose&timems=3000
+driveAndMoveArm?x=3.75&y=5.837&angle=180&armPose=Stowed&translationTolerance=0.25&timems=1500
+autoBalance
+xMode
+
+

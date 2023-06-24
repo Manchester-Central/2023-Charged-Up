@@ -106,7 +106,7 @@ public final class Constants {
       public static final double MinimumPositionMeters = 0.78 + 0.005; 
       public static final double MaximumPositionMeters = 1.32 - 0.02; 
       public static final double ExtenderSafeLimit = MinimumPositionMeters + 0.03; 
-      public static final double RampUpRate = 0.012;
+      public static final double RampUpRate = 0.018;
       public static final double ToleranceMeters = 0.02; 
       public static final double MaxPIDOutput = 1.0; 
     }

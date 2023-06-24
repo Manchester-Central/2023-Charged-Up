@@ -1,0 +1,19 @@
+BC-Bump-0ConeH1-1CubeH2-LBalance
+--Piece 1
+wait?timems=25
+resetPosition?drivePose=Score1
+moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
+recalibrateArm
+score?armPose=ConeHighPose&timems=3000
+--Piece 2
+driveAndMoveArm?x=5.676&y=7.136&angle=174.8&armPose=IntakeCubeBack&timems=2000&translationTolerance=0.15
+driveAndIntake?x=7.531&y=7.029&angle=174.8&armPose=IntakeCubeBack&timems=3500&translationTolerance=0.15
+driveAndMoveArm?x=2.3&y=7.219&angle=180&armPose=CubeHighPose&timems=2200&translationTolerance=0.15
+driveAndMoveArm?x=2.2&y=6.932&angle=180&armPose=CubeHighPose&timems=3500&translationTolerance=0.15
+score?armPose=CubeHighPose&timems=3000
+--Balance
+driveAndMoveArm?x=2.573&y=5.85&angle=180&armPose=Stowed&translationTolerance=0.15&timems=1000
+drive?x=4&y=5.837&angle=180&translationTolerance=0.15&timems=3000
+autoBalance?translationTolerance=4000&timems=1000
+xMode

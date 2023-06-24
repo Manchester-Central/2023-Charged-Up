@@ -1,0 +1,19 @@
+BC-Red-Flat-Cone9H-Cube8H-RBalance
+--Piece 1
+wait?timems=25
+resetPosition?drivePose=Score9
+moveArm?armPose=ConeHighPose&timems=3000
+wait?timems=50
+recalibrateArm
+score?armPose=ConeHighPose&timems=3000
+--Piece 2
+driveAndMoveArm?x=5.676&y=3.272&angle=180&armPose=IntakeCubeBack&timems=3000&translationTolerance=0.15
+driveAndGrip?x=7.531&y=3.439&angle=180&translationTolerance=0.15&timems=3000
+driveAndMoveArm?x=2.38&y=3.096&angle=180&armPose=Stowed&timems=3000&translationTolerance=0.15
+drive?x=2.2&y=3.592&angle=180&timems=1200
+score?armPose=CubeHighPose&timems=3000
+--Balance
+driveAndMoveArm?x=2.556&y=4.65&angle=180&armPose=Stowed&translationTolerance=0.15&timems=3000
+drive?x=4&y=4.65&angle=180&translationTolerance=0.15&timems=3000
+autoBalance?translationTolerance=4000&timems=5000
+xMode

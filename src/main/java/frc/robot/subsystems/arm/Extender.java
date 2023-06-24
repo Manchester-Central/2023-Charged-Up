@@ -105,7 +105,7 @@ public class Extender {
         
     }
 
-    public double getPositionMeters(){
+    private double getPositionMeters(){
         if (Robot.isSimulation()) {
             return m_simPos;
         }

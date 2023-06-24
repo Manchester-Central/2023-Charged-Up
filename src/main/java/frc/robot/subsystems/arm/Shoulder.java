@@ -184,7 +184,9 @@ public class Shoulder {
         if (Double.isNaN(targetDegrees)) {
             return false;
         }
-        return Math.abs(getEncoderRotation().getDegrees() - targetDegrees) < ShoulderConstants.ToleranceDegrees;
+        var dist = Math.abs(getEncoderRotation().getDegrees() - targetDegrees);
+        // SmartDashboard.putNumber("shoulderDist", dist);
+        return dist < ShoulderConstants.ToleranceDegrees;
     }
 
     // We want to add an arbitrary feed forward that applies outside the PID control loop.

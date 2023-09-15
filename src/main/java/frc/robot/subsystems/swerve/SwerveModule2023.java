@@ -15,7 +15,7 @@ import frc.robot.util.DashboardNumber;
 public class SwerveModule2023 extends SwerveModule {
     private AnalogEncoder m_absoluteEncoder;
     private double m_absoluteAngleOffset;
-    
+
     public SwerveModule2023(String moduleName, Translation2d translation, int canIdAngle, int canIdVelocity, int absoluteAnalogPort, double absoluteAngleOffset){
         super(moduleName, translation, canIdAngle, canIdVelocity);
 
@@ -50,4 +50,19 @@ public class SwerveModule2023 extends SwerveModule {
     public double getWheelCircumference() {
         return SwerveConstants.WheelCircumference;
     }
+
+    public double calculateEncoderError() {
+        return Math.abs(getPosition().angle.getDegrees() - getAbsoluteAngle()); // TO-DO: What does this line of code do?
+    }
+
+    public boolean areEncodersAligned() {
+        if(calculateEncoderError() <= 10) {
+            return true;
+        } else {
+            return false;
+        } // TO-DO: Test the number in the if statement.
+    }
+
+    // SwerveModuleState getPositon() - returns an object from which a Rotation2D object holding the relative encoder angle can be extracted.
+    // getAbsoluteAngle() - returns a Rotation2D object.
 }

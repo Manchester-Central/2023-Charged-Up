@@ -4,17 +4,13 @@
 
 package frc.robot.subsystems.arm;
 
+import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
-import com.chaos131.pid.PIDUpdate;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -25,14 +21,10 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
-import frc.robot.Constants.ArmConstants.WristConstants;
-import frc.robot.logging.LogManager;
+import frc.robot.Constants.DebugConstants;
+import frc.robot.Robot;
 
 /** Add your docs here. */
 public class Shoulder {
@@ -159,14 +151,14 @@ public class Shoulder {
     }
 
 
-    public void tunePID(PIDUpdate pidUpdate) {
+    public void tunePID(PIDFValue pidUpdate) {
         setPID(pidUpdate, m_shoulderL_A);
         setPID(pidUpdate, m_shoulderL_B);
         setPID(pidUpdate, m_shoulderR_A);
         setPID(pidUpdate, m_shoulderR_B);
     }
 
-    public void setPID(PIDUpdate pidUpdate, CANSparkMax sparkMax) {
+    public void setPID(PIDFValue pidUpdate, CANSparkMax sparkMax) {
         var controller = sparkMax.getPIDController();
         controller.setP(pidUpdate.P);
         controller.setI(pidUpdate.I);

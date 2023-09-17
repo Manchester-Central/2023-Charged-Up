@@ -6,11 +6,11 @@ package frc.robot.commands;
 
 import com.chaos131.gamepads.Gamepad;
 
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class DriverRelativeDrive extends BaseJoystickDrive {
   /** Creates a new FieldRelativeDrive. */
-  public DriverRelativeDrive(SwerveDrive swerveDrive, Gamepad driverController) {
+  public DriverRelativeDrive(SwerveDrive2023 swerveDrive, Gamepad driverController) {
     super(swerveDrive, driverController);
   }
 

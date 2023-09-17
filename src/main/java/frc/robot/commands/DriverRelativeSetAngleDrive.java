@@ -7,7 +7,7 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 import frc.robot.util.DriveDirection;
 
 public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
@@ -15,7 +15,7 @@ public class DriverRelativeSetAngleDrive extends DriverRelativeAngleDrive {
   double m_magnitude;
   DriveDirection m_direction;
 
-  public DriverRelativeSetAngleDrive(SwerveDrive swervedrive, Gamepad driverController, DriveDirection direction, double magnitude) {
+  public DriverRelativeSetAngleDrive(SwerveDrive2023 swervedrive, Gamepad driverController, DriveDirection direction, double magnitude) {
     super(swervedrive, driverController);
     m_magnitude = magnitude;
     m_direction = direction;

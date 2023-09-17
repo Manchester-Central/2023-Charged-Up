@@ -12,16 +12,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class DriveToTargetWithLimelights extends DriveToTarget {
 
     /** Creates a new DriveToTarget. */
-  public DriveToTargetWithLimelights(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
+  public DriveToTargetWithLimelights(SwerveDrive2023 swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
     super(swerveDrive, poseSupplier, translationTolerance, maxPercentSpeed);
   }
 
-  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive2023 swerveDrive) {
     double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
     double maxPercentSpeed = AutoUtil.getMaxPercentSpeed(parsedCommand);
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);

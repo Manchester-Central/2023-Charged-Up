@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.swerve;
 
+import com.chaos131.swerve.ISwerveModule;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -12,7 +14,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.util.DashboardNumber;
 
 /** Add your docs here. */
-public class SwerveModule2023 extends SwerveModule {
+public class SwerveModule2023 implements ISwerveModule {
     private AnalogEncoder m_absoluteEncoder;
     private double m_absoluteAngleOffset;
     

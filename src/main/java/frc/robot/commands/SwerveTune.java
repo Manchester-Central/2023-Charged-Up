@@ -8,12 +8,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class SwerveTune extends CommandBase {
   /** Creates a new SwerveTune. */
-  private SwerveDrive m_swervedrive;
-  public SwerveTune(SwerveDrive swervedrive) {
+  private SwerveDrive2023 m_swervedrive;
+  public SwerveTune(SwerveDrive2023 swervedrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swervedrive = swervedrive;
     addRequirements(swervedrive);

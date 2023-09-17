@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class SwerveXMode extends CommandBase {
-  SwerveDrive m_swerveDrive;
+  SwerveDrive2023 m_swerveDrive;
   /** Creates a new SwerveXMode. */
-  public SwerveXMode(SwerveDrive swerveDrive) {
+  public SwerveXMode(SwerveDrive2023 swerveDrive) {
     m_swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
     // Use addRequirements() here to declare subsystem dependencies.

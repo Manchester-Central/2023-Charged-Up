@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 import frc.robot.util.DriveDirection;
 
 public class ResetHeading extends CommandBase {
 
   /** Creates a new ResetHeading. */
-  private SwerveDrive m_SwerveDrive;
+  private SwerveDrive2023 m_SwerveDrive;
   private DriveDirection m_direction;
-  public ResetHeading(SwerveDrive swervedrive, DriveDirection direction) {
+  public ResetHeading(SwerveDrive2023 swervedrive, DriveDirection direction) {
     m_SwerveDrive = swervedrive;
     m_direction = direction;
     addRequirements(swervedrive);

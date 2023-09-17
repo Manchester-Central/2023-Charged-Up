@@ -10,7 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DebugConstants;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 import frc.robot.util.DashboardNumber;
 import frc.robot.util.DriveDirection;
 
@@ -19,9 +19,9 @@ public class AutoBalanceDrive extends CommandBase {
   public static PIDTuner PIDTuner = new PIDTuner("AutoBalance/PID_Tuner", DebugConstants.EnableDriveDebug, pid);
   private static DashboardNumber MaxSpeed = new DashboardNumber("AutoBalance/MaxPercentPower", 0.08, DebugConstants.EnableDriveDebug, (newSpeed) -> {});
   private static DashboardNumber AngleTolerance = new DashboardNumber("AutoBalance/AngleTolerance", 12, DebugConstants.EnableDriveDebug, (newTolerance) -> {});
-  SwerveDrive m_swerveDrive;
+  SwerveDrive2023 m_swerveDrive;
 
-  public AutoBalanceDrive(SwerveDrive swerveDrive) {
+  public AutoBalanceDrive(SwerveDrive2023 swerveDrive) {
     m_swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
   }

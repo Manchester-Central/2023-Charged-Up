@@ -61,7 +61,7 @@ import frc.robot.subsystems.arm.SmartArmPoseSelector;
 import frc.robot.subsystems.arm.Gripper.GripperMode;
 import frc.robot.subsystems.arm.SmartArmPoseSelector.PoseType;
 import frc.robot.subsystems.swerve.DrivePose;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 import frc.robot.util.DriveDirection;
 
 /**
@@ -75,7 +75,7 @@ public class RobotContainer {
 
   private Limelight m_limelightLeft = new Limelight("limelight-left");
   private Limelight m_limelightRight = new Limelight ("limelight-right");
-  public SwerveDrive m_swerveDrive = new SwerveDrive(m_limelightLeft, m_limelightRight);
+  public SwerveDrive2023 m_swerveDrive = SwerveDrive2023.CreateSwerveDrive(m_limelightLeft, m_limelightRight);
   public LEDs m_leds;
   //private Limelight m_Limelight2 = new Limelight("limeLight2");
   public final Gripper m_gripper = new Gripper();
@@ -171,18 +171,18 @@ public class RobotContainer {
     Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
     var slowModeCommand = new StartEndCommand(()-> {
-      SwerveDrive.TranslationSpeedModifier = 0.4;
-      SwerveDrive.RotationSpeedModifier = 0.4;
+      SwerveDrive2023.TranslationSpeedModifier = 0.4;
+      SwerveDrive2023.RotationSpeedModifier = 0.4;
     }, ()-> {
-      SwerveDrive.TranslationSpeedModifier = 1;
-      SwerveDrive.RotationSpeedModifier = 1;
+      SwerveDrive2023.TranslationSpeedModifier = 1;
+      SwerveDrive2023.RotationSpeedModifier = 1;
     });
     var creepModeCommand = new StartEndCommand(()-> {
-      SwerveDrive.TranslationSpeedModifier = 0.2;
-      SwerveDrive.RotationSpeedModifier = 0.3;
+      SwerveDrive2023.TranslationSpeedModifier = 0.2;
+      SwerveDrive2023.RotationSpeedModifier = 0.3;
     }, ()-> {
-      SwerveDrive.TranslationSpeedModifier = 1;
-      SwerveDrive.RotationSpeedModifier = 1;
+      SwerveDrive2023.TranslationSpeedModifier = 1;
+      SwerveDrive2023.RotationSpeedModifier = 1;
     });
 
     m_driver.start().onTrue(driverRelativeDrive);

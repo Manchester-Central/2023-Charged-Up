@@ -15,23 +15,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 import frc.robot.util.DashboardNumber;
 import frc.robot.util.DriveDirection;
 
 public class DriveUntilTipped extends CommandBase {
   private double m_speed;
   private double m_minAngleDegrees;
-  SwerveDrive m_swerveDrive;
+  SwerveDrive2023 m_swerveDrive;
 
-  public DriveUntilTipped(SwerveDrive swerveDrive, double speed, double minAngleDegrees) {
+  public DriveUntilTipped(SwerveDrive2023 swerveDrive, double speed, double minAngleDegrees) {
     m_swerveDrive = swerveDrive;
     m_speed = speed;
     m_minAngleDegrees = minAngleDegrees;
     addRequirements(swerveDrive);
   }
 
-  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive2023 swerveDrive) {
     double minAngleDegrees = AutoUtil.ParseDouble(parsedCommand.getArgument("minAngleDegrees"), 12);
     double speed = AutoUtil.ParseDouble(parsedCommand.getArgument("speed"), 0.5);
     return new DriveUntilTipped(swerveDrive, speed, minAngleDegrees);

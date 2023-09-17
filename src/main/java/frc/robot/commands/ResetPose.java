@@ -11,20 +11,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.auto.AutoUtil;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class ResetPose extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
+  private SwerveDrive2023 m_SwerveDrive;
   private Pose2d m_pose;
   /** Creates a new ResetPose. */
-  public ResetPose(SwerveDrive swerveDrive, Pose2d pose) {
+  public ResetPose(SwerveDrive2023 swerveDrive, Pose2d pose) {
     m_SwerveDrive = swerveDrive;
     addRequirements(m_SwerveDrive);
     m_pose = pose;
     // Use addRequirements() here to declare subsystem dependencies.
   }
   
-  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerve){
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive2023 swerve){
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
     if(pose == null) {
       return new InstantCommand();

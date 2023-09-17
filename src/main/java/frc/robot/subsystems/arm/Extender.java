@@ -4,23 +4,21 @@
 
 package frc.robot.subsystems.arm;
 
+import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
-import com.chaos131.pid.PIDUpdate;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
-import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
+import frc.robot.Constants.DebugConstants;
+import frc.robot.Robot;
 import frc.robot.util.DashboardNumber;
 
 /** Add your docs here. */
@@ -119,7 +117,7 @@ public class Extender {
         return m_sparkMax.getEncoder().getPosition();
     }
 
-    public void tunePID(PIDUpdate pidUpdate){
+    public void tunePID(PIDFValue pidUpdate){
         m_sparkMax.getPIDController().setP(pidUpdate.P);
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
         m_sparkMax.getPIDController().setD(pidUpdate.D);

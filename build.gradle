@@ -73,7 +73,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     // implementation 'com.github.Manchester-Central:CHAOS-Shared-Code:2023.0.0'
-    implementation files('libs/CHAOS-Shared-Code-2023.0.3.jar')
+    implementation files('libs/CHAOS-Shared-Code-2023.1.0-2.jar')
     implementation files('libs/jSerialComm-2.9.3.jar')
 }
 

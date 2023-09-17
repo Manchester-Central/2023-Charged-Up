@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import com.chaos131.pid.PIDTuner;
+import com.chaos131.util.DashboardNumber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.subsystems.swerve.SwerveDrive2023;
-import frc.robot.util.DashboardNumber;
 import frc.robot.util.DriveDirection;
 
 public class AutoBalanceDrive extends CommandBase {
@@ -36,7 +36,7 @@ public class AutoBalanceDrive extends CommandBase {
   public void execute() {
     var pitchDegrees = m_swerveDrive.getPitch().getDegrees();
     if(Math.abs(pitchDegrees) < AngleTolerance.get()) {
-      m_swerveDrive.swerveXMode();
+      m_swerveDrive.setXMode();
     } else {
       var speedX = MathUtil.clamp(pid.calculate(m_swerveDrive.getPitch().getDegrees()), -MaxSpeed.get(), MaxSpeed.get());
       // m_swerveDrive.moveFieldRelativeAngle(speedX, 0, DriveDirection.Towards.getAllianceAngle(), 1.0);

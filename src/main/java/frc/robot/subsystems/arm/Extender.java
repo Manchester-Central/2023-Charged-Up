@@ -6,6 +6,7 @@ package frc.robot.subsystems.arm;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
+import com.chaos131.util.DashboardNumber;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -19,7 +20,6 @@ import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ShoulderConstants;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Robot;
-import frc.robot.util.DashboardNumber;
 
 /** Add your docs here. */
 public class Extender {

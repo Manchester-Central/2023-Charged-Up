@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.swerve.SwerveDrive2023;
-import frc.robot.util.DashboardNumber;
 import frc.robot.util.DriveDirection;
 
 public class DriveUntilTipped extends CommandBase {

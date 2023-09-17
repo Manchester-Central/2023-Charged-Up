@@ -7,13 +7,13 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import com.chaos131.gamepads.Gamepad;
+import com.chaos131.util.DashboardNumber;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrive2023;
-import frc.robot.util.DashboardNumber;
 
 public abstract class BaseJoystickDrive extends CommandBase {
 

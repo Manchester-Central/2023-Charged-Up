@@ -69,6 +69,7 @@ public final class Constants {
     public static final double AbsoluteAngleOffsetBackLeft = 209.4;
     public static final double AbsoluteAngleOffsetBackRight = 240.8;
     public static final double SlewRateLimit = 10.0;
+    public static final double AcceptableEncoderError = 10;
   }
 
   public static class FieldConstants {

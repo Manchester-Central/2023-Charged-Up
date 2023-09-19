@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems.swerve;
 
+import java.util.function.DoubleSupplier;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -52,17 +56,13 @@ public class SwerveModule2023 extends SwerveModule {
     }
 
     public double calculateEncoderError() {
-        return Math.abs(getPosition().angle.getDegrees() - getAbsoluteAngle()); // TO-DO: What does this line of code do?
+        return Math.abs(getPosition().angle.getDegrees() - getAbsoluteAngle());
     }
 
     public boolean areEncodersAligned() {
-        if(calculateEncoderError() <= 10) {
-            return true;
-        } else {
-            return false;
-        } // TO-DO: Test the number in the if statement.
+        return (calculateEncoderError() >= SwerveConstants.AcceptableEncoderError);
     }
+    
 
-    // SwerveModuleState getPositon() - returns an object from which a Rotation2D object holding the relative encoder angle can be extracted.
-    // getAbsoluteAngle() - returns a Rotation2D object.
+
 }

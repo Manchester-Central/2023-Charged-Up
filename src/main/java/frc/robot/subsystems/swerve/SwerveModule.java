@@ -82,6 +82,7 @@ public abstract class SwerveModule {
   public abstract double getWheelCircumference();
   public abstract double getRawAbsoluteAngle();
   public abstract boolean areEncodersAligned();
+  
   public void setTarget(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getModuleState().angle);
     double targetAngle = closestTarget(getModuleState().angle.getDegrees(), state.angle.getDegrees());
@@ -156,7 +157,7 @@ public abstract class SwerveModule {
       SmartDashboard.putNumber(getDSKey("AbsoluteAngleRollingAverage"), m_absoluteAngleDegreesRollingAverageValue);
       // SmartDashboard.putNumber(getDSKey("InitialEncoder"), initialEncoder);
       // SmartDashboard.putNumber(getDSKey("AbsoluteEncoder"), getRawAbsoluteAngle());
-      SmartDashboard.putBoolean("areEncodersAligned", areEncodersAligned()); // TO-DO: Use getDSKey().
+      SmartDashboard.putBoolean(getDSKey("areEncodersAligned"), areEncodersAligned());
     }
   }
 

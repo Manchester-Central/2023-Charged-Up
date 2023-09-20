@@ -4,10 +4,6 @@
 
 package frc.robot.subsystems.swerve;
 
-import java.util.function.DoubleSupplier;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -60,7 +56,7 @@ public class SwerveModule2023 extends SwerveModule {
     }
 
     public boolean areEncodersAligned() {
-        return (calculateEncoderError() >= SwerveConstants.AcceptableEncoderError);
+        return (calculateEncoderError() <= SwerveConstants.AcceptableEncoderError);
     }
     
 

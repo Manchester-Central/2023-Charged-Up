@@ -44,7 +44,7 @@ public class Wrist {
     public Wrist(){
         m_sparkMax = new CANSparkMax(WristConstants.CanIdWrist, MotorType.kBrushless);
         m_sparkMax.restoreFactoryDefaults();
-        m_sparkMax.setInverted(false);
+        m_sparkMax.setInverted(true);
         m_sparkMax.setIdleMode(IdleMode.kBrake);
         m_AbsoluteEncoder = m_sparkMax.getAbsoluteEncoder(Type.kDutyCycle); 
         new DashboardNumber("Wrist/AbsoluteAngleConversionFactor", WristConstants.AbsoluteAngleConversionFactor, DebugConstants.EnableArmDebug, (newValue) -> {

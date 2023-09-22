@@ -25,7 +25,7 @@ public final class Constants {
   public static final double UpdateFrequency_Hz = 50;
 
   public static class DebugConstants {
-    public static final boolean IsDebugMode = false; // SET ME TO FALSE BEFORE MATCHES
+    public static final boolean IsDebugMode = true; // SET ME TO FALSE BEFORE MATCHES
     public static final boolean EnableDriveDebug = IsDebugMode;
     public static final boolean EnableArmDebug = IsDebugMode;
     public static final boolean EnableGripperDebug = IsDebugMode;
@@ -116,8 +116,8 @@ public final class Constants {
       public static final double MinimumAngle = -30; 
       public static final double MaximumAngle = 410; 
       public static final double AbsoluteAngleConversionFactor = 462.8599853515625;
-      public static final double AbsoluteAngleZeroOffset = 126.0;
-      public static final double SparkMaxEncoderConversionFactor = 5.803;
+      public static final double AbsoluteAngleZeroOffset = 126.0 - 110;
+      public static final double SparkMaxEncoderConversionFactor = 5.57642868205;
       public static final double RampUpRate = 0.1; 
       public static final double ToleranceDegrees = 5.0; 
       public static final double MinimumSafeAngleDegrees = 150;

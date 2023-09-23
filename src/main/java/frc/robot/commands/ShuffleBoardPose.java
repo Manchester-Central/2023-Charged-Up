@@ -22,7 +22,7 @@ public class ShuffleBoardPose extends CommandBase {
     m_shoulderKey = "PoseTest/" + name + "/Shoulder";
     m_extenderKey = "PoseTest/" + name + "/Extender";
     m_wristKey = "PoseTest/" + name + "/Wrist";
-    SmartDashboard.putNumber(m_shoulderKey, ArmPose.StowedPose.shoulderAngle.getDegrees());
+    SmartDashboard.putNumber(m_shoulderKey, ArmPose.StowedPose.getShoulderAngle().getDegrees());
     SmartDashboard.putNumber(m_extenderKey, ArmPose.StowedPose.extenderPos);
     SmartDashboard.putNumber(m_wristKey, ArmPose.StowedPose.wristAngle.getDegrees());
     m_Arm = arm;
@@ -36,7 +36,7 @@ public class ShuffleBoardPose extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double shoulderAngle = SmartDashboard.getNumber(m_shoulderKey, ArmPose.StowedPose.shoulderAngle.getDegrees());
+    double shoulderAngle = SmartDashboard.getNumber(m_shoulderKey, ArmPose.StowedPose.getShoulderAngle().getDegrees());
     double ExtenderLength = SmartDashboard.getNumber(m_extenderKey, ArmPose.StowedPose.extenderPos);
     double WristAngle = SmartDashboard.getNumber(m_wristKey, ArmPose.StowedPose.wristAngle.getDegrees());
     ArmPose m_ArmPose = new ArmPose(shoulderAngle, ExtenderLength, WristAngle, ArmPose.StowedPose.wristCoordinate);

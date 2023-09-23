@@ -80,7 +80,7 @@ public class Extender {
 
     public void updateSafetyZones(ArmPose targetArmPose, Rotation2d shoulderAngle){
         double normalizedCurrentAngle = Shoulder.normalize(shoulderAngle);
-        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.shoulderAngle);
+        double normalizedTargetAngle = Shoulder.normalize(targetArmPose.getShoulderAngle());
         if ((normalizedCurrentAngle < ShoulderConstants.MinDangerAngle && normalizedTargetAngle < ShoulderConstants.MinDangerAngle)
         || (normalizedCurrentAngle > ShoulderConstants.MaxDangerAngle && normalizedTargetAngle > ShoulderConstants.MaxDangerAngle)) {
             m_SafetyZoneHelper.resetToDefault();

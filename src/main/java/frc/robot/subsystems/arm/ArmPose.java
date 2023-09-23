@@ -14,7 +14,8 @@ import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 /** Add your docs here. */
 public class ArmPose {
-    public final Rotation2d shoulderAngle;
+    public static double shoulderOffset_deg = 0;
+    private final Rotation2d shoulderAngle;
     public final double extenderPos;
     public final Rotation2d wristAngle;
     public final CoordinateType wristCoordinate;
@@ -28,6 +29,10 @@ public class ArmPose {
 
     public ArmPose(double shoulderAngleDegrees, double extenderPos, double wristAngleDegrees, CoordinateType wristCoordinate){
         this(Rotation2d.fromDegrees(shoulderAngleDegrees), extenderPos, Rotation2d.fromDegrees(wristAngleDegrees), wristCoordinate);
+    }
+
+    public Rotation2d getShoulderAngle() {
+        return shoulderAngle.plus(Rotation2d.fromDegrees(shoulderOffset_deg));
     }
 
     public static Map<String, ArmPose> ArmPoses = new HashMap<String, ArmPose>();

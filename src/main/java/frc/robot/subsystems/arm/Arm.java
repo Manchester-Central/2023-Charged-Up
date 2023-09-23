@@ -72,7 +72,7 @@ public class Arm extends SubsystemBase {
 
   public void setArmTarget(ArmPose armPose) {
     double [] targetState = {
-      armPose.shoulderAngle.getDegrees(), 
+      armPose.getShoulderAngle().getDegrees(), 
       armPose.extenderPos, 
       armPose.wristAngle.getDegrees(), 
       0
@@ -82,7 +82,7 @@ public class Arm extends SubsystemBase {
     }
     double extensionMeters = m_extender.getEncoderPositionMeters();
     double normalizedCurrentAngle = Shoulder.normalize(m_shoulder.getEncoderRotation());
-    double normalizedTargetAngle = Shoulder.normalize(armPose.shoulderAngle);
+    double normalizedTargetAngle = Shoulder.normalize(armPose.getShoulderAngle());
     double angleDifference = Math.abs(normalizedCurrentAngle - normalizedTargetAngle);
     double wristAngleDegrees = m_wrist.getEncoderRotation().getDegrees();
 
@@ -91,7 +91,7 @@ public class Arm extends SubsystemBase {
     m_wrist.updateSafetyZones(armPose, m_shoulder.getEncoderRotation());
 
     if(angleDifference < 6) {
-      m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
+      m_shoulder.setTargetAngle(armPose.getShoulderAngle(), extensionMeters);
       m_extender.ExtendToTarget(armPose.extenderPos);
       if (armPose.wristCoordinate == CoordinateType.ArmRelative){
         m_wrist.setTarget(armPose.wristAngle);
@@ -105,7 +105,7 @@ public class Arm extends SubsystemBase {
       m_wrist.setTarget(Rotation2d.fromDegrees(180));
     }
     else {
-      m_shoulder.setTargetAngle(armPose.shoulderAngle, extensionMeters);
+      m_shoulder.setTargetAngle(armPose.getShoulderAngle(), extensionMeters);
     }
   }
 
@@ -116,7 +116,7 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean reachedTarget(ArmPose targetPose) {
-    return m_shoulder.atTarget(targetPose.shoulderAngle.getDegrees()) && m_extender.atTarget(targetPose.extenderPos) && m_wrist.atTarget(targetPose.wristAngle.getDegrees());
+    return m_shoulder.atTarget(targetPose.getShoulderAngle().getDegrees()) && m_extender.atTarget(targetPose.extenderPos) && m_wrist.atTarget(targetPose.wristAngle.getDegrees());
   }
 
   public void manualShoulder(double speed) {

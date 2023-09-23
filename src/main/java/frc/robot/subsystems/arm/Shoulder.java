@@ -76,6 +76,7 @@ public class Shoulder {
         // m_AbsoluteEncoder.setDistancePerRotation(ShoulderConstants.AbsoluteAngleConversionFactor);
         // m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
+        m_pidTuner = new PIDTuner("Shoulder/PID_Tuner", DebugConstants.EnableArmDebug, 0.025, 0, 1.6, this::tunePID);
         for (CANSparkMax canSparkMax : motorControllers) {
             canSparkMax.setIdleMode(IdleMode.kBrake);
             initializeSparkMaxEncoder(canSparkMax, getRotation());
@@ -89,7 +90,6 @@ public class Shoulder {
             Robot.logManager.addNumber("Shoulder/SparkMax" + canSparkMax.getDeviceId() + "/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> canSparkMax.getMotorTemperature());
 
         }
-        m_pidTuner = new PIDTuner("Shoulder/PID_Tuner", DebugConstants.EnableArmDebug, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
         Robot.logManager.addNumber("Shoulder/target", DebugConstants.EnableArmDebug, () -> m_targetDegrees);
         //Robot.logManager.addNumber("Shoulder/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());

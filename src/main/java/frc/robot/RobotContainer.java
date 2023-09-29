@@ -148,6 +148,7 @@ public class RobotContainer {
     coachTab.addString("AllianceColor", () -> DriverStation.getAlliance().name());
     coachTab.addString("LeftLimelight", () -> "http://10.1.31.11:5800");
     coachTab.addString("RightLimelight", () -> "http://10.1.31.23:5800");
+    Robot.logManager.addNumber("ShoulderOffsetDegrees", true, () -> ArmPose.shoulderOffset_deg);
     // TODO: Figure out the values the coach/drive team want displayed on the dashboard always
   }
 
@@ -252,8 +253,10 @@ public class RobotContainer {
     //   m_operator.start().whileTrue(new ShuffleBoardPose(m_arm, "start").repeatedly());
     //   m_operator.back().whileTrue(new ShuffleBoardPose(m_arm, "back").repeatedly());
     // }
-    m_operator.back().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));
-    m_operator.start().onTrue(new InstantCommand(() -> m_arm.recalibrateSensors()));
+    // m_operator.back().onTrue(new InstantCommand(() -> m_swerveDrive.recalibrateModules()));  
+    // m_operator.start().onTrue(new InstantCommand(() -> m_arm.recalibrateSensors()));
+    m_operator.back().onTrue(new InstantCommand(() -> ArmPose.shoulderOffset_deg -= 1));
+    m_operator.start().onTrue(new InstantCommand(() -> ArmPose.shoulderOffset_deg += 1));
     // m_operator.back().whileTrue(new RunCommand(() -> m_swerveDrive.updatePoseFromLimelights()));
   }
 

@@ -76,6 +76,7 @@ public class Shoulder {
         // m_AbsoluteEncoder.setDistancePerRotation(ShoulderConstants.AbsoluteAngleConversionFactor);
         // m_AbsoluteEncoder.setPositionOffset(ShoulderConstants.AbsoluteAngleZeroOffset);
         CANSparkMax[] motorControllers = {m_shoulderL_A, m_shoulderL_B, m_shoulderR_A, m_shoulderR_B};
+        m_pidTuner = new PIDTuner("Shoulder/PID_Tuner", DebugConstants.EnableArmDebug, 0.025, 0, 1.6, this::tunePID);
         for (CANSparkMax canSparkMax : motorControllers) {
             canSparkMax.setIdleMode(IdleMode.kBrake);
             initializeSparkMaxEncoder(canSparkMax, getRotation());
@@ -89,10 +90,9 @@ public class Shoulder {
             Robot.logManager.addNumber("Shoulder/SparkMax" + canSparkMax.getDeviceId() + "/MotorTemperature_C", DebugConstants.EnableArmDebug, () -> canSparkMax.getMotorTemperature());
 
         }
-        m_pidTuner = new PIDTuner("Shoulder/PID_Tuner", DebugConstants.EnableArmDebug, 0.025, 0, 1.6, this::tunePID);
         m_SafetyZoneHelper = new SafetyZoneHelper(ShoulderConstants.MinimumAngleDegrees, ShoulderConstants.MaximumAngleDegrees);
         Robot.logManager.addNumber("Shoulder/target", DebugConstants.EnableArmDebug, () -> m_targetDegrees);
-        Robot.logManager.addNumber("Shoulder/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
+        //Robot.logManager.addNumber("Shoulder/Rotation_deg", DebugConstants.EnableArmDebug, () -> getRotation().getDegrees());
         Robot.logManager.addNumber("Shoulder/AngleFromStowed_deg", DebugConstants.EnableArmDebug, () -> getShoulderDegreesFromStowed());
     }
     
@@ -176,7 +176,8 @@ public class Shoulder {
     private void initializeSparkMaxEncoder(CANSparkMax sparkMax, Rotation2d absoluteAngle) {
        RelativeEncoder encoder = sparkMax.getEncoder();
        encoder.setPositionConversionFactor(ShoulderConstants.SparkMaxEncoderConversionFactor);
-       encoder.setPosition(normalize(absoluteAngle));
+       //encoder.setPosition(normalize(absoluteAngle));
+       encoder.setPosition(-86);
        Robot.logManager.addNumber("Shoulder/SparkMax" + sparkMax.getDeviceId() + "/TranslatedAngle", DebugConstants.EnableArmDebug, () -> encoder.getPosition());
     }
 
@@ -204,7 +205,7 @@ public class Shoulder {
         if (Robot.isSimulation()) {
             double feedForwardVoltage = getArbitraryFeedForward(kSimExtenderFixedPosition);
             if(DriverStation.isEnabled() && Double.isFinite(m_targetDegrees)) {
-                double voltage = MathUtil.clamp(m_simPid.calculate(getRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
+                double voltage = MathUtil.clamp(m_simPid.calculate(getEncoderRotation().getDegrees(), m_targetDegrees), -1, 1) * RobotController.getBatteryVoltage();
                 double voltageWithFeedForward = voltage + feedForwardVoltage;
                 m_armSim.setInput(voltageWithFeedForward);
             } else{
@@ -231,9 +232,9 @@ public class Shoulder {
     }
 
     public void recalibrateSensors() {
-        m_shoulderL_A.getEncoder().setPosition(normalize(getRotation()));
-        m_shoulderL_B.getEncoder().setPosition(normalize(getRotation()));
-        m_shoulderR_A.getEncoder().setPosition(normalize(getRotation()));
-        m_shoulderR_B.getEncoder().setPosition(normalize(getRotation()));
+        // m_shoulderL_A.getEncoder().setPosition(normalize(getRotation()));
+        // m_shoulderL_B.getEncoder().setPosition(normalize(getRotation()));
+        // m_shoulderR_A.getEncoder().setPosition(normalize(getRotation()));
+        // m_shoulderR_B.getEncoder().setPosition(normalize(getRotation()));
     }
 }

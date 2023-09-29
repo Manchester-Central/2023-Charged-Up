@@ -65,7 +65,7 @@ public class AutoUtil {
             // If arm pose is asked for, but we don't match anything - don't return a pose.
             return null;
         } 
-        double shoulderDegrees = AutoUtil.ParseDouble(parsedCommand.getArgument("shoulder"), ArmPose.StowedPose.shoulderAngle.getDegrees());
+        double shoulderDegrees = AutoUtil.ParseDouble(parsedCommand.getArgument("shoulder"), ArmPose.StowedPose.getShoulderAngle().getDegrees());
         double extenderMeters = AutoUtil.ParseDouble(parsedCommand.getArgument("extender"), ArmPose.StowedPose.extenderPos);
         double wristDegrees = AutoUtil.ParseDouble(parsedCommand.getArgument("wrist"), ArmPose.StowedPose.wristAngle.getDegrees());
         return new ArmPose(shoulderDegrees, extenderMeters, wristDegrees, CoordinateType.ArmRelative);

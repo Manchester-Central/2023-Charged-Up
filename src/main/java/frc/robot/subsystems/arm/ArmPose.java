@@ -14,7 +14,7 @@ import frc.robot.subsystems.arm.Wrist.CoordinateType;
 
 /** Add your docs here. */
 public class ArmPose {
-    public static double shoulderOffset_deg = 0;
+    public static double shoulderOffset_deg = -5;
     private final Rotation2d shoulderAngle;
     public final double extenderPos;
     public final Rotation2d wristAngle;

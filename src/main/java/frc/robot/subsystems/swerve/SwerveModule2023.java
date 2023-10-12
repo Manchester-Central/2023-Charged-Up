@@ -182,12 +182,12 @@ public class SwerveModule2023 extends BaseSwerveModule {
     }
 
     @Override
-    protected void setEncoderAngle(Rotation2d angle) {
+    protected void setTargetAngle(Rotation2d angle) {
         m_angle.set(TalonFXControlMode.Position, degreesToEncoder(angle.getDegrees()));
     }
 
     @Override
-    protected void setEncoderVelocity_mps(double velocity_mps) {
+    protected void setTargetVelocity_mps(double velocity_mps) {
         m_velocity.set(TalonFXControlMode.Velocity, meterPerSecondToVelocityUnit(velocity_mps));
     }
 

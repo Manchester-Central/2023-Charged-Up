@@ -7,9 +7,12 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeAngleDrive extends BaseJoystickDrive {
+  Joystick testController = new Joystick(2);
   /** Creates a new DriverRelativeAngleDrive. */
   public DriverRelativeAngleDrive(SwerveDrive swerveDrive, Gamepad driverController) {
     super(swerveDrive, driverController);
@@ -25,19 +28,32 @@ public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = -m_slewedLeftY.get();
-    double yMetersPerSecond = -m_slewedLeftX.get();
-    Rotation2d rightAngle = getTargetRotation();
-    double rightMagnitude = getTargetMagnitude();
-    m_swerveDrive.moveFieldRelativeAngle(xMetersPerSecond, yMetersPerSecond, rightAngle, rightMagnitude);
+    double xMetersPerSecond = -testController.getRawAxis(1);
+    double yMetersPerSecond = -testController.getRawAxis(0);
+    for(var i = 0; i < 20; i++) {
+      SmartDashboard.putBoolean("joy/" + i, testController.getRawButton(0));
+    }
+    if (testController.getPOV(0) == -1) {
+      var omegaRadiansPerSecond = 0.0;
+      if(testController.getRawButton(16)) {
+        omegaRadiansPerSecond = -1.0;
+      } else if(testController.getRawButton(18)) {
+        omegaRadiansPerSecond = 1.0;
+      }
+      m_swerveDrive.moveFieldRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
+    } else {
+      Rotation2d rightAngle = getTargetRotation();
+      double rightMagnitude = getTargetMagnitude();
+      m_swerveDrive.moveFieldRelativeAngle(xMetersPerSecond, yMetersPerSecond, rightAngle, rightMagnitude);
+    }
   }
 
   protected Rotation2d getTargetRotation() {
-    return Rotation2d.fromRadians(m_driverController.getRightAngle() - Math.PI/2);
+    return Rotation2d.fromDegrees(testController.getPOV(0));
   }
 
   protected double getTargetMagnitude() {
-    return m_driverController.getRightMagnitude();
+    return 1.0;
   }
 
   // Called once the command ends or is interrupted.

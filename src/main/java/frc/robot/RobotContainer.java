@@ -32,6 +32,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.AutoBalanceDrive;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DriveUntilTipped;
+import frc.robot.commands.DriverRelativeAngleDrive;
 import frc.robot.commands.DriveToTarget;
 import frc.robot.commands.DriveToTargetWithLimelights;
 import frc.robot.commands.DriverRelativeDrive;
@@ -169,7 +170,7 @@ public class RobotContainer {
   }
 
   private void driverControls() {
-    Command driverRelativeDrive = new DriverRelativeDrive(m_swerveDrive, m_driver);
+    Command driverRelativeDrive = new DriverRelativeAngleDrive(m_swerveDrive, m_driver);
     m_swerveDrive.setDefaultCommand(driverRelativeDrive);
     var slowModeCommand = new StartEndCommand(()-> {
       SwerveDrive.TranslationSpeedModifier = 0.4;

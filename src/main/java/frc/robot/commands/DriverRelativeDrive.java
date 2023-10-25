@@ -6,9 +6,11 @@ package frc.robot.commands;
 
 import com.chaos131.gamepads.Gamepad;
 
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeDrive extends BaseJoystickDrive {
+  Joystick testController = new Joystick(2);
   /** Creates a new FieldRelativeDrive. */
   public DriverRelativeDrive(SwerveDrive swerveDrive, Gamepad driverController) {
     super(swerveDrive, driverController);
@@ -17,9 +19,9 @@ public class DriverRelativeDrive extends BaseJoystickDrive {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = -m_slewedLeftY.get();
-    double yMetersPerSecond = -m_slewedLeftX.get();
-    double omegaRadiansPerSecond = -m_driverController.getRightX();
+    double xMetersPerSecond = -testController.getRawAxis(1);
+    double yMetersPerSecond = -testController.getRawAxis(0);
+    double omegaRadiansPerSecond = 0; //-m_driverController.getRightX();
     m_swerveDrive.moveFieldRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
   }
 }

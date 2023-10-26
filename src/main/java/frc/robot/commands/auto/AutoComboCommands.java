@@ -18,27 +18,27 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.swerve.DrivePose;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 /**
  * A class for combining other commands into single auto commands
  */
 public class AutoComboCommands {
   
-  public static Command driveAndMoveArm(ParsedCommand parsedCommand, SwerveDrive swerveDrive, Arm arm) {
+  public static Command driveAndMoveArm(ParsedCommand parsedCommand, SwerveDrive2023 swerveDrive, Arm arm) {
     var driveCommand = DriveToTarget.createAutoCommand(parsedCommand, swerveDrive);
     var armCommand = MoveArm.createAutoCommand(parsedCommand, arm);
     return driveCommand.alongWith(armCommand);
   }
 
-  public static  Command driveAndGrip(ParsedCommand pc, SwerveDrive swerveDrive, Gripper gripper){
+  public static  Command driveAndGrip(ParsedCommand pc, SwerveDrive2023 swerveDrive, Gripper gripper){
     Command driveCommand = DriveToTarget.createAutoCommand(pc, swerveDrive);
     Command gripCommand = new Grip(gripper);
     // TODO update when we can detect that we have pick up the game piece
     return new ParallelRaceGroup(driveCommand, gripCommand);
   }
 
-  public static Command DriveAndIntake(ParsedCommand pc, SwerveDrive swerveDrive, Gripper gripper, Arm arm) {
+  public static Command DriveAndIntake(ParsedCommand pc, SwerveDrive2023 swerveDrive, Gripper gripper, Arm arm) {
     Command driveCommand = DriveToTarget.createAutoCommand(pc, swerveDrive);
     Command gripCommand = new Grip(gripper);
     Command armPoseCommand = MoveArm.createAutoCommand(pc, arm);

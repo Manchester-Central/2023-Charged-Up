@@ -7,17 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class SetPoseFromLimelights extends CommandBase {
-  private SwerveDrive m_swerveDrive;
+  private SwerveDrive2023 m_swerveDrive;
   private MedianFilter m_xFilter = new MedianFilter(100);
   private MedianFilter m_yFilter = new MedianFilter(100);
   private boolean m_seenValue = false;
   private double m_calculatedX, m_calculatedY;
 
   /** Creates a new SetPoseFromLimelights. */
-  public SetPoseFromLimelights(SwerveDrive swerveDrive) {
+  public SetPoseFromLimelights(SwerveDrive2023 swerveDrive) {
     m_swerveDrive = swerveDrive;
   }
 

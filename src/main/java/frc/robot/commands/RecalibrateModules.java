@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class RecalibrateModules extends CommandBase {
-  private SwerveDrive m_SwerveDrive;
+  private SwerveDrive2023 m_SwerveDrive;
   /** Creates a new RecalibrateModules. */
-  public RecalibrateModules(SwerveDrive swerveDrive) {
+  public RecalibrateModules(SwerveDrive2023 swerveDrive) {
     m_SwerveDrive = swerveDrive;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_SwerveDrive);

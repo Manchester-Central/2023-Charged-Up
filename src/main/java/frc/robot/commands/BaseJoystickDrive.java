@@ -7,13 +7,13 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import com.chaos131.gamepads.Gamepad;
+import com.chaos131.util.DashboardNumber;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.util.DashboardNumber;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public abstract class BaseJoystickDrive extends CommandBase {
 
@@ -37,7 +37,7 @@ public abstract class BaseJoystickDrive extends CommandBase {
     }
   }
 
-  protected final SwerveDrive m_swerveDrive;
+  protected final SwerveDrive2023 m_swerveDrive;
   protected final Gamepad m_driverController;
   protected final JoystickFilter m_slewedLeftX;
   protected final JoystickFilter m_slewedLeftY;
@@ -45,7 +45,7 @@ public abstract class BaseJoystickDrive extends CommandBase {
   protected final JoystickFilter m_slewedRightY;
 
   /** Shares some code for all joystick drives */
-  public BaseJoystickDrive(SwerveDrive swerveDrive, Gamepad driverController) {
+  public BaseJoystickDrive(SwerveDrive2023 swerveDrive, Gamepad driverController) {
     m_swerveDrive = swerveDrive;
     m_driverController = driverController;
     m_slewedLeftX = new JoystickSlewer(() -> driverController.getLeftX());

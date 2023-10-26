@@ -7,11 +7,11 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   /** Creates a new DriverRelativeAngleDrive. */
-  public DriverRelativeAngleDrive(SwerveDrive swerveDrive, Gamepad driverController) {
+  public DriverRelativeAngleDrive(SwerveDrive2023 swerveDrive, Gamepad driverController) {
     super(swerveDrive, driverController);
   }
 

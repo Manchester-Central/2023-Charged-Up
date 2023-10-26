@@ -25,3 +25,5 @@ pluginManagement {
         }
     }
 }
+include ':chaos-shared-code' 
+project(':chaos-shared-code').projectDir = new File("../CHAOS-Shared-Code")

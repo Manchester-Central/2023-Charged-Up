@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.arm;
 
+import com.chaos131.util.DashboardNumber;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -12,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
-import frc.robot.util.DashboardNumber;
+
 // i got the new forgis on the g
 /** Add your docs here. */
 public class Gripper extends SubsystemBase {

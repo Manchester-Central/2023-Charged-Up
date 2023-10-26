@@ -4,26 +4,22 @@
 
 package frc.robot.subsystems.arm;
 
+import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
-import com.chaos131.pid.PIDUpdate;
+import com.chaos131.util.DashboardNumber;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
-import java.lang.annotation.Target;
-
-import frc.robot.Robot;
-import frc.robot.Constants.DebugConstants;
-import frc.robot.Constants.ArmConstants.ShoulderConstants;
-import frc.robot.Constants.ArmConstants.WristConstants;
-import frc.robot.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants.WristConstants;
+import frc.robot.Constants.DebugConstants;
+import frc.robot.Robot;
 
 /** Add your docs here. */
 public class Wrist {
@@ -147,7 +143,7 @@ public class Wrist {
         return Rotation2d.fromDegrees(m_sparkMax.getEncoder().getPosition());
     }
 
-    public void tunePID(PIDUpdate pidUpdate){
+    public void tunePID(PIDFValue pidUpdate){
         m_sparkMax.getPIDController().setP(pidUpdate.P);
         m_sparkMax.getPIDController().setI(pidUpdate.I);        
         m_sparkMax.getPIDController().setD(pidUpdate.D);

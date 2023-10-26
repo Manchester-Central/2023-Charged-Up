@@ -16,16 +16,16 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.auto.AutoUtil;
 import frc.robot.subsystems.swerve.DrivePose;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive2023;
 
 public class DriveToTarget extends CommandBase {
-  protected SwerveDrive m_swerveDrive;
+  protected SwerveDrive2023 m_swerveDrive;
   private Supplier<Pose2d> m_poseSupplier;
   private double m_translationTolerance;
   private double m_maxPercentSpeed;
 
   /** Creates a new DriveToTarget. */
-  public DriveToTarget(SwerveDrive swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
+  public DriveToTarget(SwerveDrive2023 swerveDrive, Supplier<Pose2d> poseSupplier, double translationTolerance, double maxPercentSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerveDrive = swerveDrive;
     m_poseSupplier = poseSupplier;
@@ -35,11 +35,11 @@ public class DriveToTarget extends CommandBase {
   }
 
     /** Creates a new DriveToTarget. */
-  public DriveToTarget(SwerveDrive swerveDrive, Pose2d pose, double translationTolerance, double maxPercentSpeed) {
+  public DriveToTarget(SwerveDrive2023 swerveDrive, Pose2d pose, double translationTolerance, double maxPercentSpeed) {
     this(swerveDrive, () -> pose, translationTolerance, maxPercentSpeed);
   }
 
-  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive swerveDrive) {
+  public static Command createAutoCommand(ParsedCommand parsedCommand, SwerveDrive2023 swerveDrive) {
     double translationTolerance = AutoUtil.getTranslationTolerance(parsedCommand);
     double maxPercentSpeed = AutoUtil.getMaxPercentSpeed(parsedCommand);
     Pose2d pose = AutoUtil.getDrivePose(parsedCommand);
@@ -49,7 +49,7 @@ public class DriveToTarget extends CommandBase {
     return new DriveToTarget(swerveDrive, pose, translationTolerance, maxPercentSpeed);
   }
 
-  public static DriveToTarget toClosestScoreTarget(SwerveDrive swerveDrive) {
+  public static DriveToTarget toClosestScoreTarget(SwerveDrive2023 swerveDrive) {
     return new DriveToTarget(swerveDrive, () -> {
       var robotPose = swerveDrive.getPose();
       var closestPose = DrivePose.getClosestPose(robotPose);

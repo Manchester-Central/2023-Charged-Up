@@ -17,7 +17,7 @@ public class DriverRelativeDrive extends BaseJoystickDrive {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xMetersPerSecond = -m_slewedLeftY.get();
+    double xMetersPerSecond = m_slewedLeftY.get();
     double yMetersPerSecond = -m_slewedLeftX.get();
     double omegaRadiansPerSecond = -m_driverController.getRightX();
     m_swerveDrive.moveFieldRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);

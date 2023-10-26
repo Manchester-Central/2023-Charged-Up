@@ -39,11 +39,6 @@ public class SwerveModule2023 extends BaseSwerveModule {
         super(moduleName, translation, xModeAngle);
 
         m_absoluteEncoder = new AnalogEncoder(absoluteAnalogPort);
-
-        new DashboardNumber(getDSKey("absoluteAngleOffset"), absoluteAngleOffset, DebugConstants.EnableDriveDebug,  (newValue) -> {
-            m_absoluteAngleOffset = newValue;
-            recalibrate();
-        });
         m_angle = new WPI_TalonFX(canIdAngle);
         m_velocity = new WPI_TalonFX(canIdVelocity);
         m_angle.configFactoryDefault();
@@ -57,6 +52,11 @@ public class SwerveModule2023 extends BaseSwerveModule {
     
         m_velocity.configClosedloopRamp(VelocityRampRateDriver.get());
         m_angle.configClosedloopRamp(0);
+
+        new DashboardNumber(getDSKey("absoluteAngleOffset"), absoluteAngleOffset, DebugConstants.EnableDriveDebug,  (newValue) -> {
+            m_absoluteAngleOffset = newValue;
+            recalibrate();
+        });
     
         Robot.logManager.addNumber(getDSKey("Velocity_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_velocity.getTemperature());
         Robot.logManager.addNumber(getDSKey("Angle_Temp_C"), DebugConstants.EnableDriveDebug, () -> m_angle.getTemperature());
@@ -145,7 +145,7 @@ public class SwerveModule2023 extends BaseSwerveModule {
     }
 
     public Rotation2d getAbsoluteAngle() {
-        return Rotation2d.fromDegrees((m_absoluteEncoder.getAbsolutePosition() * 360) - m_absoluteAngleOffset);
+        return Rotation2d.fromDegrees(getRawAbsoluteAngle() - m_absoluteAngleOffset);
     }
 
     public double getAngleEncoderRatio() {

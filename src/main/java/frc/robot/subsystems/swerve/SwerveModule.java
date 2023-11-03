@@ -40,13 +40,14 @@ public abstract class SwerveModule {
   private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.5, DebugConstants.EnableDriveDebug, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity) {
+  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity, boolean invertDirection) {
     m_name = name;
     m_translation = translation;
     m_simdistance = 0;
     m_targetState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     m_angle = new WPI_TalonFX(canIdAngle);
     m_velocity = new WPI_TalonFX(canIdVelocity);
+    m_velocity.setInverted(invertDirection);
     m_angle.configFactoryDefault();
     m_velocity.configFactoryDefault();
     m_angle.configAllowableClosedloopError(0, degreesToEncoder(0.5));

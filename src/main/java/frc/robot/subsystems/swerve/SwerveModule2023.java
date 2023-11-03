@@ -16,8 +16,8 @@ public class SwerveModule2023 extends SwerveModule {
     private AnalogEncoder m_absoluteEncoder;
     private double m_absoluteAngleOffset;
     
-    public SwerveModule2023(String moduleName, Translation2d translation, int canIdAngle, int canIdVelocity, int absoluteAnalogPort, double absoluteAngleOffset){
-        super(moduleName, translation, canIdAngle, canIdVelocity);
+    public SwerveModule2023(String moduleName, Translation2d translation, int canIdAngle, int canIdVelocity, int absoluteAnalogPort, double absoluteAngleOffset, boolean invertDirection){
+        super(moduleName, translation, canIdAngle, canIdVelocity, invertDirection);
 
         m_absoluteEncoder = new AnalogEncoder(absoluteAnalogPort);
 

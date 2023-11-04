@@ -35,12 +35,14 @@ public abstract class SwerveModule {
   private String m_name;
   private LinearFilter m_absoluteAngleDegreesRollingAverage = LinearFilter.movingAverage(100);
   private double m_absoluteAngleDegreesRollingAverageValue = 0;
+  private boolean m_useAbsoluteSensor;
 
   private static DashboardNumber VelocityRampRateDriver = new DashboardNumber("Swerve/VelocityRampRateDriver", 0.2, DebugConstants.EnableDriveDebug, (newValue) -> {});
   private static DashboardNumber VelocityRampRateAuto = new DashboardNumber("Swerve/VelocityRampRateAuto", 0.5, DebugConstants.EnableDriveDebug, (newValue) -> {});
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity, boolean invertDirection) {
+  public SwerveModule(String name, Translation2d translation, int canIdAngle, int canIdVelocity, boolean invertDirection, boolean useAbsoluteSensor) {
+    m_useAbsoluteSensor = useAbsoluteSensor;
     m_name = name;
     m_translation = translation;
     m_simdistance = 0;
@@ -201,7 +203,7 @@ public abstract class SwerveModule {
   }
 
   public void recalibrate() {
-    initialEncoder = degreesToEncoder(m_absoluteAngleDegreesRollingAverageValue);
+    initialEncoder = degreesToEncoder(m_useAbsoluteSensor ? m_absoluteAngleDegreesRollingAverageValue : 0);
     m_angle.setSelectedSensorPosition(initialEncoder);
   }
 

@@ -77,7 +77,8 @@ public class SwerveDrive extends SubsystemBase {
         SwerveConstants.CanIdFrontLeftVelocity,
         SwerveConstants.AnalogInputFrontLeftAbsoluteEncoder,
         SwerveConstants.AbsoluteAngleOffsetFrontLeft, 
-        false);
+        false,
+        true);
     m_frontRight = new SwerveModule2023(
         "FR",
         frontRightTranslation,
@@ -85,6 +86,7 @@ public class SwerveDrive extends SubsystemBase {
         SwerveConstants.CanIdFrontRightVelocity,
         SwerveConstants.AnalogInputFrontRightAbsoluteEncoder,
         SwerveConstants.AbsoluteAngleOffsetFrontRight, 
+        true,
         true);
     m_backLeft = new SwerveModule2023(
         "BL",
@@ -93,7 +95,8 @@ public class SwerveDrive extends SubsystemBase {
         SwerveConstants.CanIdBackLeftVelocity,
         SwerveConstants.AnalogInputBackLeftAbsoluteEncoder,
         SwerveConstants.AbsoluteAngleOffsetBackLeft, 
-        false);
+        false,
+        true);
     m_backRight = new SwerveModule2023(
         "BR",
         backRightTranslation,
@@ -101,7 +104,8 @@ public class SwerveDrive extends SubsystemBase {
         SwerveConstants.CanIdBackRightVelocity,
         SwerveConstants.AnalogInputBackRightAbsoluteEncoder,
         SwerveConstants.AbsoluteAngleOffsetBackRight, 
-        true);
+        true,
+        false);
     
     m_kinematics = new SwerveDriveKinematics(
         getModuleTranslations());

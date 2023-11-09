@@ -9,6 +9,7 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriverRelativeAngleDrive extends BaseJoystickDrive {
@@ -28,18 +29,21 @@ public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    var maxSpeedScaling = Math.max((-testController.getRawAxis(3) + 1) / 2, 0.2);
+    SwerveDrive.TranslationSpeedModifier = maxSpeedScaling;
+    SwerveDrive.RotationSpeedModifier = maxSpeedScaling;
     double xMetersPerSecond = -testController.getRawAxis(1);
     double yMetersPerSecond = -testController.getRawAxis(0);
     for(var i = 0; i < 20; i++) {
       SmartDashboard.putBoolean("joy/" + i, testController.getRawButton(0));
     }
     if (testController.getPOV(0) == -1) {
-      var omegaRadiansPerSecond = 0.0;
-      if(testController.getRawButton(16)) {
-        omegaRadiansPerSecond = -1.0;
-      } else if(testController.getRawButton(18)) {
-        omegaRadiansPerSecond = 1.0;
-      }
+      var omegaRadiansPerSecond = -testController.getRawAxis(2);
+      // if(testController.getRawButton(16)) { // Warthog joystick
+      //   omegaRadiansPerSecond = -1.0;
+      // } else if(testController.getRawButton(18)) {
+      //   omegaRadiansPerSecond = 1.0;
+      // }
       m_swerveDrive.moveFieldRelative(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
     } else {
       Rotation2d rightAngle = getTargetRotation();
@@ -49,7 +53,7 @@ public class DriverRelativeAngleDrive extends BaseJoystickDrive {
   }
 
   protected Rotation2d getTargetRotation() {
-    return Rotation2d.fromDegrees(testController.getPOV(0));
+    return Rotation2d.fromDegrees(testController.getPOV(0)).times(-1);
   }
 
   protected double getTargetMagnitude() {
